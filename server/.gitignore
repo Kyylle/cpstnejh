@@ -1,0 +1,5 @@
+keys/productKey.json
+
+
+#ignore .env
+.env
