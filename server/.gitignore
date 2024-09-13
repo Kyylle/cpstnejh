@@ -1,5 +1,4 @@
-keys/productKey.json
-
+node_modules/
 
 #ignore .env
 .env
