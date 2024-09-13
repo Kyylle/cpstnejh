@@ -2,3 +2,5 @@ node_modules/
 
 #ignore .env
 .env
+
+server/keys/
