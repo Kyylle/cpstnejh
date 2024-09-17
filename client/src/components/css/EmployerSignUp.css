@@ -22,12 +22,12 @@
   margin-bottom: 20px;
 }
 
-.form-group {
+.employer-form-group {
   margin-bottom: 15px;
   text-align: left;
 }
 
-.form-group label {
+.employer-form-group label {
   color: white;
   font-size: 14px;
 }
@@ -47,7 +47,7 @@
 }
 
 /* Grid layout for the form */
-.form-grid {
+.employer-form-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 0px;
@@ -153,7 +153,7 @@
   
   /* Make the form stack vertically on small screens */
   @media (max-width: 600px) {
-    .form-grid {
+    .employer-form-grid {
       grid-template-columns: 1fr; /* Stack the form fields in a single column */
     }
   }

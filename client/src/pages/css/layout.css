@@ -3,23 +3,22 @@
     display: flex;
     justify-content: space-between;
     padding: 20px;
+    gap: 20px; /* Space between columns */
   }
   
   .left-column, .right-column {
     width: 25%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    background-color: #fff;
+    border-radius: 5px;
   }
   
   .middle-column {
     width: 50%;
-  }
-  
-  .left-column, .right-column {
     padding: 10px;
-    border: 1px solid #ddd;
-  }
-  
-  .middle-column {
-    padding: 10px;
+    background-color: #fff;
+    border-radius: 5px;
     border: 1px solid #ddd;
   }
   

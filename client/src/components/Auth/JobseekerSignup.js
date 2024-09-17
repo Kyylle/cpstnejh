@@ -95,8 +95,8 @@ const JobseekerSignUp = () => {
       <div className="form-box">
         <h2 className="title">Jobseeker Signup</h2>
         <form onSubmit={handleSubmit}>
-          <div className="form-grid">
-            <div className="form-group">
+          <div className="jobseeker-form-grid">
+            <div className="jobseeker-form-group">
               <input
                 type="text"
                 name="name"
@@ -109,7 +109,7 @@ const JobseekerSignUp = () => {
               {errors.name && <p className="error-text">{errors.name}</p>}
             </div>
 
-            <div className="form-group">
+            <div className="jobseeker-form-group">
               <input
                 type="email"
                 name="email"
@@ -122,7 +122,7 @@ const JobseekerSignUp = () => {
               {errors.email && <p className="error-text">{errors.email}</p>}
             </div>
 
-            <div className="form-group">
+            <div className="jobseeker-form-group">
               <input
                 type="password"
                 name="password"
@@ -137,7 +137,7 @@ const JobseekerSignUp = () => {
               )}
             </div>
 
-            <div className="form-group">
+            <div className="jobseeker-form-group">
               <input
                 type="password"
                 name="confirmPassword"

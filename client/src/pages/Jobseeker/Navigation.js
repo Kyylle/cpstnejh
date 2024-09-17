@@ -1,7 +1,7 @@
 // src/components/Navigation.js
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import './css/navigation.css'; // Import the navigation styles
+import '../css/navigation.css'; // Import the navigation styles
 
 const Navigation = () => {
   const navigate = useNavigate();

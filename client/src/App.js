@@ -5,7 +5,7 @@ import SignIn from './components/Auth/SignIn';
 import SignUpChoice from './pages/SignUpChoice';
 import EmployerSignUp from './components/Auth/EmployerSignUp';
 import JobseekerSignUp from './components/Auth/JobseekerSignup';
-import Dashboard from './pages/Dashboard';
+import Dashboard from './pages/Jobseeker/Dashboard';
 
 function App() {
   return (

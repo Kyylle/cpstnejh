@@ -68,8 +68,8 @@ const EmployerSignUp = () => {
       <div className="form-box">
         <h2 className="title">Employer Sign Up</h2>
         <form onSubmit={handleSubmit}>
-          <div className="form-grid">
-            <div className="form-group">
+          <div className="employer-form-grid">
+            <div className="employer-form-group">
               <label htmlFor="companyName">Company Name</label>
               <input
                 type="text"
@@ -82,7 +82,7 @@ const EmployerSignUp = () => {
               {errors.companyName && <p className="error-text">{errors.companyName}</p>}
             </div>
 
-            <div className="form-group">
+            <div className="employer-form-group">
               <label htmlFor="email">Email</label>
               <input
                 type="email"
@@ -96,8 +96,8 @@ const EmployerSignUp = () => {
             </div>
           </div>
 
-          <div className="form-grid">
-            <div className="form-group">
+          <div className="employer-form-grid">
+            <div className="employer-form-group">
               <label htmlFor="password">Password</label>
               <input
                 type="password"
@@ -110,7 +110,7 @@ const EmployerSignUp = () => {
               {errors.password && <p className="error-text">{errors.password}</p>}
             </div>
 
-            <div className="form-group">
+            <div className="employer-form-group">
               <label htmlFor="confirmPassword">Confirm Password</label>
               <input
                 type="password"

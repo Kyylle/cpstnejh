@@ -1,6 +1,6 @@
 // src/components/FollowedAccounts.js
 import React from 'react';
-import './css/followedAccounts.css'; // For Followed Accounts component styling
+import '../css/followedAccounts.css'; // For Followed Accounts component styling
 
 const FollowedAccounts = () => {
   return (

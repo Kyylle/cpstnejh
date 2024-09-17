@@ -1,6 +1,6 @@
 // src/components/Feeds.js
 import React from 'react';
-import './css/feeds.css'; // For Feeds component styling
+import '../css/feeds.css'; // For Feeds component styling
 
 const Feeds = () => {
   return (

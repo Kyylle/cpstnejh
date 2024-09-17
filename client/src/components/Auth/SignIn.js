@@ -52,10 +52,10 @@ const SignIn = () => {
 
   return (
     <div className="signin-form-container">
-      <div className="form-box">
+      <div className="signin-form-box">
         <h1 className="title">JOBHUB</h1>
         <form onSubmit={handleSubmit}>
-          <div className="form-group">
+          <div className="signin-form-group">
             <input
               type="text"
               name="email"
@@ -68,7 +68,7 @@ const SignIn = () => {
             {errors.email && <p className="error-text">{errors.email}</p>}
           </div>
 
-          <div className="form-group">
+          <div className="signin-form-group">
             <input
               type="password"
               name="password"

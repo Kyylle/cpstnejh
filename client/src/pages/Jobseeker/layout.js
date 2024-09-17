@@ -3,7 +3,7 @@ import React from 'react';
 import Profile from './Profile';
 import Feeds from './Feeds';
 import FollowedAccounts from './FollowedAccounts';
-import './css/layout.css'; // Optional: For layout-specific styling
+import '../css/layout.css'; // Optional: For layout-specific styling
 
 const Layout = () => {
   return (
