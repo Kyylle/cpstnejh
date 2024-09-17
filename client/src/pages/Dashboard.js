@@ -1,13 +1,16 @@
 import React from 'react';
-// import './css/Dashboard.css'; // Optional: For custom styling
+
+import './css/dashboard.css'; // For the dashboard-specific styling
+import Navigation from './Navigation';
+import Layout from './layout';
 
 const Dashboard = () => {
   return (
     <div className="dashboard-container">
-      <h1>Welcome to JobHub Dashboard</h1>
-      <p>This is where users can see their profile, job listings, and more.</p>
-      {/* Add any other relevant information, components, or links to other sections */}
-    </div>
+      {/* Include the Navigation component */}
+      <Navigation/>
+      <Layout/>
+      </div>
   );
 };
 

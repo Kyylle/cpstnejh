@@ -1,0 +1,14 @@
+/* src/css/feeds.css */
+.feeds-container {
+    padding: 10px;
+  }
+  
+  .post {
+    border-bottom: 1px solid #ddd;
+    padding: 10px 0;
+  }
+  
+  .post h3 {
+    margin: 0 0 5px;
+  }
+  

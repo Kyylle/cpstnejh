@@ -1,0 +1,160 @@
+.signup-form-container {
+  display: flex;
+  justify-content: center; /* Horizontally center the content */
+  align-items: center; /* Vertically center the content */
+  height: 100vh; /* Full viewport height */
+  background-color: #f5f5f5;
+}
+
+.form-box {
+  background-color: #2e4d80;
+  padding: 30px;
+  border-radius: 10px;
+  width: 100%;
+  max-width: 600px; /* Adjust the max-width to fit the two columns */
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.title {
+  color: white;
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.form-group {
+  margin-bottom: 15px;
+  text-align: left;
+}
+
+.form-group label {
+  color: white;
+  font-size: 14px;
+}
+
+.input-field {
+  width: 95%;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  margin-bottom: 10px;
+  font-size: 16px;
+}
+
+.error-text {
+  color: red;
+  font-size: 12px;
+}
+
+/* Grid layout for the form */
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0px;
+  column-gap: 50px;
+}
+
+.submit-button, .google-signin-button {
+  padding: 10px;
+  background-color: white;
+  color: black;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-bottom: 15px;
+}
+
+.small-button {
+  width: 150px; /* Reduce the width */
+  padding: 8px; /* Reduce padding */
+  font-size: 14px; /* Smaller font */
+  margin: 0 auto 10px auto;
+}
+
+.google-signin-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #fff; /* White background for better visibility */
+  color: black;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 10px;
+  cursor: pointer;
+  font-size: 16px;
+  width: auto; /* Adjust width automatically */
+  margin-top: 20px;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+  margin: 10px auto;
+  width: 250px;
+}
+
+.google-logo {
+  width: 20px;
+  height: 20px;
+  margin-right: 10px; /* Space between logo and text */
+}
+
+.google-text {
+  display: flex;
+  font-weight: bold;
+  font-size: 24px;
+}
+
+.g-letter {
+  color: #4285F4; /* Blue */
+}
+
+.o-letter {
+  color: #EA4335; /* Red */
+}
+
+.o2-letter {
+  color: #FBBC05; /* Yellow */
+}
+
+.g2-letter {
+  color: #4285F4; /* Blue */
+}
+
+.l-letter {
+  color: #34A853; /* Green */
+}
+
+.e-letter {
+  color: #EA4335; /* Red */
+}
+
+.google-signin-button:hover {
+  background-color: #f7f7f7;
+  border-color: #bbb;
+}
+
+.submit-button:hover, .google-signin-button:hover {
+  background-color: #ddd;
+}
+
+.success-text {
+  color: lightgreen;
+  font-size: 12px;
+}
+
+.blur-line {
+  border: none; /* Remove the default border */
+  height: 1px; /* Set the thickness of the line */
+  margin: 20px 0; /* Add space above and below the line */
+  background: rgb(255, 255, 255); /* Light color for the line */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* Apply blur effect */
+  width: 100%; /* Ensure it spans the full width */
+}
+
+
+  
+  /* Make the form stack vertically on small screens */
+  @media (max-width: 600px) {
+    .form-grid {
+      grid-template-columns: 1fr; /* Stack the form fields in a single column */
+    }
+  }
+  

@@ -1,0 +1,25 @@
+/* src/css/layout.css */
+.layout-container {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+  }
+  
+  .left-column, .right-column {
+    width: 25%;
+  }
+  
+  .middle-column {
+    width: 50%;
+  }
+  
+  .left-column, .right-column {
+    padding: 10px;
+    border: 1px solid #ddd;
+  }
+  
+  .middle-column {
+    padding: 10px;
+    border: 1px solid #ddd;
+  }
+  

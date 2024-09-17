@@ -29,34 +29,28 @@ exports.registerEmployer = async (req, res) => {
 // Register jobseeker
 exports.registerJobseeker = async (req, res) => {
     try {
-      const { name = "", email, password } = req.body; // Destructure fields
-  
-      // Check if email and password are provided
-      if (!email || !password) {
-        return res.status(400).json({ error: 'Email and password are required' });
-      }
-  
-      // Check if the email is already registered
-      const existingJobseeker = await Jobseeker.findOne({ email });
-      if (existingJobseeker) {
-        return res.status(400).json({ error: 'Email is already registered' });
-      }
-  
-      // Hash the password before saving the jobseeker
-      const hashedPassword = await bcrypt.hash(password, 10);
-  
-      // Create and save the new Jobseeker
-      const newJobseeker = new Jobseeker({ name, email, password: hashedPassword });
-      await newJobseeker.save();
-  
-      // Respond with success message
-      res.status(201).json({ message: 'Jobseeker registered successfully' });
+        const { name = "", email, password } = req.body;
+
+        if (!email || !password) {
+            return res.status(400).json({ error: 'Email and password are required' });
+        }
+
+        const existingJobseeker = await Jobseeker.findOne({ email });
+        if (existingJobseeker) {
+            return res.status(400).json({ error: 'Email is already registered' });
+        }
+
+        const hashedPassword = await bcrypt.hash(password, 10);
+        const newJobseeker = new Jobseeker({ name, email, password: hashedPassword });
+        await newJobseeker.save();
+
+        res.status(201).json({ message: 'Jobseeker registered successfully' });
     } catch (err) {
-      // Log the error and respond with an error message
-      console.error('Error during jobseeker registration:', err);
-      res.status(500).json({ error: 'An internal server error occurred' });
+        console.error('Error during jobseeker registration:', err);
+        res.status(500).json({ error: 'An internal server error occurred' });
     }
-  };
+};
+
 
 
 
@@ -80,26 +74,71 @@ exports.loginWithEmail = async (req, res) => {
 
 
 // Login with Google
-exports.loginWithGoogle = async (req, res) => {
+// exports.loginWithGoogle = async (req, res) => {
+//     try {
+//         const { idToken } = req.body;
+
+//         // Verify the ID token with Firebase
+//         const decodedToken = await admin.auth().verifyIdToken(idToken);
+//         const uid = decodedToken.uid;
+//         const email = decodedToken.email;
+
+//         // Find the user by their Firebase UID
+//         let user = await Jobseeker.findOne({ firebaseUid: uid });
+
+//         // If the user doesn't exist, create a new Jobseeker
+//         if (!user) {
+//             user = new Jobseeker({
+//                 firebaseUid: uid,
+//                 email
+//             });
+//             await user.save();
+//         }
+
+//         // Generate a custom token for further use
+//         const customToken = await admin.auth().createCustomToken(uid);
+
+//         // Respond with the custom token
+//         res.json({ token: customToken });
+//     } catch (err) {
+//         console.error('Error during Google sign-in:', err);
+//         res.status(500).json({ error: 'An error occurred during Google sign-in' });
+//     }
+// };
+
+//signup
+// In your authController.js
+exports.signupWithGoogle = async (req, res) => {
     try {
-        const { idToken } = req.body;
-        const decodedToken = await admin.auth().verifyIdToken(idToken);
-        const uid = decodedToken.uid;
-
-        // Check if the user exists by firebaseUid instead of _id
-        let user = await Employer.findOne({ firebaseUid: uid }) || await Jobseeker.findOne({ firebaseUid: uid });
-
-        if (!user) {
-            // If the user does not exist, create a new Jobseeker (or Employer) with firebaseUid
-            user = new Jobseeker({ firebaseUid: uid, email: decodedToken.email });
-            await user.save();
-        }
-
-        // Generate a custom token to return
-        const customToken = await admin.auth().createCustomToken(uid);
-        res.json({ token: customToken });
+      const { idToken } = req.body;
+  
+      if (!idToken) {
+        return res.status(400).json({ error: 'ID token is required' });
+      }
+  
+      // Verify the ID token with Firebase
+      const decodedToken = await admin.auth().verifyIdToken(idToken);
+      const uid = decodedToken.uid;
+      const email = decodedToken.email;
+  
+      // Check if the user exists in the Jobseeker collection
+      let user = await Jobseeker.findOne({ firebaseUid: uid });
+  
+      if (!user) {
+        // If user does not exist, create a new Jobseeker
+        user = new Jobseeker({ firebaseUid: uid, email });
+        await user.save();
+        console.log('New Jobseeker created:', user); // Debugging line
+      } else {
+        console.log('Existing Jobseeker found:', user); // Debugging line
+      }
+  
+      // Generate a custom token to return to the client for further use
+      const customToken = await admin.auth().createCustomToken(uid);
+      res.json({ token: customToken });
     } catch (err) {
-        console.error(err); // Log the error for debugging
-        res.status(500).json({ error: 'An error occurred during Google sign-in' });
+      console.error('Error during Google sign-up:', err);
+      res.status(500).json({ error: 'An error occurred during Google sign-up' });
     }
-};
+  };
+

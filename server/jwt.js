@@ -15,7 +15,7 @@ const generateRandomPayload = () => {
 // Generate a random token
 const generateToken = () => {
   const payload = generateRandomPayload();
-  const token = jwt.sign(payload, secretKey, { expiresIn: '7d' }); // Token expires in 1 hour
+  const token = jwt.sign(payload, secretKey, { expiresIn: '1y' }); // Token expires in 1 hour
   return token;
 };
 

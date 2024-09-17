@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { auth, provider, signInWithPopup } from "../../config/firebase";
+import { auth, provider, signInWithRedirect, getRedirectResult } from "../../config/firebase";
 import "../css/JobseekerSignUp.css";
 
 const JobseekerSignUp = () => {
@@ -62,22 +62,38 @@ const JobseekerSignUp = () => {
     }
   };
 
+  // Handle Google Sign-In using redirect
   const handleGoogleSignIn = async () => {
     try {
-      const result = await signInWithPopup(auth, provider);
-      const idToken = await result.user.getIdToken();
-      // Remove response since it's not used
-      await axios.post("/api/auth/login/google", { idToken });
-      navigate("/dashboard");
+      await signInWithRedirect(auth, provider);
     } catch (error) {
       console.error("Google Sign-In Error:", error);
     }
   };
 
+  // Handle the result after redirect
+  useEffect(() => {
+    const handleRedirectResult = async () => {
+      try {
+        const result = await getRedirectResult(auth);
+        if (result) {
+          const idToken = await result.user.getIdToken(); // Get the user's ID token
+          console.log('ID Token:', idToken); // Debugging line
+          await axios.post("/api/auth/signup/google", { idToken }); // Send token to backend
+          navigate("/dashboard"); // Navigate to dashboard on success
+        }
+      } catch (error) {
+        console.error("Redirect Sign-In Error:", error); // Handle errors
+      }
+    };
+
+    handleRedirectResult();
+  }, [navigate]);
+
   return (
     <div className="signup-form-container">
       <div className="form-box">
-        <h2 className="title">Registration</h2>
+        <h2 className="title">Jobseeker Signup</h2>
         <form onSubmit={handleSubmit}>
           <div className="form-grid">
             <div className="form-group">
@@ -146,16 +162,15 @@ const JobseekerSignUp = () => {
         </form>
         <hr className="blur-line" />
         <button onClick={handleGoogleSignIn} className="google-signin-button">
-  <span className="google-text">
-    <span className="g-letter">G</span>
-    <span className="o-letter">o</span>
-    <span className="o2-letter">o</span>
-    <span className="g2-letter">g</span>
-    <span className="l-letter">l</span>
-    <span className="e-letter">e</span>
-  </span>
-</button>
-
+          <span className="google-text">
+            <span className="g-letter">G</span>
+            <span className="o-letter">o</span>
+            <span className="o2-letter">o</span>
+            <span className="g2-letter">g</span>
+            <span className="l-letter">l</span>
+            <span className="e-letter">e</span>
+          </span>
+        </button>
       </div>
     </div>
   );

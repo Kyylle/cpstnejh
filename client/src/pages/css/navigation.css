@@ -1,0 +1,52 @@
+/* src/css/Navigation.css */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #2e4d80;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .navbar-left {
+    display: flex;
+    align-items: center;
+  }
+  
+  .logo {
+    font-size: 24px;
+    font-weight: bold;
+    margin-right: 20px;
+  }
+  
+  .navbar-search-bar {
+    padding: 5px 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .navbar-center {
+    display: flex;
+    gap: 15px;
+  }
+  
+  .navbar-button {
+    text-decoration: none;
+    color: #fff;
+    font-size: 16px;
+    padding: 5px 10px;
+    border: none;
+    background: none;
+    cursor: pointer;
+  }
+  
+  /* .navbar-button:hover {
+    background-color: #e9ecef;
+    border-radius: 4px;
+  } */
+  
+  .navbar-right {
+    display: flex;
+    align-items: center;
+  }
+  
