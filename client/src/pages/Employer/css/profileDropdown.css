@@ -1,0 +1,85 @@
+.profile-dropdown {
+    position: absolute;
+    right: 0;
+    background-color: white;
+    width: 250px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    padding: 16px;
+    z-index: 1000;
+    margin-right: 65px;
+    margin-top: 15px;
+  }
+  
+  .dropdown-header {
+    display: flex;
+    flex-direction: column; /* Stack items vertically */
+    align-items: flex-start; /* Align items to the left */
+  }
+  
+  .profile-info {
+    margin-bottom: 12px;
+  }
+  
+  .profile-name-icon {
+    display: flex;
+    align-items: center; /* Align icon and name on the same line */
+  }
+  
+  .profile-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px; /* Add space between the icon and name */
+  }
+  
+  .view-profile-btn {
+    padding: 8px 12px;
+    border-radius: 24px;
+    cursor: pointer;
+    font-size: 14px;
+    margin-left: 20%;
+    margin-top: 8px; /* Add space above the button */
+    width: 100%; /* Make the button take full width */
+    text-align: center; /* Center-align the button text */
+    background-color: white; /* White background */
+    border: 2px solid #0073b1; /* Border color */
+    color: #0073b1; /* Text color */
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease; /* Smooth transition */
+  }
+  
+  /* Hover Effect */
+  .view-profile-btn:hover {
+    background-color: #0073b1; /* Change background color on hover */
+    color: white; /* Change text color on hover */
+    border-color: #005580; /* Darker border on hover */
+  }
+  
+  
+  .dropdown-section h4 {
+    font-size: 14px;
+    margin-bottom: 8px;
+  }
+  
+  .dropdown-section ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .dropdown-section li {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 8px;
+    cursor: pointer;
+  }
+  
+  .dropdown-footer .sign-out-btn {
+    padding: 8px 12px;
+    background-color: #e60023;
+    color: white;
+    border: none;
+    border-radius: 24px;
+    cursor: pointer;
+    font-size: 14px;
+  }
+  

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import '../css/dashboard.css'; // For the dashboard-specific styling
+import './css/dashboard.css'; // For the dashboard-specific styling
 import Navigation from './Navigation';
 import Layout from './layout';
 

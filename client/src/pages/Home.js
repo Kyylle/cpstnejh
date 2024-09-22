@@ -1,14 +1,14 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import './css/Home.css'; // Add necessary styles here
+import './Home.css'; // Add necessary styles here
 
 const Home = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="home-container">
+    <div className="page-content">
       {/* Navigation Bar */}
-      <nav className="navbar">
+      <nav className="navbar-home">
         <div className="logo">JobHub</div>
         
         <div className="auth-buttons">
@@ -24,7 +24,7 @@ const Home = () => {
       {/* Main Content */}
       <div className="main-content">
         <div className="text-section">
-          <h1>Your dream Job is just click away</h1>
+          <h1>Your dream Job is just a click away</h1>
           <p>
             A modern recruitment platform designed to streamline the connection
             between employers and job seekers.
@@ -32,16 +32,14 @@ const Home = () => {
 
           {/* Search and Login Button */}
           <div className="search-login">
-          <input 
-          type="text" 
-          className="search-bar" 
-          placeholder="Find Now" 
-          />
-          <button className="search-btn">Find</button>
+            <input 
+              type="text" 
+              className="search-bar" 
+              placeholder="Find Now" 
+            />
+            <button className="search-btn">Find</button>
           </div>
         </div>
-
-        {/* Omit the image section here */}
       </div>
     </div>
   );

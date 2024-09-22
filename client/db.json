@@ -1,0 +1,34 @@
+{
+    "profile": {
+      "profilePicture": "https://via.placeholder.com/150",
+      "name": "John Doe",
+      "headline": "Software Developer",
+      "location": "San Francisco, CA",
+      "email": "john.doe@example.com",
+      "phone": "(123) 456-7890",
+      "summary": "Experienced software developer with a passion for creating innovative solutions.",
+      "experience": [
+        {
+          "position": "Senior Developer",
+          "company": "Tech Corp",
+          "dates": "Jan 2020 - Present",
+          "description": "Leading a team of developers to build scalable web applications."
+        },
+        {
+          "position": "Software Engineer",
+          "company": "Dev Inc",
+          "dates": "Jun 2016 - Dec 2019",
+          "description": "Worked on various web development projects, focusing on front-end technologies."
+        }
+      ],
+      "education": [
+        {
+          "school": "University of Tech",
+          "degree": "B.Sc. in Computer Science",
+          "dates": "2012 - 2016"
+        }
+      ],
+      "skills": ["JavaScript", "React", "Node.js", "CSS"]
+    }
+  }
+  

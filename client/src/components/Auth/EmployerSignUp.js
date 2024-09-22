@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from "react-router-dom";
 import '../css/EmployerSignUp.css'; // Import the regular CSS file
 
 const EmployerSignUp = () => {
@@ -12,6 +13,7 @@ const EmployerSignUp = () => {
 
   const [errors, setErrors] = useState({});
   const [message, setMessage] = useState('');
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -58,9 +60,12 @@ const EmployerSignUp = () => {
       const response = await axios.post('/api/auth/employer', formData);
       setMessage(response.data.message);
       setErrors({});
+      navigate("/employerdashboard");
+
     } catch (err) {
       setErrors({ server: err.response ? err.response.data.error : 'Server error' });
     }
+    
   };
 
   return (
@@ -129,19 +134,6 @@ const EmployerSignUp = () => {
 
           <button type="submit" className="submit-button">
             Sign Up
-          </button>
-
-          {/* Google sign-in button */}
-          <button type="button" className="google-signin-button">
-            <div className="google-logo"></div>
-            <div className="google-text">
-              <span className="g-letter">G</span>
-              <span className="o-letter">o</span>
-              <span className="o2-letter">o</span>
-              <span className="g2-letter">g</span>
-              <span className="l-letter">l</span>
-              <span className="e-letter">e</span>
-            </div>
           </button>
 
           <div className="blur-line"></div>

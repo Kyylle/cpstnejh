@@ -1,0 +1,181 @@
+.profile-main-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #ccc;
+  }
+  
+  .profile-section {
+    display: flex;
+    justify-content: center;
+    padding-top: 60px;
+    width: 100%;
+  }
+  
+  .profile-card {
+    background-color: white;
+    border-radius: 10px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 80%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .profile-photo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .profile-photo img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background-color: gray;
+  }
+  
+  .new-photo-btn {
+    margin-top: 10px;
+    padding: 5px 10px;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .profile-info h2 {
+    margin: 0;
+  }
+  
+  .edit-profile-btn {
+    background: none;
+    border: none;
+    font-size: 24px; /* Increased size */
+    cursor: pointer;
+    color: #3498db; /* Edit button color */
+  }
+  
+  .main-contents {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 30px;
+    width: 100%;
+    max-width: 1000px; /* Ensure that content fits within this width */
+  }
+  
+  .resume-upload,
+  .previous-position,
+  .skills,
+  .experience,
+  .education {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    width: 80%; /* Wider width */
+    max-width: 800px; /* Wider max-width */
+  }
+  
+  .content-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  .edit-btn {
+    background: none;
+    border: none;
+    font-size: 20px; /* Increased size */
+    cursor: pointer;
+    color: #3498db;
+    margin-left: 5px; /* Closer to the plus button */
+  }
+  
+  .edit-btn:hover {
+    color: #2980b9;
+  }
+  
+  .plus-btn {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: #2ecc71;
+    margin-right: 5px; /* Move it closer to the edit button */
+  }
+  
+  .plus-btn:hover {
+    color: #27ae60;
+  }
+  
+  /* Modal styles for editing profile */
+  .modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  .modal-content {
+    background-color: white;
+    border-radius: 10px;
+    padding: 20px;
+    width: 90%;
+    max-width: 500px;
+    position: relative;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 24px;
+    font-weight: bold;
+    color: #2c3e50;
+    cursor: pointer;
+  }
+  
+  .modal-content form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .modal-content input[type="text"],
+  .modal-content input[type="email"],
+  .modal-content input[type="tel"],
+  .modal-content textarea {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    font-size: 16px;
+    width: 100%;
+  }
+  
+  .modal-content input[type="submit"] {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    width: 100%;
+  }
+  
+  .modal-content input[type="submit"]:hover {
+    background-color: #2980b9;
+  }
+  

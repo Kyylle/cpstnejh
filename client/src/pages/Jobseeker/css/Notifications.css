@@ -1,0 +1,54 @@
+/* src/styles/Notifications.css */
+
+.notifications-container {
+    padding: 20px;
+    background-color: #f3f4f6; /* Light gray background */
+    font-family: 'Arial', sans-serif; /* Clean font */
+    height: 100vh; /* Full height */
+    overflow-y: auto; /* Scroll if needed */
+    padding-top: 40px;
+  }
+  
+  .notifications-content {
+    max-width: 600px; /* Center content */
+    margin: auto;
+    background: white; /* White background for content */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    padding: 20px;
+  }
+  
+  h1 {
+    font-size: 24px;
+    color: #333; /* Dark gray for heading */
+    margin-bottom: 20px;
+  }
+  
+  .notifications-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .notification-item {
+    padding: 15px;
+    border-bottom: 1px solid #eaeaea; /* Divider line */
+    transition: background 0.2s; /* Smooth hover effect */
+  }
+  
+  .notification-item:hover {
+    background: #f9f9f9; /* Light hover effect */
+  }
+  
+  .notification-message {
+    font-size: 16px; /* Message font size */
+    color: #555; /* Medium gray for messages */
+  }
+  
+  .notification-time {
+    font-size: 12px; /* Smaller font for time */
+    color: #888; /* Light gray for time */
+    display: block; /* Ensures time is on a new line */
+    margin-top: 5px; /* Space above time */
+  }
+  

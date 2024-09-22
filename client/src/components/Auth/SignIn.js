@@ -30,25 +30,40 @@ const SignIn = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     const validationErrors = validateForm();
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
       return;
     }
-
+  
     setLoading(true);
     try {
       const response = await axios.post('/api/auth/login/email', formData);
       setErrors({});
-      localStorage.setItem('authToken', response.data.token);
-      navigate('/dashboard');
+  
+      // Store token and userType
+      const { token, userType } = response.data;
+      localStorage.setItem('authToken', token);
+  
+      // Check the response data for the user type
+      console.log('User type:', userType); // Debugging: Check the userType in the console
+  
+      // Redirect based on user type
+      if (userType === 'employer') {
+        navigate('/employerdashboard');
+      } else {
+        navigate('/dashboard');
+      }
     } catch (err) {
       setErrors({ server: err.response ? err.response.data.message : 'Server error' });
     } finally {
       setLoading(false);
     }
   };
+  
+  
+  
 
   return (
     <div className="signin-form-container">

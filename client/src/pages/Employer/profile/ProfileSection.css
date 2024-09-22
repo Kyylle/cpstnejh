@@ -1,0 +1,200 @@
+/* Profile section container */
+.ps-profile-section-container {
+    background-color: white;
+    border-radius: 8px;
+    padding: 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    position: relative;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  
+  /* Cover Photo */
+  .ps-profile-cover {
+    position: relative;
+    width: 100%;
+    height: 180px;
+  }
+  
+  .ps-cover-photo {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 8px 8px 0 0;
+    padding: 0;
+  }
+  
+  .ps-change-cover-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: rgba(255, 255, 255, 0.8);
+    border: none;
+    border-radius: 50%;
+    padding: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .ps-change-cover-btn:hover {
+    background-color: rgba(255, 255, 255, 1);
+  }
+  
+  /* Profile Picture */
+  .ps-profile-picture-container {
+    position: absolute;
+    top: 100px;
+    left: 30px;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    border: 3px solid white;
+    overflow: hidden;
+    background-color: white;
+  }
+  .ps-profile-details-container {
+    padding: 10px;
+    padding-top: 20px;
+  }
+  .ps-profile-picture {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+  }
+  
+  .ps-change-photo-btn {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    right: 25%;
+    bottom: 25%;
+    background-color:rgba(255, 255, 255, 1);
+    border: none;
+    border-radius: 50%;
+    padding: 6px;
+    cursor: pointer;
+  }
+
+  /* edit-icon */
+  .ps-edit-icon {
+    position: absolute;
+    top: 200px;
+    right: 20px;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.2s ease, background-color 0.2s ease;
+    border-radius: 50%;
+  }
+  
+  .ps-edit-icon:hover {
+    background-color: #f1f1f1;
+    transform: scale(1.1);
+  }
+  .ps-edit-icon .edit-btn {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+  }
+  
+  .ps-edit-icon .edit-btn img {
+    width: 24px;
+    height: 24px;
+  }
+  
+  
+  /* Company Information (below the profile picture) */
+  .ps-company-info {
+    margin-left: 10px; /* Move company info next to profile picture */
+    margin-top: 50px; /* Adjust for vertical spacing */
+  }
+  
+  .ps-company-info h1 {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+  
+  .ps-profile-title {
+    font-size: 16px;
+    color: gray;
+    margin-bottom: 5px;
+  }
+  
+  .ps-location {
+    font-size: 14px;
+    color: gray;
+  }
+  
+  .ps-location a {
+    color: #0073b1;
+    text-decoration: none;
+  }
+  
+  .ps-location a:hover {
+    text-decoration: underline;
+  }
+  
+  /* Action buttons */
+  .ps-profile-actions {
+    margin-top: 25px; /* Adjust space below the company name */
+    display: flex;
+    gap: 10px;
+  }
+  
+  .ps-blue-btn, .ps-more-btn {
+    padding: 10px 16px;
+    border-radius: 20px;
+    font-size: 14px;
+    cursor: pointer;
+    margin-right: 10px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+  
+  .ps-blue-btn {
+    background-color: #0073b1;
+    color: white;
+    border: none;
+  }
+  
+  .ps-blue-btn:hover {
+    background-color: #005580;
+  }
+  
+  .ps-more-btn {
+    background-color: white;
+    color: black;
+    border: 1px solid gray;
+  }
+  
+  .ps-more-btn:hover {
+    background-color: #f3f2ef;
+    border-color: #0073b1;
+    color: #0073b1;
+  }
+  
+  /* Open to work section */
+  .ps-open-to-work {
+    background-color: #e8f4fb;
+    border-radius: 8px;
+    padding: 10px;
+    margin-top: 15px;
+    display: flex;
+    align-items: center;
+  }
+  
+  .ps-open-to-work strong {
+    color: #0073b1;
+  }
+  
+  .ps-show-details {
+    margin-left: 10px;
+    color: #0073b1;
+    text-decoration: none;
+  }
+  
+  .ps-show-details:hover {
+    text-decoration: underline;
+  }
+  

@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faBuilding } from '@fortawesome/free-solid-svg-icons';
-import './css/SignUpChoice.css';
+import './SignUpChoice.css';
 
 const SignUpChoice = () => {
   const navigate = useNavigate();

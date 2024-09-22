@@ -1,9 +1,9 @@
-const admin = require('../config/firebase');
 const bcrypt = require('bcryptjs');
 const Employer = require('../models/employer');
 const Jobseeker = require('../models/jobseeker');
+const jwt = require('jsonwebtoken');
 
-// Register employer
+// Register Employer
 exports.registerEmployer = async (req, res) => {
     try {
         const { companyName, email, password } = req.body;
@@ -11,6 +11,12 @@ exports.registerEmployer = async (req, res) => {
         // Check if all required fields are provided
         if (!companyName || !email || !password) {
             return res.status(400).json({ error: 'All fields are required' });
+        }
+
+        // Check if email already exists
+        const existingEmployer = await Employer.findOne({ email });
+        if (existingEmployer) {
+            return res.status(400).json({ error: 'Email is already registered' });
         }
 
         // Hash the password
@@ -22,11 +28,14 @@ exports.registerEmployer = async (req, res) => {
 
         res.status(201).json({ message: 'Employer registered successfully' });
     } catch (err) {
-        res.status(500).json({ error: err.message });
+        // Log the error for debugging
+        console.error('Error in registerEmployer:', err);
+        res.status(500).json({ error: 'An internal server error occurred' });
     }
 };
 
-// Register jobseeker
+
+// Register Jobseeker
 exports.registerJobseeker = async (req, res) => {
     try {
         const { name = "", email, password } = req.body;
@@ -51,94 +60,104 @@ exports.registerJobseeker = async (req, res) => {
     }
 };
 
-
-
-
-
 // Login with email and password
+// Backend: loginWithEmail function (authController.js)
 exports.loginWithEmail = async (req, res) => {
     try {
         const { email, password } = req.body;
-        const user = await Employer.findOne({ email }) || await Jobseeker.findOne({ email });
-        if (!user) return res.status(401).json({ message: 'User not found' });
 
+        // Find the user in either Employer or Jobseeker collection
+        let user = await Employer.findOne({ email });
+        let userType = '';
+
+        if (user) {
+            userType = 'employer';
+        } else {
+            user = await Jobseeker.findOne({ email });
+            if (user) {
+                userType = 'jobseeker';
+            }
+        }
+
+        if (!user) {
+            return res.status(401).json({ message: 'User not found' });
+        }
+
+        // Check if the password matches
         const isMatch = await bcrypt.compare(password, user.password);
-        if (!isMatch) return res.status(401).json({ message: 'Invalid email or password' });
+        if (!isMatch) {
+            return res.status(401).json({ message: 'Invalid email or password' });
+        }
 
-        const token = await admin.auth().createCustomToken(user._id.toString());
-        res.json({ token });
+        // Generate a JWT token
+        const token = jwt.sign(
+            { id: user._id, email: user.email, role: userType }, 
+            process.env.JWT_SECRET, 
+            { expiresIn: '1h' }
+        );
+
+        // Debugging: Log the userType to verify it's correctly identified
+        console.log('User Type:', userType);
+
+        // Respond with token and userType
+        res.json({
+            token,
+            userType // Ensure this is correctly returned
+        });
     } catch (err) {
-        res.status(500).json({ error: err.message });
-    } 
+        console.error('Login error:', err);
+        res.status(500).json({ message: 'An internal server error occurred' });
+    }
 };
 
 
-// Login with Google
-// exports.loginWithGoogle = async (req, res) => {
-//     try {
-//         const { idToken } = req.body;
 
-//         // Verify the ID token with Firebase
-//         const decodedToken = await admin.auth().verifyIdToken(idToken);
-//         const uid = decodedToken.uid;
-//         const email = decodedToken.email;
+  
+// Get jobseeker by email
+exports.getUserByEmail = async (req, res) => {
+    const { email } = req.query;
 
-//         // Find the user by their Firebase UID
-//         let user = await Jobseeker.findOne({ firebaseUid: uid });
+    console.log('Received email query:', email);
 
-//         // If the user doesn't exist, create a new Jobseeker
-//         if (!user) {
-//             user = new Jobseeker({
-//                 firebaseUid: uid,
-//                 email
-//             });
-//             await user.save();
-//         }
+    if (!email) {
+        return res.status(400).json({ message: 'Email query parameter is required' });
+    }
 
-//         // Generate a custom token for further use
-//         const customToken = await admin.auth().createCustomToken(uid);
-
-//         // Respond with the custom token
-//         res.json({ token: customToken });
-//     } catch (err) {
-//         console.error('Error during Google sign-in:', err);
-//         res.status(500).json({ error: 'An error occurred during Google sign-in' });
-//     }
-// };
-
-//signup
-// In your authController.js
-exports.signupWithGoogle = async (req, res) => {
     try {
-      const { idToken } = req.body;
+        // Find the jobseeker by email
+        const user = await Jobseeker.findOne({ email });
+
+        console.log('Found user:', user);
+
+        if (!user) {
+            return res.status(404).json({ message: 'Jobseeker not found' });
+        }
+
+        res.json(user);
+    } catch (error) {
+        console.error('Error fetching jobseeker:', error);
+        res.status(500).json({ message: 'Server error' });
+    }
+};
+
+//getuser
+exports.getUserProfile = async (req, res) => {
+    try {
+      const userId = req.user.id; // Assuming you are using authMiddleware that attaches the user to req.user
   
-      if (!idToken) {
-        return res.status(400).json({ error: 'ID token is required' });
+      // Query the database for the user profile (check if employer or jobseeker)
+      const employer = await Employer.findById(userId); // Adjust this depending on your model structure
+      if (!employer) {
+        return res.status(404).json({ message: 'Employer not found' });
       }
   
-      // Verify the ID token with Firebase
-      const decodedToken = await admin.auth().verifyIdToken(idToken);
-      const uid = decodedToken.uid;
-      const email = decodedToken.email;
-  
-      // Check if the user exists in the Jobseeker collection
-      let user = await Jobseeker.findOne({ firebaseUid: uid });
-  
-      if (!user) {
-        // If user does not exist, create a new Jobseeker
-        user = new Jobseeker({ firebaseUid: uid, email });
-        await user.save();
-        console.log('New Jobseeker created:', user); // Debugging line
-      } else {
-        console.log('Existing Jobseeker found:', user); // Debugging line
-      }
-  
-      // Generate a custom token to return to the client for further use
-      const customToken = await admin.auth().createCustomToken(uid);
-      res.json({ token: customToken });
+      // Respond with the user's profile
+      res.json({
+        companyName: employer.companyName,
+        email: employer.email,
+      });
     } catch (err) {
-      console.error('Error during Google sign-up:', err);
-      res.status(500).json({ error: 'An error occurred during Google sign-up' });
+      console.error('Error fetching employer profile:', err);
+      res.status(500).json({ message: 'An internal server error occurred' });
     }
   };
-

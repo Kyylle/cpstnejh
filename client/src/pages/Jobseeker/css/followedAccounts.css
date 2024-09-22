@@ -1,0 +1,61 @@
+
+
+.followed-accounts-container h3 {
+  font-size: 16px;
+  margin-bottom: 16px;
+}
+
+.account {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.account-logo {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin-right: 12px;
+}
+
+.account-info {
+  flex-grow: 1;
+}
+
+.account-info h4 {
+  font-size: 14px;
+  margin: 0;
+}
+
+.account-info p {
+  font-size: 12px;
+  color: #666;
+}
+
+.follow-button {
+  background-color: #0a66c2;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.follow-button:hover {
+  background-color: #004182;
+}
+
+.view-more {
+  margin-top: 16px;
+}
+
+.view-more a {
+  text-decoration: none;
+  font-size: 12px;
+  color: #0073b1;
+}
+
+.view-more a:hover {
+  text-decoration: underline;
+}

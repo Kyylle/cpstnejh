@@ -1,0 +1,105 @@
+/* src/css/Navigation.css */
+body{
+  background-color: white;
+}
+.navbar {
+    position: fixed;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #2e4d80;
+    border-bottom: 1px solid #ddd;
+    z-index: 1000;
+    width: 100%;
+  }
+  
+  .navbar-left {
+    display: flex;
+    align-items: center;
+  }
+  
+  .logo {
+    font-size: 24px;
+    font-weight: bold;
+    margin-right: 20px;
+  }
+  
+  .navbar-search-bar {
+    padding: 5px 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .navbar-center {
+    display: flex;
+    gap: 15px;
+  }
+  
+  .navbar-button {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    margin-left: 15px;
+    font-size: 16px;
+  }
+  
+  .navbar-profile {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    position: relative;
+  }
+  
+  .navbar-user-name {
+    margin-right: 10px;
+    color: white;
+  }
+  
+  .profile-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #666;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 18px;
+  }
+
+  .profile-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%; /* Make it circular */
+  }
+  
+  .profile-dropdown {
+    position: absolute;
+    top: 50px;
+    right: 0;
+    background-color: white;
+    border-radius: 4px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    z-index: 1;
+  }
+  
+  .dropdown-item {
+    background: none;
+    border: none;
+    color: black;
+    cursor: pointer;
+    padding: 8px 12px;
+    text-align: left;
+    width: 100%;
+  }
+  
+  .dropdown-item:hover {
+    background-color: #f0f0f0;
+  }
+  
+  .page-content {
+    margin-top: 0px; /* Adjust according to the height of the navbar */
+  }
