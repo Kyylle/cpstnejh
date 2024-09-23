@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './ProfileSection.css'; // Import the CSS styles for this section
 import ContactInfoModal from './ContactInfoModal'; // Import the Contact Info Modal
+import EditAccountModal from './EditAccountModal'; // Import the Edit Account Modal
 
 const ProfileSection = () => {
   const [companyData, setCompanyData] = useState({
@@ -12,7 +13,10 @@ const ProfileSection = () => {
     email: '', // Initially empty, will be fetched
     location: '',
   });
-  const [isModalOpen, setIsModalOpen] = useState(false); // State to control modal visibility
+
+  // State to control visibility of modals
+  const [isContactModalOpen, setIsContactModalOpen] = useState(false); // For Contact Info Modal
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false); // For Edit Account Modal
 
   // Fetch company profile data when the component loads
   useEffect(() => {
@@ -47,11 +51,24 @@ const ProfileSection = () => {
 
   const handleContactInfoClick = (event) => {
     event.preventDefault(); // Prevent the default link behavior (page refresh)
-    setIsModalOpen(true); // Open the modal
+    setIsContactModalOpen(true); // Open the Contact Info Modal
   };
 
-  const handleCloseModal = () => {
-    setIsModalOpen(false); // Close the modal
+  const handleEditClick = () => {
+    setIsEditModalOpen(true); // Open the Edit Account Modal
+  };
+
+  const handleCloseContactModal = () => {
+    setIsContactModalOpen(false); // Close the Contact Info Modal
+  };
+
+  const handleCloseEditModal = () => {
+    setIsEditModalOpen(false); // Close the Edit Account Modal
+  };
+
+  const handleSave = (updatedData) => {
+    // Save the updated data (you can send it to the backend if necessary)
+    setCompanyData(updatedData);
   };
 
   return (
@@ -80,7 +97,7 @@ const ProfileSection = () => {
 
           {/* Edit Icon (on the right side) */}
           <div className="ps-edit-icon">
-            <button className="edit-btn">
+            <button className="edit-btn" onClick={handleEditClick}>
               <img src="https://img.icons8.com/material-outlined/24/000000/edit--v1.png" alt="Edit" />
             </button>
           </div>
@@ -116,12 +133,20 @@ const ProfileSection = () => {
 
       {/* Contact Info Modal */}
       <ContactInfoModal
-        isOpen={isModalOpen}
-        onClose={handleCloseModal}
+        isOpen={isContactModalOpen} // Separate state for Contact Modal
+        onClose={handleCloseContactModal}
         companyName={companyData.companyName}
         profileUrl={companyData.profileUrl}
         email={companyData.email}
         location={companyData.location}
+      />
+
+      {/* Edit Info Modal */}
+      <EditAccountModal
+        isOpen={isEditModalOpen} // Separate state for Edit Modal
+        onClose={handleCloseEditModal}
+        initialData={companyData}
+        onSave={handleSave}
       />
     </div>
   );

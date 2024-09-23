@@ -17,7 +17,7 @@ connectDB();
 
 // Routes
 app.use('/api/auth', authRoutes); // Mount auth routes at /api/auth
-app.use('/api/users', userRoutes); // Mount user routes at /api/users
+
 
 // Additional Middleware or Route Grouping can go here
 

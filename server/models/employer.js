@@ -18,6 +18,10 @@ const employerSchema = new mongoose.Schema({
     type: String,
     required: false,
   },
+  location: {
+    country: { type: String, required: false },
+    city: { type: String, required: false },
+  },
   phoneNumber: {
     type: String,
     required: false,
@@ -47,6 +51,10 @@ const employerSchema = new mongoose.Schema({
   backgroundPhotoURL: {
     type: String,
     required: false,
+  },
+  profileUrl: {
+    type: String,
+    required: false, // URL for the employer's profile
   },
 });
 
