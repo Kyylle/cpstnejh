@@ -1,0 +1,53 @@
+.notification-container {
+    padding: 90px;
+}
+
+.notifications-header {
+    /* padding-top: 90px !important; */
+    border: 2px solid #ccc;
+    border-radius: 10px;
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    gap: 10px; /* Ensures space between buttons */
+    padding: 10px;
+    width: fit-content; /* Ensures the container only takes as much space as needed */
+    background-color: #fff; /* White background for the header */
+}
+
+.notifications-header button {
+    padding: 10px 20px;
+    font-size: 16px;
+    border: 2px solid #ccc;
+    background-color: #fff;
+    border-radius: 20px; /* Slightly rounded edges for the buttons */
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.notifications-header button.active {
+    background-color: #290aee; /* Active button with green background */
+    color: white;
+    border-color: #290aee;
+}
+
+.notifications-header button:hover {
+    background-color: #f6f7f6; /* Hover effect with green background */
+    color: white;
+}
+
+.notifications-header button:not(.active) {
+    color: #333; /* Text color for inactive buttons */
+    border-color: #ccc;
+}
+
+.notifications-content {
+    font-size: 16px;
+    padding: 20px;
+    border: 1px solid #ddd;
+    background-color: #fff;
+    border-radius: 10px;
+}
+
+
+
