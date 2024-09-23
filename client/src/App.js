@@ -13,6 +13,7 @@ import Notifications from './pages/Jobseeker/Notifications';
 import EmployerHome from './pages/Employer/EmployerHome';
 import ProtectedRoute from './components/ProtectedRoute'; // Import ProtectedRoute component
 import EmployerProfileSettings from './pages/Employer/EmployerProfileSettings';
+import EmployerNotification from './pages/Employer/notifications/EmployerNotification';
 
 
 function App() {
@@ -87,6 +88,14 @@ function App() {
           }
         />
 
+      <Route
+      path="/employernotifications"
+      element={
+        <ProtectedRoute>
+          <EmployerNotification/>
+        </ProtectedRoute>
+      }
+      />
 
       </Routes>
     </Router>
