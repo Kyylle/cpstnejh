@@ -103,8 +103,10 @@ exports.loginWithEmail = async (req, res) => {
       { expiresIn: "1h" }
     );
 
+
     // Debugging: Log the userType to verify it's correctly identified
     console.log("User Type:", userType);
+    console.log(token);
 
     // Respond with token and userType
     res.json({
@@ -148,46 +150,54 @@ exports.getUserByEmail = async (req, res) => {
 
 //getuser
 exports.getUserProfile = async (req, res) => {
-    try {
-        const userId = req.user.id; // Assuming you are using authMiddleware that attaches the user to req.user
+  try {
+    const userId = req.user.id; // Get user ID from request (assumed from auth middleware)
 
-        // Query the database for the user profile (check if employer or jobseeker)
-        let user = await Employer.findById(userId);
-        if (!user) {
-            user = await Jobseeker.findById(userId);
-        }
-
-        if (!user) {
-            return res.status(404).json({ message: 'User not found' });
-        }
-
-        // Respond with the user's profile based on role
-        if (user.companyName) {
-            res.json({
-                companyName: user.companyName,
-                email: user.email,
-            });
-        } else {
-            res.json({
-                name: user.name,
-                email: user.email,
-            });
-        }
-    } catch (err) {
-        console.error('Error fetching user profile:', err);
-        res.status(500).json({ message: 'An internal server error occurred' });
+    // Check if the user is an Employer
+    let user = await Employer.findById(userId).select('-password'); // Exclude password
+    if (!user) {
+      // If not found in Employer, check in Jobseeker
+      user = await Jobseeker.findById(userId).select('-password'); // Exclude password
     }
+
+    // If no user is found in either, return a 404
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Respond with the user's data. Add additional fields if necessary.
+    const response = {
+      companyName: user.companyName || '',
+      name: user.name || '',
+      email: user.email,
+      location: user.location || '',
+      website: user.website || '',
+      headline: user.headline || '',
+      industry: user.industry || '',
+      pronouns: user.pronouns || '',
+    };
+
+    res.json(response); // Send back the profile data
+  } catch (err) {
+    console.error('Error fetching user profile:', err);
+    res.status(500).json({ message: 'An internal server error occurred' });
+  }
 };
+
+
+
+
 
 //updateCompanyProfile
 
 exports.updateEmployerProfile = async (req, res) => {
   try {
+    console.log(req.body); // Log the request body to check what is being received
     const {
       companyName,
       pronouns,
       headline,
-      location,
+      location, // Now treated as a string
       email,
       website,
       industry,
@@ -201,10 +211,7 @@ exports.updateEmployerProfile = async (req, res) => {
         companyName,
         pronouns,
         headline,
-        location: {
-          country: location.country,
-          city: location.city,
-        },
+        location, // Simply assign location as a string
         email,
         website,
         industry,

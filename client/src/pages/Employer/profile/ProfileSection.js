@@ -1,81 +1,173 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import './ProfileSection.css'; // Import the CSS styles for this section
-import ContactInfoModal from './ContactInfoModal'; // Import the Contact Info Modal
-import EditAccountModal from './EditAccountModal'; // Import the Edit Account Modal
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import "./ProfileSection.css"; // Import the CSS styles for this section
+import ContactInfoModal from "./ContactInfoModal"; // Import the Contact Info Modal
+import EditAccountModal from "./EditAccountModal"; // Import the Edit Account Modal
 
 const ProfileSection = () => {
   const [companyData, setCompanyData] = useState({
-    companyName: '',
-    location: '',
-    contactInfo: '',
-    profileUrl: '', // Initially empty, will be fetched
-    email: '', // Initially empty, will be fetched
-    location: '',
+    companyName: "",
+    pronouns: "",
+    headline: "",
+    location: "",
+    email: "",
+    website: "",
+    industry: "",
   });
 
-  // State to control visibility of modals
   const [isContactModalOpen, setIsContactModalOpen] = useState(false); // For Contact Info Modal
   const [isEditModalOpen, setIsEditModalOpen] = useState(false); // For Edit Account Modal
 
-  // Fetch company profile data when the component loads
+  // Fetch company profile data from the backend when the component loads (or page refreshes)
   useEffect(() => {
     const fetchCompanyData = async () => {
       try {
-        const token = localStorage.getItem('authToken'); // Assuming auth token is stored here
+        const token = localStorage.getItem('authToken');
         const config = {
           headers: {
-            Authorization: `Bearer ${token}`, // Include token in the request header if needed
+            Authorization: `Bearer ${token}`,
           },
+        
         };
-
-        // Make the API request to get company profile data
-        const response = await axios.get('/api/auth/profile', config); // Replace with your actual API endpoint
-        const { companyName, location, contactInfo, email, profileUrl } = response.data;
-
-        // Set the company data in the state
+  
+  
+        const response = await axios.get('/api/auth/profile', config);
+        console.log('Fetched company data:', response.data);  // Check the data here
+  
+        // Destructure and update state
+        const { companyName, location, email, website, pronouns, headline, industry } = response.data;
+  
         setCompanyData({
           companyName,
           location,
-          contactInfo,
           email,
-          profileUrl,
+          website,
+          pronouns,
+          headline,
+          industry,
         });
       } catch (error) {
         console.error('Error fetching company profile data:', error);
       }
     };
-
+  
     fetchCompanyData();
   }, []);
+  
+
+  // Handle change in form inputs
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setCompanyData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  // Update employer profile function
+  const updateEmployerProfile = async (formData) => {
+    try {
+      const token = localStorage.getItem("authToken");
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      const response = await axios.put(
+        "/api/auth/updateprofile",
+        formData,
+        config
+      );
+      console.log("Profile updated:", response.data);
+      // Update the state with the saved data
+      setCompanyData(response.data.updatedEmployer);
+    } catch (error) {
+      console.error("Error updating profile:", error);
+    }
+  };
+
+  // Handle form submission
+  // Handle form submission
+  const handleSubmit = () => {
+    const updatedData = {
+      ...companyData,
+      companyName: companyData.companyName || "",
+      pronouns: companyData.pronouns || "",
+      headline: companyData.headline || "",
+      industry: companyData.industry || "",
+      location: companyData.location || "",
+      email: companyData.email || "",
+      website: companyData.website || "",
+    };
+
+    console.log("Form data being sent:", updatedData);
+    updateEmployerProfile(updatedData); // Call the update function
+    setIsEditModalOpen(false); // Close the modal after submission
+  };
+
+  // Handle save to refetch the updated data
+  const handleSave = async () => {
+    const token = localStorage.getItem("authToken");
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    try {
+      const response = await axios.get("/api/auth/profile", config);
+      const {
+        companyName,
+        location,
+        email,
+        website,
+        pronouns,
+        headline,
+        industry,
+      } = response.data;
+
+      setCompanyData({
+        companyName,
+        location,
+        email,
+        website,
+        pronouns,
+        headline,
+        industry,
+      });
+    } catch (error) {
+      console.error("Error fetching updated company data:", error);
+    }
+  };
 
   const handleContactInfoClick = (event) => {
-    event.preventDefault(); // Prevent the default link behavior (page refresh)
-    setIsContactModalOpen(true); // Open the Contact Info Modal
+    event.preventDefault();
+    setIsContactModalOpen(true);
   };
 
   const handleEditClick = () => {
-    setIsEditModalOpen(true); // Open the Edit Account Modal
+    setIsEditModalOpen(true);
   };
 
   const handleCloseContactModal = () => {
-    setIsContactModalOpen(false); // Close the Contact Info Modal
+    setIsContactModalOpen(false);
   };
 
   const handleCloseEditModal = () => {
-    setIsEditModalOpen(false); // Close the Edit Account Modal
-  };
-
-  const handleSave = (updatedData) => {
-    // Save the updated data (you can send it to the backend if necessary)
-    setCompanyData(updatedData);
+    setIsEditModalOpen(false);
   };
 
   return (
     <div className="ps-profile-section-container">
       {/* Background Cover */}
       <div className="ps-profile-cover">
-        <img src="https://via.placeholder.com/1200x300" alt="Cover" className="ps-cover-photo" />
+        <img
+          src="https://via.placeholder.com/1200x300"
+          alt="Cover"
+          className="ps-cover-photo"
+        />
         <button className="ps-change-cover-btn">
           <img src="https://img.icons8.com/camera" alt="Change Cover" />
         </button>
@@ -95,19 +187,22 @@ const ProfileSection = () => {
             </button>
           </div>
 
-          {/* Edit Icon (on the right side) */}
+          {/* Edit Icon */}
           <div className="ps-edit-icon">
             <button className="edit-btn" onClick={handleEditClick}>
-              <img src="https://img.icons8.com/material-outlined/24/000000/edit--v1.png" alt="Edit" />
+              <img
+                src="https://img.icons8.com/material-outlined/24/000000/edit--v1.png"
+                alt="Edit"
+              />
             </button>
           </div>
 
-          {/* Company Information Next to Profile Picture */}
+          {/* Company Information */}
           <div className="ps-company-info">
-            <h1>{companyData.companyName || 'Company Name'}</h1>
-            <p className="ps-profile-title"></p>
+            <h1>{companyData.companyName || "Company Name"}</h1>
+            <p className="ps-profile-title">{companyData.headline || ""}</p>
             <p className="ps-location">
-              {companyData.location || 'No location'} •{' '}
+              {companyData.location || "No location"} •{" "}
               <a href="/" onClick={handleContactInfoClick}>
                 Contact info
               </a>
@@ -120,20 +215,11 @@ const ProfileSection = () => {
           <button className="ps-blue-btn">Enhance profile</button>
           <button className="ps-more-btn">More</button>
         </div>
-
-        <div className="ps-open-to-work">
-          <p>
-            <strong>Open to work</strong> Junior Developer roles
-            <a href="/" className="ps-show-details">
-              Show details
-            </a>
-          </p>
-        </div>
       </div>
 
       {/* Contact Info Modal */}
       <ContactInfoModal
-        isOpen={isContactModalOpen} // Separate state for Contact Modal
+        isOpen={isContactModalOpen}
         onClose={handleCloseContactModal}
         companyName={companyData.companyName}
         profileUrl={companyData.profileUrl}
@@ -143,10 +229,11 @@ const ProfileSection = () => {
 
       {/* Edit Info Modal */}
       <EditAccountModal
-        isOpen={isEditModalOpen} // Separate state for Edit Modal
+        isOpen={isEditModalOpen}
         onClose={handleCloseEditModal}
-        initialData={companyData}
-        onSave={handleSave}
+        formData={companyData} // Pass the current form data
+        handleChange={handleChange} // Pass the handleChange function
+        handleSubmit={handleSubmit} // Pass the handleSubmit function
       />
     </div>
   );

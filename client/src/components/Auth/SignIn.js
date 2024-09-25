@@ -48,7 +48,7 @@ const SignIn = () => {
   
       // Check the response data for the user type
       console.log('User type:', userType); // Debugging: Check the userType in the console
-  
+      console.log(token);
       // Redirect based on user type
       if (userType === 'employer') {
         navigate('/employerdashboard');

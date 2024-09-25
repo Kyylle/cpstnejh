@@ -14,13 +14,9 @@ const employerSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  address: {
-    type: String,
-    required: false,
-  },
   location: {
-    country: { type: String, required: false },
-    city: { type: String, required: false },
+    type: String, // Change from nested object to a simple string
+    required: false,
   },
   phoneNumber: {
     type: String,
@@ -43,7 +39,6 @@ const employerSchema = new mongoose.Schema({
     type: String,
     required: false,
   },
-  // Fields for profile photo and background photo
   profilePhotoURL: {
     type: String,
     required: false,
@@ -54,7 +49,19 @@ const employerSchema = new mongoose.Schema({
   },
   profileUrl: {
     type: String,
-    required: false, // URL for the employer's profile
+    required: false,
+  },
+  headline: {
+    type: String,
+    required: false,
+  },
+  pronouns: {
+    type: String,
+    required: false,
+  },
+  industry: {
+    type: String,
+    required: false,
   },
 });
 
