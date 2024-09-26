@@ -14,6 +14,10 @@ const Navigation = () => {
     const fetchEmployerProfile = async () => {
       try {
         const token = localStorage.getItem('authToken');
+        
+        // Debugging: Check if the token is correctly fetched
+        console.log('Token from localStorage:', token);
+
         if (!token) {
           throw new Error('No authentication token found');
         }
@@ -26,6 +30,10 @@ const Navigation = () => {
 
         // Fetch profile data from your backend
         const response = await axios.get('/api/auth/profile', config);
+        console.log('Profile data response:', response.data);
+        
+        // Debugging: Check the response from the backend
+        console.log('Profile data response:', response.data);
         
         if (response.data.companyName) {
           setCompanyName(response.data.companyName); // Set the company's name
@@ -34,7 +42,8 @@ const Navigation = () => {
           throw new Error('No profile data found in response');
         }
       } catch (error) {
-        console.error('Error fetching employer profile:', error);
+        // Debugging: Check if the error is related to authorization
+        console.error('Error fetching employer profile:', error.response ? error.response.data : error.message);
       }
     };
 

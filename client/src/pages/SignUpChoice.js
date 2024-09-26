@@ -1,5 +1,6 @@
 import React from 'react';
 import './SignUpChoice.css'; // Ensure unique CSS file
+import { FiX } from 'react-icons/fi';
 
 const SignUpChoice = ({ showModal, onClose, openEmployerSignUp, openJobseekerSignUp }) => { // Accept openEmployerSignUp prop
 
@@ -8,7 +9,9 @@ const SignUpChoice = ({ showModal, onClose, openEmployerSignUp, openJobseekerSig
   return (
     <div className="unique-modal-overlay">
       <div className="unique-signup-modal-container">
-        <button className="unique-close-button" onClick={onClose}>X</button>
+      <button className="close-button" onClick={onClose}>
+        <FiX size={24} />
+        </button>
         <div className="unique-signup-choice-content">
           <h2 className="unique-signup-title">Sign Up As?</h2>
           

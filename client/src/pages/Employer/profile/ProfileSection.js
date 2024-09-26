@@ -101,32 +101,35 @@ const ProfileSection = () => {
   // Handle profile picture save
   const handleProfilePictureSave = async (file) => {
     const formData = new FormData();
-    formData.append("profileImage", file); // Append profile image
-
+    formData.append('profileImage', file); // Ensure 'profileImage' matches the multer field
+  
     try {
-      const token = localStorage.getItem("authToken");
+      const token = localStorage.getItem('authToken');
       const config = {
         headers: {
-          "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data',
+          Authorization: `Bearer ${token}`, // Include the JWT token
         },
       };
-
-      const response = await axios.put(
-        "/api/auth/uploadProfilePicture",
-        formData,
-        config
-      );
-
+  
+      const response = await axios.put('/api/auth/uploadProfilePicture', formData, config);
+  
+      // Update state with the new profile image path from the response
       setCompanyData((prevData) => ({
         ...prevData,
-        profileImage: response.data.imagePath, // Assuming the backend returns `imagePath`
+        profileImage: response.data.imagePath,
       }));
     } catch (error) {
-      console.error("Error uploading profile picture:", error);
+      console.error('Error uploading profile picture:', error);
     }
   };
 
+  const handleFileChange = (e) => {
+    const file = e.target.files[0]; // Get the first file from the input
+    handleProfilePictureSave(file);  // Pass the file to the save function
+  };
+  
+  
   // Handle background picture save
   const handleBackgroundPictureSave = async (file) => {
     const formData = new FormData();
@@ -153,14 +156,6 @@ const ProfileSection = () => {
       }));
     } catch (error) {
       console.error("Error uploading background picture:", error);
-    }
-  };
-
-  // Handle file selection for profile picture
-  const handleFileChange = (e) => {
-    const file = e.target.files[0]; // Get the selected file
-    if (file) {
-      handleProfilePictureSave(file); // Call the function to save the profile picture
     }
   };
 
@@ -229,13 +224,6 @@ const ProfileSection = () => {
             >
               <img src="https://img.icons8.com/camera" alt="Change Photo" />
             </button>
-            
-            {/* Add the file input here */}
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleFileChange} // Trigger the file upload
-            />
           </div>
 
           {/* Edit Icon */}

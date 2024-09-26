@@ -114,34 +114,34 @@ exports.loginWithEmail = async (req, res) => {
       return res.status(401).json({ message: "User not found" });
     }
 
-    // Check if the password matches
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      return res.status(401).json({ message: "Invalid email or password" });
+      // Check if the password matches
+      const isMatch = await bcrypt.compare(password, user.password);
+      if (!isMatch) {
+        return res.status(401).json({ message: "Invalid email or password" });
+      }
+
+      // Generate a JWT token
+      const token = jwt.sign(
+        { id: user._id, email: user.email, role: userType },
+        process.env.JWT_SECRET,
+        { expiresIn: "1h" }
+      );
+
+
+      // Debugging: Log the userType to verify it's correctly identified
+      console.log("User Type:", userType);
+      console.log(token);
+
+      // Respond with token and userType
+      res.json({
+        token,
+        userType, // Ensure this is correctly returned
+      });
+    } catch (err) {
+      console.error("Login error:", err);
+      res.status(500).json({ message: "An internal server error occurred" });
     }
-
-    // Generate a JWT token
-    const token = jwt.sign(
-      { id: user._id, email: user.email, role: userType },
-      process.env.JWT_SECRET,
-      { expiresIn: "1h" }
-    );
-
-
-    // Debugging: Log the userType to verify it's correctly identified
-    console.log("User Type:", userType);
-    console.log(token);
-
-    // Respond with token and userType
-    res.json({
-      token,
-      userType, // Ensure this is correctly returned
-    });
-  } catch (err) {
-    console.error("Login error:", err);
-    res.status(500).json({ message: "An internal server error occurred" });
-  }
-};
+  };
 
 // Get jobseeker by email
 exports.getUserByEmail = async (req, res) => {
@@ -175,38 +175,34 @@ exports.getUserByEmail = async (req, res) => {
 //getuser
 exports.getUserProfile = async (req, res) => {
   try {
-    const userId = req.user.id; // Get user ID from request (assumed from auth middleware)
+    const userId = req.user.id; // The decoded token should include the 'id'
 
-    // Check if the user is an Employer
-    let user = await Employer.findById(userId).select('-password'); // Exclude password
-    if (!user) {
-      // If not found in Employer, check in Jobseeker
-      user = await Jobseeker.findById(userId).select('-password'); // Exclude password
-    }
-
-    // If no user is found in either, return a 404
+    // Fetch the user data based on the user ID (either Employer or Jobseeker)
+    let user = await Employer.findById(userId).select('-password');
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    // Respond with the user's data. Add additional fields if necessary.
+    // Construct the response object
     const response = {
       companyName: user.companyName || '',
-      name: user.name || '',
       email: user.email,
       location: user.location || '',
-      website: user.website || '',
       headline: user.headline || '',
+      website: user.website || '',
       industry: user.industry || '',
-      pronouns: user.pronouns || '',
+      profileImage: user.profileImage || '',
+      backgroundImage: user.backgroundImage || '',
     };
 
-    res.json(response); // Send back the profile data
+    // Return the user data in the response
+    return res.json(response);
   } catch (err) {
     console.error('Error fetching user profile:', err);
-    res.status(500).json({ message: 'An internal server error occurred' });
+    return res.status(500).json({ message: 'An internal server error occurred' });
   }
 };
+
 
 
 

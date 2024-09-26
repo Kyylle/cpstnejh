@@ -45,6 +45,7 @@ const SignIn = ({ showModal, onClose, openSignupModal }) => {
 
       const { token, userType } = response.data;
       localStorage.setItem('authToken', token);
+      console.log("Token after login:", token);
 
       if (userType === 'employer') {
         navigate('/employerdashboard');

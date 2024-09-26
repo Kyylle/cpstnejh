@@ -102,3 +102,25 @@
 .employer-submit-button:hover {
   background-color: #6333b7;
 }
+
+
+/* Close Button */
+.close-button {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 1.5rem;
+  color: #333;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  transition: color 0.3s ease;
+}
+
+.close-button:hover {
+  color: #7e4cdd; /* Matches the purple theme */
+}

@@ -5,20 +5,20 @@ const Jobseeker = require('../models/jobseeker');
 // Middleware to verify JWT and extract user info
 const authMiddleware = (req, res, next) => {
   const token = req.header('Authorization') && req.header('Authorization').replace('Bearer ', '');
-  
+
   if (!token) {
     return res.status(401).json({ message: 'No token, authorization denied' });
   }
 
   try {
-    // Verify the token
+    // Decode the token and attach the user info to req.user
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     
-    // Attach the decoded user data to the request object
+    // Ensure that decoded includes the user ID
     req.user = decoded;
     next();
   } catch (err) {
-    res.status(401).json({ message: 'Token is not valid' });
+    return res.status(401).json({ message: 'Token is not valid' });
   }
 };
 
@@ -26,41 +26,31 @@ const authMiddleware = (req, res, next) => {
 const protect = async (req, res, next) => {
   let token;
 
-  // Check if the authorization header contains the Bearer token
+  // Check if the Authorization header exists and starts with Bearer
   if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
-    try {
-      // Extract token from the authorization header
-      token = req.headers.authorization.split(' ')[1];
-      
-      // Verify the token
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    token = req.headers.authorization.split(' ')[1]; // Extract token
+  }
 
-      // Try to find the user (Employer or Jobseeker) by their decoded id
-      let user = await Employer.findById(decoded.userId).select('-password');
-      if (!user) {
-        user = await Jobseeker.findById(decoded.userId).select('-password');
-      }
-
-      // If user not found in either collection
-      if (!user) {
-        return res.status(401).json({ message: 'User not authorized' });
-      }
-
-      // Attach the user to the request object
-      req.user = user;
-      next();
-    } catch (error) {
-      console.error('Not authorized, token failed:', error.message);
-      return res.status(401).json({ message: 'Not authorized, token failed' });
-    }
-  } else {
+  if (!token) {
     return res.status(401).json({ message: 'Not authorized, no token' });
+  }
+
+  try {
+    // Verify the token using JWT_SECRET
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    // Attach the decoded user info to req object
+    req.user = decoded;
+    
+    // Proceed to the next middleware or controller
+    next();
+  } catch (error) {
+    console.error('Token verification failed:', error.message); // Log the error
+    return res.status(401).json({ message: 'Not authorized, token failed' });
   }
 };
 
-
-// Export both middlewares
 module.exports = {
   authMiddleware,
-  protect
+  protect,
 };

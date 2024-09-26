@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { FiX } from 'react-icons/fi';
 import "../css/EmployerSignUp.css"; // Ensure unique CSS file
 
 const EmployerSignUp = ({ showModal, onClose }) => {
@@ -87,7 +88,9 @@ const EmployerSignUp = ({ showModal, onClose }) => {
   return (
     <div className="employer-modal-overlay">
       <div className="employer-signup-modal-container">
-        <button className="employer-close-button" onClick={onClose}>X</button>
+      <button className="close-button" onClick={onClose}>
+        <FiX size={24} />
+        </button>
         <div className="employer-form-box">
           <h2 className="employer-title">Employer Signup</h2>
           <form onSubmit={handleSubmit}>
