@@ -8,12 +8,12 @@ exports.registerEmployer = async (req, res) => {
   try {
     const { companyName, email, password } = req.body;
 
-    // Check if all required fields are provided
+    // Validate required fields
     if (!companyName || !email || !password) {
       return res.status(400).json({ error: "All fields are required" });
     }
 
-    // Check if email already exists
+    // Check if email is already registered
     const existingEmployer = await Employer.findOne({ email });
     if (existingEmployer) {
       return res.status(400).json({ error: "Email is already registered" });
@@ -30,9 +30,20 @@ exports.registerEmployer = async (req, res) => {
     });
     await newEmployer.save();
 
-    res.status(201).json({ message: "Employer registered successfully" });
+    // Generate a JWT token
+    const token = jwt.sign(
+      { userId: newEmployer._id, email: newEmployer.email, userType: "employer" },
+      process.env.JWT_SECRET,
+      { expiresIn: '1h' }
+    );
+
+    // Return token and userType in the response
+    res.status(201).json({
+      message: "Employer registered successfully",
+      token, 
+      userType: "employer" // This is the userType you need to return
+    });
   } catch (err) {
-    // Log the error for debugging
     console.error("Error in registerEmployer:", err);
     res.status(500).json({ error: "An internal server error occurred" });
   }
@@ -60,7 +71,20 @@ exports.registerJobseeker = async (req, res) => {
     });
     await newJobseeker.save();
 
-    res.status(201).json({ message: "Jobseeker registered successfully" });
+
+    //generate token
+    const token = jwt.sign(
+      { userId: newJobseeker._id, email: newJobseeker.email, userType: "jobseeker" },
+      process.env.JWT_SECRET,
+      { expiresIn: "1h" } // Token expires in 1 hour
+    );
+
+    // Send response with token
+    res.status(201).json({
+      message: "Jobseeker registered successfully",
+      token, // Return token for frontend to store
+      userType: "jobseeker",
+    });
   } catch (err) {
     console.error("Error during jobseeker registration:", err);
     res.status(500).json({ error: "An internal server error occurred" });
@@ -232,3 +256,111 @@ exports.updateEmployerProfile = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+
+
+
+
+// Update employer profile picture
+
+// Controller for uploading and updating employer profile picture
+exports.updateEmployerProfilePicture = async (req, res) => {
+  try {
+    const employerId = req.user.id; // Assuming JWT middleware is providing the user
+
+    // Check if a file was uploaded
+    if (!req.file) {
+      return res.status(400).json({ message: 'No file uploaded' });
+    }
+    console.log('Received file:', req.file);
+    // Construct the file path
+    const imagePath = `/uploads/${req.file.filename}`; // Path to the uploaded image
+
+    // Update the employer's profile image in the database
+    const updatedEmployer = await Employer.findByIdAndUpdate(
+      employerId,
+      { profileImage: imagePath }, // Save the image path
+      { new: true } // Return the updated document
+    );
+
+    if (!updatedEmployer) {
+      return res.status(404).json({ message: 'Employer not found' });
+    }
+
+    // Respond with the new image path
+    res.status(200).json({
+      success: true,
+      imagePath: updatedEmployer.profileImage,
+      message: 'Profile picture updated successfully',
+    });
+  } catch (error) {
+    console.error('Error updating profile picture:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+
+
+
+
+
+// Update employer background picture
+// Update employer background picture
+exports.updateEmployerBackgroundPicture = async (req, res) => {
+  try {
+    const employerId = req.user.id; // Assuming you have user data in the req.user object (JWT-based authentication)
+
+    // Check if the file was uploaded
+    if (!req.file) {
+      return res.status(400).json({ message: 'No file uploaded' });
+    }
+
+    // Construct the file path
+    const imagePath = `/uploads/${req.file.filename}`;
+
+    // Update the employer's background picture in the database
+    const updatedEmployer = await Employer.findByIdAndUpdate(
+      employerId,
+      { backgroundImage: imagePath },
+      { new: true } // Return the updated document
+    );
+
+    if (!updatedEmployer) {
+      return res.status(404).json({ message: 'Employer not found' });
+    }
+
+    // Send a success response with the new image path
+    res.json({
+      success: true,
+      imagePath: updatedEmployer.backgroundImage,
+      message: 'Background picture updated successfully',
+    });
+  } catch (error) {
+    console.error('Error updating employer background picture:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+
+
+
+//get profile Image
+
+
+exports.getProfileImage = async (req, res) => {
+  try {
+    const userId = req.user.id; // Extract user ID from the request (after authentication)
+    const employer = await Employer.findById(userId).select('profileImage'); // Retrieve only the profile image
+
+    if (!employer) {
+      return res.status(404).json({ message: 'Employer not found' });
+    }
+
+    res.json({ profileImage: employer.profileImage });
+  } catch (error) {
+    console.error('Error fetching profile image:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+
+

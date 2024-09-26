@@ -36,9 +36,9 @@ const protect = async (req, res, next) => {
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
       // Try to find the user (Employer or Jobseeker) by their decoded id
-      let user = await Employer.findById(decoded.id).select('-password');
+      let user = await Employer.findById(decoded.userId).select('-password');
       if (!user) {
-        user = await Jobseeker.findById(decoded.id).select('-password');
+        user = await Jobseeker.findById(decoded.userId).select('-password');
       }
 
       // If user not found in either collection
@@ -57,6 +57,7 @@ const protect = async (req, res, next) => {
     return res.status(401).json({ message: 'Not authorized, no token' });
   }
 };
+
 
 // Export both middlewares
 module.exports = {

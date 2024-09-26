@@ -1,28 +1,39 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUser, faBuilding } from '@fortawesome/free-solid-svg-icons';
-import './SignUpChoice.css';
+import './SignUpChoice.css'; // Ensure unique CSS file
 
-const SignUpChoice = () => {
-  const navigate = useNavigate();
+const SignUpChoice = ({ showModal, onClose, openEmployerSignUp, openJobseekerSignUp }) => { // Accept openEmployerSignUp prop
+
+  if (!showModal) return null; // Don't render if modal is closed
 
   return (
-    <div className="signup-choice-container">
-      <h2>Sign Up as</h2>
-      <div className="signup-choice-buttons">
-        <button
-          onClick={() => navigate('/signup/jobseeker')}
-          className="signup-button"
-        >
-          <FontAwesomeIcon icon={faUser} className="icon" /> Jobseeker
-        </button>
-        <button
-          onClick={() => navigate('/signup/employer')}
-          className="signup-button"
-        >
-          <FontAwesomeIcon icon={faBuilding} className="icon" /> Employer
-        </button>
+    <div className="unique-modal-overlay">
+      <div className="unique-signup-modal-container">
+        <button className="unique-close-button" onClick={onClose}>X</button>
+        <div className="unique-signup-choice-content">
+          <h2 className="unique-signup-title">Sign Up As?</h2>
+          
+          <div className="unique-signup-choice-buttons">
+            <div className="unique-signup-option">
+              <p>Are you looking for employees?</p>
+              <button
+                onClick={openEmployerSignUp} // Use openEmployerSignUp to transition to Employer signup
+                className="unique-signup-button"
+              >
+                Employer
+              </button>
+            </div>
+
+            <div className="unique-signup-option">
+              <p>Are you looking for jobs?</p>
+              <button
+                onClick={openJobseekerSignUp}
+                className="unique-signup-button"
+              >
+                Jobseeker
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

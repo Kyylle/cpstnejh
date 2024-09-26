@@ -39,18 +39,14 @@ const employerSchema = new mongoose.Schema({
     type: String,
     required: false,
   },
-  profilePhotoURL: {
+  profileImage: { 
     type: String,
     required: false,
-  },
-  backgroundPhotoURL: {
-    type: String,
+  }, 
+  backgroundImage: { 
+    type: String ,
     required: false,
-  },
-  profileUrl: {
-    type: String,
-    required: false,
-  },
+  }, 
   headline: {
     type: String,
     required: false,

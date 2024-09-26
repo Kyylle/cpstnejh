@@ -3,6 +3,8 @@ import axios from "axios";
 import "./ProfileSection.css"; // Import the CSS styles for this section
 import ContactInfoModal from "./ContactInfoModal"; // Import the Contact Info Modal
 import EditAccountModal from "./EditAccountModal"; // Import the Edit Account Modal
+import ProfilePictureModal from "./ProfilePictureModal"; // Import Profile Picture Modal
+import BackgroundPictureModal from "./BackgroundPictureModal"; // Import Background Picture Modal
 
 const ProfileSection = () => {
   const [companyData, setCompanyData] = useState({
@@ -13,30 +15,39 @@ const ProfileSection = () => {
     email: "",
     website: "",
     industry: "",
+    profileImage: "", // For profile picture URL
+    backgroundImage: "", // For background picture URL
   });
 
   const [isContactModalOpen, setIsContactModalOpen] = useState(false); // For Contact Info Modal
   const [isEditModalOpen, setIsEditModalOpen] = useState(false); // For Edit Account Modal
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false); // For Profile Picture Modal
+  const [isBackgroundModalOpen, setIsBackgroundModalOpen] = useState(false); // For Background Picture Modal
 
   // Fetch company profile data from the backend when the component loads (or page refreshes)
   useEffect(() => {
     const fetchCompanyData = async () => {
       try {
-        const token = localStorage.getItem('authToken');
+        const token = localStorage.getItem("authToken");
         const config = {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        
         };
-  
-  
-        const response = await axios.get('/api/auth/profile', config);
-        console.log('Fetched company data:', response.data);  // Check the data here
-  
-        // Destructure and update state
-        const { companyName, location, email, website, pronouns, headline, industry } = response.data;
-  
+
+        const response = await axios.get("/api/auth/profile", config);
+        const {
+          companyName,
+          location,
+          email,
+          website,
+          pronouns,
+          headline,
+          industry,
+          profileImage,
+          backgroundImage,
+        } = response.data;
+
         setCompanyData({
           companyName,
           location,
@@ -45,15 +56,16 @@ const ProfileSection = () => {
           pronouns,
           headline,
           industry,
+          profileImage, // Set the profile image URL from the server
+          backgroundImage, // Set the background image URL from the server
         });
       } catch (error) {
-        console.error('Error fetching company profile data:', error);
+        console.error("Error fetching company profile data:", error);
       }
     };
-  
+
     fetchCompanyData();
   }, []);
-  
 
   // Handle change in form inputs
   const handleChange = (e) => {
@@ -80,16 +92,79 @@ const ProfileSection = () => {
         formData,
         config
       );
-      console.log("Profile updated:", response.data);
-      // Update the state with the saved data
       setCompanyData(response.data.updatedEmployer);
     } catch (error) {
       console.error("Error updating profile:", error);
     }
   };
 
-  // Handle form submission
-  // Handle form submission
+  // Handle profile picture save
+  const handleProfilePictureSave = async (file) => {
+    const formData = new FormData();
+    formData.append("profileImage", file); // Append profile image
+
+    try {
+      const token = localStorage.getItem("authToken");
+      const config = {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      const response = await axios.put(
+        "/api/auth/uploadProfilePicture",
+        formData,
+        config
+      );
+
+      setCompanyData((prevData) => ({
+        ...prevData,
+        profileImage: response.data.imagePath, // Assuming the backend returns `imagePath`
+      }));
+    } catch (error) {
+      console.error("Error uploading profile picture:", error);
+    }
+  };
+
+  // Handle background picture save
+  const handleBackgroundPictureSave = async (file) => {
+    const formData = new FormData();
+    formData.append("backgroundImage", file); // Append background image
+
+    try {
+      const token = localStorage.getItem("authToken");
+      const config = {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      const response = await axios.put(
+        "/api/auth/uploadBackgroundPicture",
+        formData,
+        config
+      );
+
+      setCompanyData((prevData) => ({
+        ...prevData,
+        backgroundImage: response.data.imagePath, // Assuming the backend returns `imagePath`
+      }));
+    } catch (error) {
+      console.error("Error uploading background picture:", error);
+    }
+  };
+
+  // Handle file selection for profile picture
+  const handleFileChange = (e) => {
+    const file = e.target.files[0]; // Get the selected file
+    if (file) {
+      handleProfilePictureSave(file); // Call the function to save the profile picture
+    }
+  };
+
+  // Handle form submission for profile updates (excluding images)
   const handleSubmit = () => {
     const updatedData = {
       ...companyData,
@@ -102,44 +177,8 @@ const ProfileSection = () => {
       website: companyData.website || "",
     };
 
-    console.log("Form data being sent:", updatedData);
     updateEmployerProfile(updatedData); // Call the update function
     setIsEditModalOpen(false); // Close the modal after submission
-  };
-
-  // Handle save to refetch the updated data
-  const handleSave = async () => {
-    const token = localStorage.getItem("authToken");
-    const config = {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    };
-
-    try {
-      const response = await axios.get("/api/auth/profile", config);
-      const {
-        companyName,
-        location,
-        email,
-        website,
-        pronouns,
-        headline,
-        industry,
-      } = response.data;
-
-      setCompanyData({
-        companyName,
-        location,
-        email,
-        website,
-        pronouns,
-        headline,
-        industry,
-      });
-    } catch (error) {
-      console.error("Error fetching updated company data:", error);
-    }
   };
 
   const handleContactInfoClick = (event) => {
@@ -151,24 +190,22 @@ const ProfileSection = () => {
     setIsEditModalOpen(true);
   };
 
-  const handleCloseContactModal = () => {
-    setIsContactModalOpen(false);
-  };
-
-  const handleCloseEditModal = () => {
-    setIsEditModalOpen(false);
-  };
-
   return (
     <div className="ps-profile-section-container">
       {/* Background Cover */}
       <div className="ps-profile-cover">
         <img
-          src="https://via.placeholder.com/1200x300"
+          src={
+            companyData.backgroundImage ||
+            "https://via.placeholder.com/1200x300"
+          }
           alt="Cover"
           className="ps-cover-photo"
         />
-        <button className="ps-change-cover-btn">
+        <button
+          className="ps-change-cover-btn"
+          onClick={() => setIsBackgroundModalOpen(true)}
+        >
           <img src="https://img.icons8.com/camera" alt="Change Cover" />
         </button>
       </div>
@@ -178,13 +215,27 @@ const ProfileSection = () => {
         <div className="ps-profile-info">
           <div className="ps-profile-picture-container">
             <img
-              src="https://via.placeholder.com/150"
+              src={
+                companyData.profileImage
+                  ? `http://localhost:5000${companyData.profileImage}`
+                  : "https://img.icons8.com/camera"
+              }
               alt="Profile"
               className="ps-profile-picture"
             />
-            <button className="ps-change-photo-btn">
+            <button
+              className="ps-change-photo-btn"
+              onClick={() => setIsProfileModalOpen(true)}
+            >
               <img src="https://img.icons8.com/camera" alt="Change Photo" />
             </button>
+            
+            {/* Add the file input here */}
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleFileChange} // Trigger the file upload
+            />
           </div>
 
           {/* Edit Icon */}
@@ -220,7 +271,7 @@ const ProfileSection = () => {
       {/* Contact Info Modal */}
       <ContactInfoModal
         isOpen={isContactModalOpen}
-        onClose={handleCloseContactModal}
+        onClose={() => setIsContactModalOpen(false)}
         companyName={companyData.companyName}
         profileUrl={companyData.profileUrl}
         email={companyData.email}
@@ -230,10 +281,24 @@ const ProfileSection = () => {
       {/* Edit Info Modal */}
       <EditAccountModal
         isOpen={isEditModalOpen}
-        onClose={handleCloseEditModal}
+        onClose={() => setIsEditModalOpen(false)}
         formData={companyData} // Pass the current form data
         handleChange={handleChange} // Pass the handleChange function
         handleSubmit={handleSubmit} // Pass the handleSubmit function
+      />
+
+      {/* Profile Picture Modal */}
+      <ProfilePictureModal
+        isOpen={isProfileModalOpen}
+        onClose={() => setIsProfileModalOpen(false)}
+        handleSave={handleProfilePictureSave} // Pass the function to update the profile picture
+      />
+
+      {/* Background Picture Modal */}
+      <BackgroundPictureModal
+        isOpen={isBackgroundModalOpen}
+        onClose={() => setIsBackgroundModalOpen(false)}
+        handleSave={handleBackgroundPictureSave} // Pass the function to update the background picture
       />
     </div>
   );

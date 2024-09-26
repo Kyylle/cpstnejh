@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import "../css/JobseekerSignUp.css";
+import "../css/JobseekerSignUp.css"; // Ensure unique CSS file
 
-const JobseekerSignUp = () => {
+const JobseekerSignUp = ({ showModal, onClose }) => { // Accept showModal and onClose props
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -51,9 +51,19 @@ const JobseekerSignUp = () => {
 
     try {
       const response = await axios.post("/api/auth/jobseeker", formData);
-      setMessage(response.data.message);
-      setErrors({});
+      
+      // Assuming the response contains an authentication token and userType
+      const { token, userType } = response.data;
+
+      // Store token in localStorage
+      localStorage.setItem('authToken', token);
+
+      // Clear errors and set success message
+      setMessage("Jobseeker registered successfully");
+
+      // Redirect to dashboard immediately after successful signup
       navigate("/dashboard");
+
     } catch (err) {
       setErrors({
         server: err.response ? err.response.data.error : "Server error",
@@ -61,76 +71,77 @@ const JobseekerSignUp = () => {
     }
   };
 
+  if (!showModal) return null; // Don't render if modal is not shown
+
   return (
-    <div className="signup-form-container">
-      <div className="form-box">
-        <h2 className="title">Jobseeker Signup</h2>
-        <form onSubmit={handleSubmit}>
-          <div className="jobseeker-form-grid">
-            <div className="jobseeker-form-group">
-              <input
-                type="text"
-                name="name"
-                id="name"
-                className="input-field"
-                value={formData.name}
-                onChange={handleChange}
-                placeholder="Full Name"
-              />
-              {errors.name && <p className="error-text">{errors.name}</p>}
+    <div className="jobseeker-modal-overlay">
+      <div className="jobseeker-signup-modal-container">
+        <button className="jobseeker-close-button" onClick={onClose}>X</button>
+        <div className="jobseeker-form-box">
+          <h2 className="jobseeker-title">Jobseeker Signup</h2>
+          <form onSubmit={handleSubmit}>
+            <div className="jobseeker-form-grid">
+              <div className="jobseeker-form-group">
+                <input
+                  type="text"
+                  name="name"
+                  id="name"
+                  className="jobseeker-input-field"
+                  value={formData.name}
+                  onChange={handleChange}
+                  placeholder="Full Name"
+                />
+                {errors.name && <p className="jobseeker-error-text">{errors.name}</p>}
+              </div>
+
+              <div className="jobseeker-form-group">
+                <input
+                  type="email"
+                  name="email"
+                  id="email"
+                  className="jobseeker-input-field"
+                  value={formData.email}
+                  onChange={handleChange}
+                  placeholder="Email"
+                />
+                {errors.email && <p className="jobseeker-error-text">{errors.email}</p>}
+              </div>
+
+              <div className="jobseeker-form-group">
+                <input
+                  type="password"
+                  name="password"
+                  id="password"
+                  className="jobseeker-input-field"
+                  value={formData.password}
+                  onChange={handleChange}
+                  placeholder="Password"
+                />
+                {errors.password && <p className="jobseeker-error-text">{errors.password}</p>}
+              </div>
+
+              <div className="jobseeker-form-group">
+                <input
+                  type="password"
+                  name="confirmPassword"
+                  id="confirmPassword"
+                  className="jobseeker-input-field"
+                  value={formData.confirmPassword}
+                  onChange={handleChange}
+                  placeholder="Confirm Password"
+                />
+                {errors.confirmPassword && <p className="jobseeker-error-text">{errors.confirmPassword}</p>}
+              </div>
             </div>
 
-            <div className="jobseeker-form-group">
-              <input
-                type="email"
-                name="email"
-                id="email"
-                className="input-field"
-                value={formData.email}
-                onChange={handleChange}
-                placeholder="Email"
-              />
-              {errors.email && <p className="error-text">{errors.email}</p>}
-            </div>
+            {errors.server && <p className="jobseeker-error-text">{errors.server}</p>}
+            {message && <p className="jobseeker-success-text">{message}</p>}
 
-            <div className="jobseeker-form-group">
-              <input
-                type="password"
-                name="password"
-                id="password"
-                className="input-field"
-                value={formData.password}
-                onChange={handleChange}
-                placeholder="Password"
-              />
-              {errors.password && (
-                <p className="error-text">{errors.password}</p>
-              )}
-            </div>
-
-            <div className="jobseeker-form-group">
-              <input
-                type="password"
-                name="confirmPassword"
-                id="confirmPassword"
-                className="input-field"
-                value={formData.confirmPassword}
-                onChange={handleChange}
-                placeholder="Confirm Password"
-              />
-              {errors.confirmPassword && (
-                <p className="error-text">{errors.confirmPassword}</p>
-              )}
-            </div>
-          </div>
-
-          {errors.server && <p className="error-text">{errors.server}</p>}
-          {message && <p className="success-text">{message}</p>}
-
-          <button type="submit" className="submit-button small-button">
-            Sign Up
-          </button>
-        </form>
+            <button type="submit" className="jobseeker-submit-button small-button">
+              Sign Up
+            </button>
+          </form>
+        </div>
       </div>
     </div>
   );

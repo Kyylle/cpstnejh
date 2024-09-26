@@ -1,18 +1,19 @@
-import React, { useState } from 'react';
-import axios from 'axios';
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import '../css/EmployerSignUp.css'; // Import the regular CSS file
+import axios from "axios";
+import "../css/EmployerSignUp.css"; // Ensure unique CSS file
 
-const EmployerSignUp = () => {
+const EmployerSignUp = ({ showModal, onClose }) => {
   const [formData, setFormData] = useState({
-    companyName: '',
-    email: '',
-    password: '',
-    confirmPassword: '', // Add confirm password field
+    companyName: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
   });
 
   const [errors, setErrors] = useState({});
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false); // Define loading state here
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -23,25 +24,23 @@ const EmployerSignUp = () => {
     const errors = {};
 
     if (!formData.companyName) {
-      errors.companyName = 'Company Name is required';
+      errors.companyName = "Company Name is required";
     }
 
     if (!formData.email) {
-      errors.email = 'Email is required';
+      errors.email = "Email is required";
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      errors.email = 'Email address is invalid';
+      errors.email = "Email address is invalid";
     }
 
     if (!formData.password) {
-      errors.password = 'Password is required';
+      errors.password = "Password is required";
     } else if (formData.password.length < 6) {
-      errors.password = 'Password must be at least 6 characters long';
+      errors.password = "Password must be at least 6 characters long";
     }
 
-    if (!formData.confirmPassword) {
-      errors.confirmPassword = 'Confirm Password is required';
-    } else if (formData.password !== formData.confirmPassword) {
-      errors.confirmPassword = 'Passwords do not match';
+    if (formData.password !== formData.confirmPassword) {
+      errors.confirmPassword = "Passwords do not match";
     }
 
     return errors;
@@ -56,88 +55,114 @@ const EmployerSignUp = () => {
       return;
     }
 
+    setLoading(true);  // Set loading state
     try {
       const response = await axios.post('/api/auth/employer', formData);
-      setMessage(response.data.message);
       setErrors({});
-      navigate("/employerdashboard");
 
+      const { token, userType } = response.data;
+      if (!token || !userType) {
+        setErrors({ server: 'Token or userType missing from response' });
+        return;
+      }
+
+      // Store token in localStorage
+      localStorage.setItem('authToken', token);
+
+      // Redirect based on userType
+      if (userType === 'employer') {
+        navigate('/employerdashboard');
+      } else {
+        navigate('/dashboard');
+      }
     } catch (err) {
       setErrors({ server: err.response ? err.response.data.error : 'Server error' });
+    } finally {
+      setLoading(false);  // Clear loading state
     }
-    
   };
 
+  if (!showModal) return null; // Don't render if modal is not shown
+
   return (
-    <div className="signup-form-container">
-      <div className="form-box">
-        <h2 className="title">Employer Sign Up</h2>
-        <form onSubmit={handleSubmit}>
-          <div className="employer-form-grid">
-            <div className="employer-form-group">
-              <label htmlFor="companyName">Company Name</label>
-              <input
-                type="text"
-                name="companyName"
-                id="companyName"
-                className="input-field"
-                value={formData.companyName}
-                onChange={handleChange}
-              />
-              {errors.companyName && <p className="error-text">{errors.companyName}</p>}
+    <div className="employer-modal-overlay">
+      <div className="employer-signup-modal-container">
+        <button className="employer-close-button" onClick={onClose}>X</button>
+        <div className="employer-form-box">
+          <h2 className="employer-title">Employer Signup</h2>
+          <form onSubmit={handleSubmit}>
+            <div className="employer-form-grid">
+              <div className="employer-form-group">
+                <input
+                  type="text"
+                  name="companyName"
+                  id="companyName"
+                  className="employer-input-field"
+                  value={formData.companyName}
+                  onChange={handleChange}
+                  placeholder="Company Name"
+                />
+                {errors.companyName && (
+                  <p className="employer-error-text">{errors.companyName}</p>
+                )}
+              </div>
+
+              <div className="employer-form-group">
+                <input
+                  type="email"
+                  name="email"
+                  id="email"
+                  className="employer-input-field"
+                  value={formData.email}
+                  onChange={handleChange}
+                  placeholder="Email"
+                />
+                {errors.email && (
+                  <p className="employer-error-text">{errors.email}</p>
+                )}
+              </div>
             </div>
 
-            <div className="employer-form-group">
-              <label htmlFor="email">Email</label>
-              <input
-                type="email"
-                name="email"
-                id="email"
-                className="input-field"
-                value={formData.email}
-                onChange={handleChange}
-              />
-              {errors.email && <p className="error-text">{errors.email}</p>}
+            <div className="employer-form-grid">
+              <div className="employer-form-group">
+                <input
+                  type="password"
+                  name="password"
+                  id="password"
+                  className="employer-input-field"
+                  value={formData.password}
+                  onChange={handleChange}
+                  placeholder="Password"
+                />
+                {errors.password && (
+                  <p className="employer-error-text">{errors.password}</p>
+                )}
+              </div>
+
+              <div className="employer-form-group">
+                <input
+                  type="password"
+                  name="confirmPassword"
+                  id="confirmPassword"
+                  className="employer-input-field"
+                  value={formData.confirmPassword}
+                  onChange={handleChange}
+                  placeholder="Confirm Password"
+                />
+                {errors.confirmPassword && (
+                  <p className="employer-error-text">{errors.confirmPassword}</p>
+                )}
+              </div>
             </div>
-          </div>
 
-          <div className="employer-form-grid">
-            <div className="employer-form-group">
-              <label htmlFor="password">Password</label>
-              <input
-                type="password"
-                name="password"
-                id="password"
-                className="input-field"
-                value={formData.password}
-                onChange={handleChange}
-              />
-              {errors.password && <p className="error-text">{errors.password}</p>}
-            </div>
+            {errors.server && <p className="employer-error-text">{errors.server}</p>}
+            {message && <p className="employer-success-text">{message}</p>}
 
-            <div className="employer-form-group">
-              <label htmlFor="confirmPassword">Confirm Password</label>
-              <input
-                type="password"
-                name="confirmPassword"
-                id="confirmPassword"
-                className="input-field"
-                value={formData.confirmPassword}
-                onChange={handleChange}
-              />
-              {errors.confirmPassword && <p className="error-text">{errors.confirmPassword}</p>}
-            </div>
-          </div>
-
-          {errors.server && <p className="error-text">{errors.server}</p>}
-          {message && <p className="success-text">{message}</p>}
-
-          <button type="submit" className="submit-button">
-            Sign Up
-          </button>
-
-          <div className="blur-line"></div>
-        </form>
+            <button type="submit" className="employer-submit-button" disabled={loading}>
+              {loading ? 'Signing Up...' : 'Sign Up'}
+            </button>
+          </form>
+        </div>
       </div>
     </div>
   );
