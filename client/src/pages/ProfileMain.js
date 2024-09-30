@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Navigation from './Navigation';
+import Navigation from './Jobseeker/Navigation';
 import './css/profileMain.css';
 
 const ProfileMain = () => {

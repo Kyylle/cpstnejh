@@ -3,24 +3,7 @@ const Employer = require('../models/employer');
 const Jobseeker = require('../models/jobseeker');
 
 // Middleware to verify JWT and extract user info
-const authMiddleware = (req, res, next) => {
-  const token = req.header('Authorization') && req.header('Authorization').replace('Bearer ', '');
 
-  if (!token) {
-    return res.status(401).json({ message: 'No token, authorization denied' });
-  }
-
-  try {
-    // Decode the token and attach the user info to req.user
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    
-    // Ensure that decoded includes the user ID
-    req.user = decoded;
-    next();
-  } catch (err) {
-    return res.status(401).json({ message: 'Token is not valid' });
-  }
-};
 
 // Protect middleware to handle both Employer and Jobseeker authentication
 const protect = async (req, res, next) => {
@@ -51,6 +34,5 @@ const protect = async (req, res, next) => {
 };
 
 module.exports = {
-  authMiddleware,
   protect,
 };

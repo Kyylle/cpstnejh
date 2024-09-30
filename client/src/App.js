@@ -6,12 +6,12 @@ import SignUpChoice from './pages/SignUpChoice';
 import EmployerSignUp from './components/Auth/EmployerSignUp';
 import JobseekerSignUp from './components/Auth/JobseekerSignup';
 import Dashboard from './pages/Jobseeker/Dashboard';
-import ProfileMain from './pages/Jobseeker/ProfileMain';
+import ProfileMain from './pages/Jobseeker/Profile';
 import Job from './pages/Jobseeker/Job';
 import Messaging from './pages/Jobseeker/Messaging';
 import Notifications from './pages/Jobseeker/Notifications';
 import EmployerHome from './pages/Employer/EmployerHome';
-import ProtectedRoute from './components/ProtectedRoute'; // Import ProtectedRoute component
+import ProtectedRoute from './components/ProtectedRoute'; 
 import EmployerProfileSettings from './pages/Employer/EmployerProfileSettings';
 import EmployerNotification from './pages/Employer/notifications/EmployerNotification';
 import EmployerInquiries from './pages/Employer/Inquiries/EmployerInquiries';

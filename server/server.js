@@ -20,10 +20,18 @@ if (!fs.existsSync(uploadsDir)) {
   fs.mkdirSync(uploadsDir);
 }
 
+// const contentUploadsDir = path.join(__dirname, 'contentuploads');
+
+// if (!fs.existsSync(contentUploadsDir)) {
+//   fs.mkdirSync(contentUploadsDir);
+// }
+
 // Middleware
 app.use(express.json()); // Middleware to parse JSON bodies
 app.use(cors()); // Middleware for handling CORS (frontend-backend communication)
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+// app.use('/contentuploads', express.static(path.join(__dirname, 'contentuploads')));
+
 // Connect to MongoDB
 connectDB();
 
@@ -31,7 +39,6 @@ connectDB();
 app.use('/api/auth', authRoutes); // Mount auth routes at /api/auth
 
 
-// Additional Middleware or Route Grouping can go here
 
 // Global Error Handling Middleware (Optional)
 app.use((err, req, res, next) => {

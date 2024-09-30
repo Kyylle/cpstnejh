@@ -122,7 +122,7 @@ exports.loginWithEmail = async (req, res) => {
 
       // Generate a JWT token
       const token = jwt.sign(
-        { id: user._id, email: user.email, role: userType },
+        { userId: user._id, email: user.email, userType: user.userType }, // Use userId and userType
         process.env.JWT_SECRET,
         { expiresIn: "1h" }
       );
@@ -203,11 +203,6 @@ exports.getUserProfile = async (req, res) => {
   }
 };
 
-
-
-
-
-
 //updateCompanyProfile
 
 exports.updateEmployerProfile = async (req, res) => {
@@ -254,10 +249,6 @@ exports.updateEmployerProfile = async (req, res) => {
 };
 
 
-
-
-// Update employer profile picture
-
 // Controller for uploading and updating employer profile picture
 exports.updateEmployerProfilePicture = async (req, res) => {
   try {
@@ -294,12 +285,6 @@ exports.updateEmployerProfilePicture = async (req, res) => {
   }
 };
 
-
-
-
-
-
-// Update employer background picture
 // Update employer background picture
 exports.updateEmployerBackgroundPicture = async (req, res) => {
   try {
@@ -337,11 +322,7 @@ exports.updateEmployerBackgroundPicture = async (req, res) => {
 };
 
 
-
-
 //get profile Image
-
-
 exports.getProfileImage = async (req, res) => {
   try {
     const userId = req.user.id; // Extract user ID from the request (after authentication)
@@ -359,4 +340,5 @@ exports.getProfileImage = async (req, res) => {
 };
 
 
-
+//Post a job
+// Post a new job
