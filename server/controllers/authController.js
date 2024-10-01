@@ -2,6 +2,8 @@ const bcrypt = require("bcryptjs");
 const Employer = require("../models/employer");
 const Jobseeker = require("../models/jobseeker");
 const jwt = require("jsonwebtoken");
+// const Profile = require("../models/jobseekerProfile");
+
 
 // Register Employer
 exports.registerEmployer = async (req, res) => {
@@ -143,36 +145,193 @@ exports.loginWithEmail = async (req, res) => {
     }
   };
 
-// Get jobseeker by email
-exports.getUserByEmail = async (req, res) => {
-  const { email } = req.query;
 
-  console.log("Received email query:", email);
 
-  if (!email) {
-    return res
-      .status(400)
-      .json({ message: "Email query parameter is required" });
-  }
 
+
+  //JOBSEEKER CONTROLLER
+// Get jobseeker profile
+exports.getJobseekerProfile = async (req, res) => {
   try {
-    // Find the jobseeker by email
-    const user = await Jobseeker.findOne({ email });
+    const userId = req.user.userId; // Extract the jobseeker ID from the JWT
 
-    console.log("Found user:", user);
+    // Fetch the jobseeker's profile using the 'jobseeker' field
+    let profile = await Jobseeker.findById(userId).select('-password');  // Exclude the password
 
-    if (!user) {
-      return res.status(404).json({ message: "Jobseeker not found" });
+    if (!profile) {
+      return res.status(404).json({ message: 'Jobseeker profile not found' });
     }
 
-    res.json(user);
+    // Construct the response object with relevant profile fields
+    const response = {
+      name: profile.name || '',  // Fetch name from populated jobseeker field
+      email: profile.email,      // Fetch email from populated jobseeker field
+      bio: profile.bio || '',
+      location: profile.location || '',
+      website: profile.website || '',
+      experience: profile.experience || [],
+      skills: profile.skills || [],
+      education: profile.education || [],
+      profileImage: profile.profileImage || '',
+      backgroundImage: profile.backgroundImage || '',
+    };
+
+    // Return the profile data
+    return res.json(response);
+  } catch (err) {
+    console.error('Error fetching jobseeker profile:', err);
+    return res.status(500).json({ message: 'An internal server error occurred' });
+  }
+};
+
+
+//update jobseeker profile
+exports.updateJobseekerProfile = async (req, res) => {
+  try {
+    console.log(req.body); // Log the request body to check what is being received
+    const {
+      name,
+      bio,
+      location,
+      website,
+      experience,
+      skills,
+      education,
+    } = req.body;
+
+    const jobseekerId = req.user.userId; // Assuming you use the ID from the token
+
+    const updatedJobseeker = await Jobseeker.findByIdAndUpdate(
+      jobseekerId,
+      {
+        name,
+        bio,
+        location, // Location can be treated as a string
+        website,
+        experience, // Experience is an array, make sure the structure is correct
+        skills, // Skills is an array
+        education, // Education is an array
+      },
+      { new: true } // Return the updated document
+    );
+
+    if (!updatedJobseeker) {
+      return res.status(404).json({ message: "Jobseeker profile not found" });
+    }
+
+    res.status(200).json({
+      message: "Profile updated successfully",
+      updatedJobseeker,
+    });
   } catch (error) {
-    console.error("Error fetching jobseeker:", error);
+    console.error("Error updating jobseeker profile:", error);
     res.status(500).json({ message: "Server error" });
   }
 };
 
-//getuser
+// Controller for uploading profile picture
+exports.uploadJobseekerProfilePicture = async (req, res) => {
+  try {
+    const userId = req.user.userId; // Extract the jobseeker ID from the JWT
+
+    // Check if the file was uploaded
+    if (!req.file) {
+      return res.status(400).json({ message: 'No profile picture file uploaded' });
+    }
+
+    // Find the jobseeker profile by the jobseeker ID
+    let profile = await JobseekerProfile.findOne({ jobseeker: userId });
+
+    if (!profile) {
+      return res.status(404).json({ message: 'Jobseeker profile not found' });
+    }
+
+    // Update the profileImage field with the file path
+    profile.profileImage = req.file.path; // Assuming file is stored in req.file.path
+    await profile.save(); // Save the updated profile
+
+    // Return the updated profile
+    return res.json(profile);
+  } catch (err) {
+    console.error('Error uploading profile picture:', err);
+    return res.status(500).json({ message: 'An internal server error occurred' });
+  }
+};
+
+// Controller for uploading background picture
+exports.uploadJobseekerBackgroundPicture = async (req, res) => {
+  try {
+    const userId = req.user.userId; // Extract the jobseeker ID from the JWT
+
+    // Check if the file was uploaded
+    if (!req.file) {
+      return res.status(400).json({ message: 'No background picture file uploaded' });
+    }
+
+    // Update the backgroundImage field with the file path
+    const profile = await Jobseeker.findByIdAndUpdate(
+      userId, 
+      { backgroundImage: req.file.path }, // Assuming file is stored in req.file.path
+      { new: true }
+    ).select('-password');
+
+    if (!profile) {
+      return res.status(404).json({ message: 'Jobseeker profile not found' });
+    }
+
+    // Return the updated profile
+    return res.json(profile);
+  } catch (err) {
+    console.error('Error uploading background picture:', err);
+    return res.status(500).json({ message: 'An internal server error occurred' });
+  }
+};
+
+// Controller for fetching profile and background images
+exports.getJobseekerProfileAndBackgroundImages = async (req, res) => {
+  try {
+    const userId = req.user.userId; // Extract the jobseeker ID from the JWT
+
+    // Find the jobseeker profile by the jobseeker ID
+    let profile = await JobseekerProfile.findOne({ jobseeker: userId });
+
+    if (!profile) {
+      return res.status(404).json({ message: 'Jobseeker profile not found' });
+    }
+
+    // Construct the response object with profileImage and backgroundImage fields
+    const response = {
+      profileImage: profile.profileImage || '',
+      backgroundImage: profile.backgroundImage || ''
+    };
+
+    // Return the images
+    return res.json(response);
+  } catch (err) {
+    console.error('Error fetching profile and background images:', err);
+    return res.status(500).json({ message: 'An internal server error occurred' });
+  }
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//EMPLOYER CONTROLLERS
+//get employer user
 exports.getUserProfile = async (req, res) => {
   try {
     const userId = req.user.userId; // The decoded token should include the 'id'

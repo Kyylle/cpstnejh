@@ -8,6 +8,11 @@ const {
   updateEmployerProfilePicture,
   updateEmployerBackgroundPicture,
   getProfileImage,
+  getJobseekerProfile,
+  updateJobseekerProfile,
+  uploadJobseekerProfilePicture,
+  uploadJobseekerBackgroundPicture,
+  getJobseekerProfileAndBackgroundImages,
 } = require('../controllers/authController');
 const {
   postJob
@@ -17,7 +22,8 @@ const  {protect}  = require('../middleware/authMiddleware');
 const multer = require('multer');
 const path = require('path');
 const router = express.Router();
-const contentUpload = require('../middleware/contentUpload')
+const contentUpload = require('../middleware/contentUpload');
+const jobseekerProfileUploads = require('../middleware/jobseekerProfileUploadsMiddleware');
 // Configure Multer for profile and background image uploads
 const profileStorage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -36,8 +42,45 @@ router.post('/jobseeker', registerJobseeker);
 router.post('/employer', registerEmployer);
 router.post('/login/email', loginWithEmail);
 
-// Profile routes
+
+//JOBSEEKER RPUTES
+//get jobseeker profile
+router.get('/getJobseekerProfile', protect, getJobseekerProfile);
+
+//update jobseeker profile
+router.put('/update/jobseeker', protect, updateJobseekerProfile)
+
+//upload jobseeker profile picture
+router.put('/jobseeker/upload/profile-picture', protect, jobseekerProfileUploads.single('profileImage'), uploadJobseekerProfilePicture);
+
+//upload jobseeker background profile picture
+
+router.put('/jobseeker/upload/backgroundprofile', protect, jobseekerProfileUploads.single('backgroundImage'), uploadJobseekerBackgroundPicture);
+
+//get orofile and background
+router.get('/jobseeker/images', protect, getJobseekerProfileAndBackgroundImages);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// EMPLOYER ROUTES
+//get employer Profile
 router.get('/profile', protect, getUserProfile);
+//update profile
 router.put('/updateprofile', protect, updateEmployerProfile);
 
 // Profile picture routes
