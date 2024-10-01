@@ -17,7 +17,7 @@ const  {protect}  = require('../middleware/authMiddleware');
 const multer = require('multer');
 const path = require('path');
 const router = express.Router();
-
+const contentUpload = require('../middleware/contentUpload')
 // Configure Multer for profile and background image uploads
 const profileStorage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -30,17 +30,6 @@ const profileStorage = multer.diskStorage({
 
 const upload = multer({ storage: profileStorage });
 
-// Configure Multer for content uploads (images, videos)
-// const contentStorage = multer.diskStorage({
-//   destination: function (req, file, cb) {
-//     cb(null, 'contentuploads/'); // Specify the folder where content images/videos are stored
-//   },
-//   filename: function (req, file, cb) {
-//     cb(null, Date.now() + path.extname(file.originalname)); // Rename the file with a timestamp
-//   },
-// });
-
-// const contentUpload = multer({ storage: contentStorage });
 
 // Register routes
 router.post('/jobseeker', registerJobseeker);
@@ -62,7 +51,8 @@ router.put('/uploadBackgroundPicture', protect, upload.single('backgroundImage')
 router.post('/post-job', protect, postJob);
 
 // Post content for networking
-router.post('/post-contents', protect, postContent);
+// router.post('/post-contents', protect, postContent);
+router.post('/post-contents', protect, contentUpload.array('media', 5), postContent);
 
 // Like a post
 router.post('/like-post', protect, likePost);

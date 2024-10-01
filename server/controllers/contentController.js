@@ -41,7 +41,7 @@ const Employer = require('../models/employer'); // Include the Employer model
 //   };
 exports.postContent = async (req, res) => {
   try {
-    const employerId = req.user.userId; // Assuming userId is set in req.user by your protect middleware
+    const employerId = req.user.userId; // Extract employer ID from the JWT payload (set by protect middleware)
 
     // Validate input
     const { caption } = req.body;
@@ -58,14 +58,21 @@ exports.postContent = async (req, res) => {
     // Get the current date and time
     const postedDate = new Date();
 
-    // Create new content with caption and current date/time
+    // Check if any files (images) were uploaded
+    let mediaFiles = [];
+    if (req.files && req.files.length > 0) {
+      mediaFiles = req.files.map(file => `/contentuploads/${file.filename}`); // Get file paths for the uploaded images
+    }
+
+    // Create new content with caption, media files, and the current date/time
     const newContent = new Content({
       employer: employerId,
       caption, // Only posting text content
+      media: mediaFiles, // Array of uploaded media file paths
       postedDate, // Automatically set the current date and time
     });
 
-    // Save to the database
+    // Save the content to the database
     await newContent.save();
 
     res.status(201).json({
@@ -77,7 +84,7 @@ exports.postContent = async (req, res) => {
     res.status(500).json({ error: "An internal server error occurred" });
   }
 };
-  
+
 
 // Like a post (both employers and jobseekers)
 exports.likePost = async (req, res) => {

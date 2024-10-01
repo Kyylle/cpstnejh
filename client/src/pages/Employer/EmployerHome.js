@@ -6,7 +6,7 @@ const EmployerHome = () => {
     return (
         <div className='home-container'>
             <Navigation/>
-       <Layout/>
+            <Layout/>
         </div>
     )
 }

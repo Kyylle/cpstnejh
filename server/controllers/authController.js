@@ -175,7 +175,7 @@ exports.getUserByEmail = async (req, res) => {
 //getuser
 exports.getUserProfile = async (req, res) => {
   try {
-    const userId = req.user.id; // The decoded token should include the 'id'
+    const userId = req.user.userId; // The decoded token should include the 'id'
 
     // Fetch the user data based on the user ID (either Employer or Jobseeker)
     let user = await Employer.findById(userId).select('-password');
@@ -288,7 +288,7 @@ exports.updateEmployerProfilePicture = async (req, res) => {
 // Update employer background picture
 exports.updateEmployerBackgroundPicture = async (req, res) => {
   try {
-    const employerId = req.user.id; // Assuming you have user data in the req.user object (JWT-based authentication)
+    const employerId = req.user.userId; // Assuming you have user data in the req.user object (JWT-based authentication)
 
     // Check if the file was uploaded
     if (!req.file) {

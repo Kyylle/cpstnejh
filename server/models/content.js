@@ -47,6 +47,10 @@ const contentSchema = new mongoose.Schema({
     type: Date,
     default: Date.now, // Automatically set to current date and time
   },
+  media: {
+    type: [String], // Array of strings to store media file paths (images/videos)
+    required: false, // Optional, some posts might not have media
+  },
   likes: [
     {
       user: {

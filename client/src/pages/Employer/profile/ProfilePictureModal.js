@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { FiX } from 'react-icons/fi';
+import './ProfilePictureModal.css';
 
 const ProfilePictureModal = ({ isOpen, onClose, handleSave }) => {
   const [selectedFile, setSelectedFile] = useState(null);
@@ -22,7 +24,6 @@ const ProfilePictureModal = ({ isOpen, onClose, handleSave }) => {
           },
         };
         
-        // Update the URL to point to the backend server, likely running on port 5000
         const response = await axios.put('/api/auth/uploadProfilePicture', formData, config);
   
         console.log('Profile picture uploaded successfully:', response.data);
@@ -38,8 +39,12 @@ const ProfilePictureModal = ({ isOpen, onClose, handleSave }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="modal-overlay">
-      <div className="modal-content">
+    <div className="profile-picture-modal-overlay">
+      <div className="profile-picture-modal-content">
+        {/* Close button at the top-right */}
+        <button className="modal-close-btn-top" onClick={onClose}>
+        <FiX size={24} />
+        </button>
         <h2>Upload Profile Picture</h2>
         <input type="file" onChange={handleFileChange} />
         <div className="photo-options">
@@ -47,9 +52,6 @@ const ProfilePictureModal = ({ isOpen, onClose, handleSave }) => {
             Upload
           </button>
         </div>
-        <button className="modal-close-btn" onClick={onClose}>
-          Close
-        </button>
       </div>
     </div>
   );

@@ -29,7 +29,7 @@ const Navigation = () => {
         };
 
         // Fetch profile data from your backend
-        const response = await axios.get('/api/auth/profile', config);
+        const response = await axios.get('api/auth/profile', config);
         console.log('Profile data response:', response.data);
         
         // Debugging: Check the response from the backend

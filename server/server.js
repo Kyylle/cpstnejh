@@ -20,12 +20,6 @@ if (!fs.existsSync(uploadsDir)) {
   fs.mkdirSync(uploadsDir);
 }
 
-// const contentUploadsDir = path.join(__dirname, 'contentuploads');
-
-// if (!fs.existsSync(contentUploadsDir)) {
-//   fs.mkdirSync(contentUploadsDir);
-// }
-
 // Middleware
 app.use(express.json()); // Middleware to parse JSON bodies
 app.use(cors()); // Middleware for handling CORS (frontend-backend communication)
