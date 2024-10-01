@@ -218,7 +218,7 @@ exports.updateEmployerProfile = async (req, res) => {
       industry,
     } = req.body;
 
-    const employerId = req.user.id; // Assuming you use the ID from the token
+    const employerId = req.user.userId; // Assuming you use the ID from the token
 
     const updatedEmployer = await Employer.findByIdAndUpdate(
       employerId,
