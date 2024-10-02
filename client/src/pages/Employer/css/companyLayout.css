@@ -1,0 +1,94 @@
+.employer-layout-container {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px;
+  margin:10px;
+  gap: 20px; /* Added gap to ensure consistent spacing between columns */
+}
+
+
+
+.employer-left-column {
+  width: 20%;
+}
+
+.employer-middle-column {
+  width: 50%;
+}
+
+.employer-right-column {
+  width: 25%;
+  padding-right: 10px;
+}
+
+.page-content, .company-profile-container {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Create post section */
+.create-post {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.create-post-input {
+  width: 70%; /* Adjusted width for better alignment */
+  padding: 10px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+/* Post buttons */
+.media-btn, 
+.event-btn, 
+.article-btn {
+  background-color: #0073b1;
+  color: white;
+  padding: 10px 15px;
+  border-radius: 4px;
+  cursor: pointer;
+  border: none;
+  margin-left: 5px; /* Added margin for spacing between buttons */
+}
+
+.feed-list {
+  margin-top: 20px;
+}
+
+.feed-item {
+  margin-bottom: 20px;
+  padding: 10px;
+  background-color: #fff;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Added shadow for depth */
+}
+
+.feed-img {
+  width: 100%;
+  height: auto;
+  border-radius: 4px;
+}
+
+.recommendations-list {
+  margin-top: 20px;
+}
+
+.recommendation-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.follow-btn {
+  background-color: #0073b1;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  border: none;
+}

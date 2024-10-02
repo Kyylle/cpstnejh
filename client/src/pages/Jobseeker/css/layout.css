@@ -7,19 +7,16 @@
     padding-top: 70px;
   }
   
-  .left-column, .right-column {
+  /* .left-column, .right-column {
     width: 25%;
     padding: 10px;
-    border: 1px solid #ddd;
-    background-color: #fff;
-    border-radius: 5px;
-  }
+  
+  } */
   
   .middle-column {
     width: 50%;
     padding: 10px;
     background-color: #fff;
     border-radius: 5px;
-    border: 1px solid #ddd;
   }
   

@@ -365,6 +365,7 @@ exports.getUserProfile = async (req, res) => {
       location: user.location || '',
       headline: user.headline || '',
       website: user.website || '',
+      pronouns: user.pronouns || '',
       industry: user.industry || '',
       profileImage: user.profileImage || '',
       backgroundImage: user.backgroundImage || '',
@@ -427,7 +428,7 @@ exports.updateEmployerProfile = async (req, res) => {
 // Controller for uploading and updating employer profile picture
 exports.updateEmployerProfilePicture = async (req, res) => {
   try {
-    const employerId = req.user.id; // Assuming JWT middleware is providing the user
+    const employerId = req.user.userId; // Assuming JWT middleware is providing the user
 
     // Check if a file was uploaded
     if (!req.file) {
@@ -469,7 +470,7 @@ exports.updateEmployerBackgroundPicture = async (req, res) => {
     if (!req.file) {
       return res.status(400).json({ message: 'No file uploaded' });
     }
-
+    console.log('Received file:', req.file);
     // Construct the file path
     const imagePath = `/uploads/${req.file.filename}`;
 

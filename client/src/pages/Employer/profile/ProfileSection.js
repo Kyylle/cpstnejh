@@ -3,8 +3,7 @@ import axios from "axios";
 import "./ProfileSection.css"; // Import the CSS styles for this section
 import ContactInfoModal from "./ContactInfoModal"; // Import the Contact Info Modal
 import EditAccountModal from "./EditAccountModal"; // Import the Edit Account Modal
-import ProfilePictureModal from "./ProfilePictureModal"; // Import Profile Picture Modal
-import BackgroundPictureModal from "./BackgroundPictureModal"; // Import Background Picture Modal
+import FileUploadModal from "./FileUploadModal"; // Reusable file upload modal
 
 const ProfileSection = () => {
   const [companyData, setCompanyData] = useState({
@@ -24,7 +23,6 @@ const ProfileSection = () => {
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false); // For Profile Picture Modal
   const [isBackgroundModalOpen, setIsBackgroundModalOpen] = useState(false); // For Background Picture Modal
 
-  // Fetch company profile data from the backend when the component loads (or page refreshes)
   useEffect(() => {
     const fetchCompanyData = async () => {
       try {
@@ -67,16 +65,6 @@ const ProfileSection = () => {
     fetchCompanyData();
   }, []);
 
-  // Handle change in form inputs
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setCompanyData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
-  };
-
-  // Update employer profile function
   const updateEmployerProfile = async (formData) => {
     try {
       const token = localStorage.getItem("authToken");
@@ -98,68 +86,20 @@ const ProfileSection = () => {
     }
   };
 
-  // Handle profile picture save
-  const handleProfilePictureSave = async (file) => {
-    const formData = new FormData();
-    formData.append('profileImage', file); // Ensure 'profileImage' matches the multer field
-  
-    try {
-      const token = localStorage.getItem('authToken');
-      const config = {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          Authorization: `Bearer ${token}`, // Include the JWT token
-        },
-      };
-  
-      const response = await axios.put('/api/auth/uploadProfilePicture', formData, config);
-  
-      // Update state with the new profile image path from the response
-      setCompanyData((prevData) => ({
-        ...prevData,
-        profileImage: response.data.imagePath,
-      }));
-    } catch (error) {
-      console.error('Error uploading profile picture:', error);
-    }
+  const handleSaveProfileImage = (data) => {
+    setCompanyData((prevData) => ({
+      ...prevData,
+      profileImage: data.imagePath,
+    }));
   };
 
-  const handleFileChange = (e) => {
-    const file = e.target.files[0]; // Get the first file from the input
-    handleProfilePictureSave(file);  // Pass the file to the save function
-  };
-  
-  
-  // Handle background picture save
-  const handleBackgroundPictureSave = async (file) => {
-    const formData = new FormData();
-    formData.append("backgroundImage", file); // Append background image
-
-    try {
-      const token = localStorage.getItem("authToken");
-      const config = {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${token}`,
-        },
-      };
-
-      const response = await axios.put(
-        "/api/auth/uploadBackgroundPicture",
-        formData,
-        config
-      );
-
-      setCompanyData((prevData) => ({
-        ...prevData,
-        backgroundImage: response.data.imagePath, // Assuming the backend returns `imagePath`
-      }));
-    } catch (error) {
-      console.error("Error uploading background picture:", error);
-    }
+  const handleSaveBackgroundImage = (data) => {
+    setCompanyData((prevData) => ({
+      ...prevData,
+      backgroundImage: data.imagePath,
+    }));
   };
 
-  // Handle form submission for profile updates (excluding images)
   const handleSubmit = () => {
     const updatedData = {
       ...companyData,
@@ -172,17 +112,8 @@ const ProfileSection = () => {
       website: companyData.website || "",
     };
 
-    updateEmployerProfile(updatedData); // Call the update function
-    setIsEditModalOpen(false); // Close the modal after submission
-  };
-
-  const handleContactInfoClick = (event) => {
-    event.preventDefault();
-    setIsContactModalOpen(true);
-  };
-
-  const handleEditClick = () => {
-    setIsEditModalOpen(true);
+    updateEmployerProfile(updatedData);
+    setIsEditModalOpen(false);
   };
 
   return (
@@ -228,7 +159,10 @@ const ProfileSection = () => {
 
           {/* Edit Icon */}
           <div className="ps-edit-icon">
-            <button className="edit-btn" onClick={handleEditClick}>
+            <button
+              className="edit-btn"
+              onClick={() => setIsEditModalOpen(true)}
+            >
               <img
                 src="https://img.icons8.com/material-outlined/24/000000/edit--v1.png"
                 alt="Edit"
@@ -242,7 +176,7 @@ const ProfileSection = () => {
             <p className="ps-profile-title">{companyData.headline || ""}</p>
             <p className="ps-location">
               {companyData.location || "No location"} •{" "}
-              <a href="/" onClick={handleContactInfoClick}>
+              <a href="/" onClick={() => setIsContactModalOpen(true)}>
                 Contact info
               </a>
             </p>
@@ -270,23 +204,31 @@ const ProfileSection = () => {
       <EditAccountModal
         isOpen={isEditModalOpen}
         onClose={() => setIsEditModalOpen(false)}
-        formData={companyData} // Pass the current form data
-        handleChange={handleChange} // Pass the handleChange function
-        handleSubmit={handleSubmit} // Pass the handleSubmit function
+        formData={companyData}
+        handleChange={(e) =>
+          setCompanyData({ ...companyData, [e.target.name]: e.target.value })
+        }
+        handleSubmit={handleSubmit}
       />
 
       {/* Profile Picture Modal */}
-      <ProfilePictureModal
+      <FileUploadModal
         isOpen={isProfileModalOpen}
         onClose={() => setIsProfileModalOpen(false)}
-        handleSave={handleProfilePictureSave} // Pass the function to update the profile picture
+        uploadEndpoint="/api/auth/uploadProfilePicture" // Correct the port here if needed
+        fieldName="profileImage"
+        modalTitle="Profile Picture"
+        handleSave={handleSaveProfileImage}
       />
 
       {/* Background Picture Modal */}
-      <BackgroundPictureModal
+      <FileUploadModal
         isOpen={isBackgroundModalOpen}
         onClose={() => setIsBackgroundModalOpen(false)}
-        handleSave={handleBackgroundPictureSave} // Pass the function to update the background picture
+        uploadEndpoint="/api/auth/uploadBackgroundPicture"
+        fieldName="backgroundImage"
+        modalTitle="Background Picture"
+        handleSave={handleSaveBackgroundImage}
       />
     </div>
   );

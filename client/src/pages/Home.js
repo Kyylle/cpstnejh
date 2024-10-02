@@ -47,7 +47,7 @@ const Home = () => {
   };
 
   return (
-    <div className="page-content">
+    <div className="home-page-content">
       {/* Navigation Bar */}
       <nav className="navbar-home">
         <div className="logo">JobHub</div>
@@ -67,8 +67,8 @@ const Home = () => {
         <div className="text-section">
           <h1>Your dream job is just a click away</h1>
           <p>
-            A modern recruitment platform designed to streamline the connection
-            between employers and job seekers.
+            A modern recruitment platform designed to streamline the connection between 
+            employers and job seekers.
           </p>
 
           {/* Search and Find Button */}
