@@ -232,68 +232,84 @@ exports.updateJobseekerProfile = async (req, res) => {
 // Controller for uploading profile picture
 exports.uploadJobseekerProfilePicture = async (req, res) => {
   try {
-    const userId = req.user.userId; // Extract the jobseeker ID from the JWT
+    const jobseekerId = req.user.userId; // Assuming JWT middleware is providing the userId
 
-    // Check if the file was uploaded
+    // Check if a file was uploaded
     if (!req.file) {
-      return res.status(400).json({ message: 'No profile picture file uploaded' });
+      return res.status(400).json({ message: 'No file uploaded' });
     }
 
-    // Find the jobseeker profile by the jobseeker ID
-    let profile = await JobseekerProfile.findOne({ jobseeker: userId });
+    console.log('Received file:', req.file);
 
-    if (!profile) {
-      return res.status(404).json({ message: 'Jobseeker profile not found' });
+    // Construct the file path
+    const imagePath = `/jobseekerProfileUploads/${req.file.filename}`; // Path to the uploaded image
+
+    // Update the jobseeker's profile image in the database
+    const updatedJobseeker = await Jobseeker.findByIdAndUpdate(
+      jobseekerId,
+      { profileImage: imagePath }, // Save the image path in the database
+      { new: true } // Return the updated document
+    );
+
+    if (!updatedJobseeker) {
+      return res.status(404).json({ message: 'Jobseeker not found' });
     }
 
-    // Update the profileImage field with the file path
-    profile.profileImage = req.file.path; // Assuming file is stored in req.file.path
-    await profile.save(); // Save the updated profile
-
-    // Return the updated profile
-    return res.json(profile);
-  } catch (err) {
-    console.error('Error uploading profile picture:', err);
-    return res.status(500).json({ message: 'An internal server error occurred' });
+    // Respond with the new image path
+    res.status(200).json({
+      success: true,
+      imagePath: updatedJobseeker.profileImage,
+      message: 'Profile picture updated successfully',
+    });
+  } catch (error) {
+    console.error('Error updating profile picture:', error);
+    res.status(500).json({ message: 'Server error' });
   }
 };
-
 // Controller for uploading background picture
 exports.uploadJobseekerBackgroundPicture = async (req, res) => {
   try {
-    const userId = req.user.userId; // Extract the jobseeker ID from the JWT
+    const jobseekerId = req.user.userId; // Assuming JWT middleware is providing the userId
 
-    // Check if the file was uploaded
+    // Check if a file was uploaded
     if (!req.file) {
-      return res.status(400).json({ message: 'No background picture file uploaded' });
+      return res.status(400).json({ message: 'No file uploaded' });
     }
 
-    // Update the backgroundImage field with the file path
-    const profile = await Jobseeker.findByIdAndUpdate(
-      userId, 
-      { backgroundImage: req.file.path }, // Assuming file is stored in req.file.path
-      { new: true }
-    ).select('-password');
+    console.log('Received file:', req.file);
 
-    if (!profile) {
-      return res.status(404).json({ message: 'Jobseeker profile not found' });
+    // Construct the file path
+    const imagePath = `/jobseekerProfileUploads/${req.file.filename}`; // Path to the uploaded image
+
+    // Update the jobseeker's background image in the database
+    const updatedJobseeker = await Jobseeker.findByIdAndUpdate(
+      jobseekerId,
+      { backgroundImage: imagePath }, // Save the image path in the database
+      { new: true } // Return the updated document
+    );
+
+    if (!updatedJobseeker) {
+      return res.status(404).json({ message: 'Jobseeker not found' });
     }
 
-    // Return the updated profile
-    return res.json(profile);
-  } catch (err) {
-    console.error('Error uploading background picture:', err);
-    return res.status(500).json({ message: 'An internal server error occurred' });
+    // Respond with the new image path
+    res.status(200).json({
+      success: true,
+      imagePath: updatedJobseeker.backgroundImage,
+      message: 'Background picture updated successfully',
+    });
+  } catch (error) {
+    console.error('Error updating background picture:', error);
+    res.status(500).json({ message: 'Server error' });
   }
 };
-
 // Controller for fetching profile and background images
 exports.getJobseekerProfileAndBackgroundImages = async (req, res) => {
   try {
     const userId = req.user.userId; // Extract the jobseeker ID from the JWT
 
-    // Find the jobseeker profile by the jobseeker ID
-    let profile = await JobseekerProfile.findOne({ jobseeker: userId });
+    // Find the jobseeker by their ID (userId)
+    let profile = await Jobseeker.findById(userId).select('profileImage backgroundImage');
 
     if (!profile) {
       return res.status(404).json({ message: 'Jobseeker profile not found' });
