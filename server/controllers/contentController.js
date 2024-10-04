@@ -156,3 +156,19 @@ exports.commentOnPost = async (req, res) => {
     res.status(500).json({ message: "An internal server error occurred" });
   }
 };
+
+
+//get the posts content
+exports.getPosts = async (req, res) => {
+  try {
+    // Find all posts (You can add pagination, filtering, or sorting if needed)
+    const posts = await Content.find()
+      .populate('employer', 'companyName profileImage') // Assuming you're fetching employer details for the post
+      .sort({ postedDate: -1 }); // Sorting by the most recent posts
+
+    res.status(200).json(posts); // Return the posts as JSON
+  } catch (error) {
+    console.error('Error fetching posts:', error);
+    res.status(500).json({ message: 'An error occurred while fetching posts' });
+  }
+};

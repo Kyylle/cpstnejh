@@ -1,0 +1,125 @@
+.post-job-container {
+    margin: 20px auto;
+    max-width: 600px;
+    border-radius: 10px;
+}
+
+.post-job-input {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    padding: 10px;
+    background-color: white;
+}
+
+.post-job-profile-pic {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.post-job-input input {
+    border: none;
+    outline: none;
+    flex-grow: 1;
+    padding: 10px;
+    border-radius: 20px;
+    margin-right: 10px;
+}
+
+.post-job-action-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.post-job-free-job, .post-job-media {
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    color: #0073b1;
+}
+
+.post-job-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.post-job-post-modal {
+    background-color: white;
+    padding: 20px;
+    width: 400px;
+    border-radius: 10px;
+    position: relative;
+}
+
+.post-job-post-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.post-job-close-modal-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+.post-job-modal-actions {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.post-job-upload-btn {
+    background-color: #0073b1;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.post-job-image-preview img {
+    max-width: 100%;
+    margin-top: 10px;
+}
+
+.post-job-post-btn, .post-job-submit-btn {
+    background-color: #0073b1;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+    text-align: center;
+}
+
+form label {
+    display: block;
+    margin-top: 10px;
+    font-size: 14px;
+}
+
+form input, form select {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}

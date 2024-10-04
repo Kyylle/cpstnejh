@@ -516,5 +516,48 @@ exports.getProfileImage = async (req, res) => {
 };
 
 
+//get all
+exports.getAllProfiles = async (req, res) => {
+  try {
+    const loggedInUserId = req.user.userId; // Assuming the token includes userId
+
+    // Fetch all employer profiles except the logged-in user
+    const employers = await Employer.find({ _id: { $ne: loggedInUserId } })
+      .select('companyName location industry profileImage');
+
+    // Fetch all jobseeker profiles except the logged-in user
+    const jobseekers = await Jobseeker.find({ _id: { $ne: loggedInUserId } })
+      .select('name skills experience profileImage');
+
+    // Construct a combined response for both employers and jobseekers
+    const profiles = [
+      ...employers.map(employer => ({
+        type: 'employer', // Add a type field to distinguish
+        companyName: employer.companyName,
+        location: employer.location,
+        industry: employer.industry,
+        profileImage: employer.profileImage,
+      })),
+      ...jobseekers.map(jobseeker => ({
+        type: 'jobseeker', // Add a type field to distinguish
+        name: jobseeker.name,
+        skills: jobseeker.skills,
+        experience: jobseeker.experience.map(exp => `${exp.title} at ${exp.company}`).join(', ') || 'No experience',
+        jobseekerProfileImage: jobseeker.profileImage,
+      })),
+    ];
+
+    if (profiles.length === 0) {
+      return res.status(404).json({ message: 'No profiles found' });
+    }
+
+    // Return the combined profiles data
+    return res.status(200).json(profiles);
+  } catch (err) {
+    console.error('Error fetching profiles:', err);
+    return res.status(500).json({ message: 'An internal server error occurred' });
+  }
+};
+
 //Post a job
 // Post a new job

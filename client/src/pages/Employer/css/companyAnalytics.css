@@ -1,0 +1,96 @@
+.company-analytics-container {
+  margin-left: 0; /* Move the container further left */
+  margin-right: auto; /* Prevent extra space on the right */
+  width: 100%; /* Ensure the container takes up full width */
+  max-width: 300px; /* Set a maximum width for readability */
+  padding: 15px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: white;
+  border-radius: 8px;
+  position: relative; /* Allow positioning adjustments */
+  left: -10px; /* Move it 50px to the left */
+}
+
+  
+  .company-analytics-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  
+  .company-analytics-header h4 {
+    font-size: 16px;
+    font-weight: bold;
+  }
+  
+  .info-icon {
+    font-size: 14px;
+    background-color: #ddd;
+    border-radius: 50%;
+    padding: 4px;
+    cursor: pointer;
+  }
+  
+  .company-analytics-recommendations-list {
+    margin-top: 10px;
+  }
+  
+  .company-analytics-recommendation-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .company-analytics-profile-image {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    margin-right: 10px;
+  }
+  
+  .company-analytics-profile-details {
+    flex-grow: 1;
+  }
+  
+  .company-analytics-profile-name {
+    font-size: 14px;
+    font-weight: bold;
+  }
+  
+  .company-analytics-profile-description {
+    font-size: 12px;
+    color: #666;
+  }
+  
+  .company-analytics-follow-btn {
+    background-color: #0073b1;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    border: none;
+  }
+  
+  .company-analytics-view-more {
+    text-align: center;
+    margin-top: 10px;
+  }
+  
+  .company-analytics-view-more a {
+    color: #0073b1;
+    text-decoration: none;
+    font-weight: bold;
+  }
+  
+  .company-analytics-view-more a:hover {
+    text-decoration: underline;
+  }
+  
+  .error-message {
+    color: red;
+    margin-bottom: 10px;
+  }
+  

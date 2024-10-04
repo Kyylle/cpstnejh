@@ -1,0 +1,60 @@
+.feed-list {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.feed-item {
+    background-color: white;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.feed-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.feed-profile-image {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+}
+
+.feed-details {
+    display: flex;
+    flex-direction: column;
+}
+
+.feed-company-name {
+    font-weight: bold;
+    margin: 0;
+}
+
+.feed-date {
+    color: #888;
+    font-size: 0.9em;
+}
+
+.feed-caption {
+    margin-top: 10px;
+    font-size: 1rem;
+    color: #333;
+}
+
+.feed-media {
+    margin-top: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.feed-media-image {
+    width: 100%;
+    max-width: 300px;
+    border-radius: 8px;
+    object-fit: cover;
+}

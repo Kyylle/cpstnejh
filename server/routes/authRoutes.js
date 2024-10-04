@@ -13,11 +13,12 @@ const {
   uploadJobseekerProfilePicture,
   uploadJobseekerBackgroundPicture,
   getJobseekerProfileAndBackgroundImages,
+  getAllProfiles
 } = require('../controllers/authController');
 const {
   postJob
 } = require('../controllers/jobController');
-const { postContent, likePost, commentOnPost } = require('../controllers/contentController');
+const { postContent, likePost, commentOnPost, getPosts } = require('../controllers/contentController');
 const  {protect}  = require('../middleware/authMiddleware');
 const multer = require('multer');
 const path = require('path');
@@ -41,6 +42,9 @@ const upload = multer({ storage: profileStorage });
 router.post('/jobseeker', registerJobseeker);
 router.post('/employer', registerEmployer);
 router.post('/login/email', loginWithEmail);
+
+//get all
+router.get('/getallprofiles', protect, getAllProfiles);
 
 
 //JOBSEEKER RPUTES
@@ -77,6 +81,8 @@ router.get('/jobseeker/images', protect, getJobseekerProfileAndBackgroundImages)
 
 
 
+
+
 // EMPLOYER ROUTES
 //get employer Profile
 router.get('/profile', protect, getUserProfile);
@@ -93,6 +99,12 @@ router.put('/uploadBackgroundPicture', protect, upload.single('backgroundImage')
 // Post a job
 router.post('/post-job', protect, postJob);
 
+
+
+
+
+
+
 // Post content for networking
 // router.post('/post-contents', protect, postContent);
 router.post('/post-contents', protect, contentUpload.array('media', 5), postContent);
@@ -102,6 +114,16 @@ router.post('/like-post', protect, likePost);
 
 // Comment on a post
 router.post('/comment-post', protect, commentOnPost);
+
+
+
+///get post content
+router.get('/get-posts', protect, getPosts);
+
+
+
+
+
 
 
 router.get('/test', (req, res) => {
