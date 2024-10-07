@@ -1,159 +1,187 @@
-import React, { useEffect, useState } from "react";
-import PostJob from "./PostJob";
-import { fetchFeeds, likePost, commentPost } from './services/apiService'; // Import API service
-import { fetchAllCommentersProfileImages } from './utils/profileHelpers'; // Import profile helper
-import './css/companyFeeds.css';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import './css/companyFeeds.css'; // Ensure to style it like the example image
+import PostJob from './PostJob';
 
 const CompanyFeeds = () => {
-  const [feeds, setFeeds] = useState([]);
-  const [commentValues, setCommentValues] = useState({});
-  const [commentersProfileImages, setCommentersProfileImages] = useState({});
+    const [feeds, setFeeds] = useState([]);
+    const [commentValues, setCommentValues] = useState({}); // State to store comments for each post
 
-  useEffect(() => {
-    const fetchData = async () => {
+    useEffect(() => {
+        // Fetch feed data from backend
+        const fetchFeeds = async () => {
+            try {
+                const token = localStorage.getItem('authToken'); // Ensure token is available in localStorage
+                const config = {
+                    headers: {
+                        Authorization: `Bearer ${token}`, // Add the token to the Authorization header
+                    },
+                };
+
+                const response = await axios.get('/api/auth/get-posts', config); // Adjust the endpoint to match your backend
+                setFeeds(response.data);
+            } catch (error) {
+                console.error('Error fetching feeds:', error);
+            }
+        };
+        fetchFeeds();
+    }, []);
+
+    // Handle like post
+    const handleLikePost = async (postId) => {
+      console.log('Liking post with ID:', postId); // Debugging log
+    
       try {
-        const response = await fetchFeeds();
-        setFeeds(response.data);
-
-        // Fetch all commenters' profile images
-        await fetchAllCommentersProfileImages(response.data, setCommentersProfileImages);
+          const token = localStorage.getItem('authToken');
+          const config = {
+              headers: {
+                  Authorization: `Bearer ${token}`,
+              },
+          };
+          const response = await axios.post('/api/auth/like-post', { postId }, config);
+          console.log('Post liked:', response.data);
+    
+          // Update the liked post in the feeds state
+          const updatedFeeds = feeds.map(feed => {
+              if (feed._id === postId) {
+                  // Update the likes count
+                  return { ...feed, likes: response.data.likes };
+              }
+              return feed;
+          });
+          setFeeds(updatedFeeds);
       } catch (error) {
-        console.error("Error fetching feeds:", error);
+          console.error('Error liking the post:', error);
       }
+  };
+  
+
+    // Handle comment input changes
+    const handleCommentChange = (postId, comment) => {
+        setCommentValues(prevState => ({
+            ...prevState,
+            [postId]: comment,
+        }));
     };
-    fetchData();
-  }, []);
 
-  const handleLikePost = async (postId) => {
-    try {
-      const response = await likePost(postId);
-      const updatedFeeds = feeds.map((feed) => {
-        if (feed._id === postId) {
-          return { ...feed, likes: response.data.likes };
+    // Handle comment post
+    const handleCommentPost = async (postId) => {
+        const comment = commentValues[postId];
+        if (!comment || !comment.trim()) {
+            alert("Comment cannot be empty");
+            return;
         }
-        return feed;
-      });
-      setFeeds(updatedFeeds);
-    } catch (error) {
-      console.error("Error liking the post:", error);
-    }
-  };
 
-  const handleCommentPost = async (postId) => {
-    const comment = commentValues[postId];
-    if (!comment || !comment.trim()) {
-      alert("Comment cannot be empty");
-      return;
-    }
+        try {
+            const token = localStorage.getItem('authToken');
+            const config = {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            };
+            const response = await axios.post('/api/auth/comment-post', { postId, comment }, config);
+            console.log('Comment added:', response.data);
 
-    try {
-      const response = await commentPost(postId, comment);
-
-      // Fetch profile images for the new comments
-      await fetchAllCommentersProfileImages(response.data.comments, setCommentersProfileImages);
-
-      const updatedFeeds = feeds.map((feed) => {
-        if (feed._id === postId) {
-          return { ...feed, comments: response.data.comments };
+            // Update the post with the new comment in the feeds state
+            const updatedFeeds = feeds.map(feed => {
+                if (feed._id === postId) {
+                    return { ...feed, comments: response.data.comments };
+                }
+                return feed;
+            });
+            setFeeds(updatedFeeds);
+            setCommentValues(prevState => ({
+                ...prevState,
+                [postId]: '', // Clear the input field for that post after commenting
+            }));
+        } catch (error) {
+            console.error('Error adding comment:', error);
         }
-        return feed;
-      });
+    };
+    
 
-      setFeeds(updatedFeeds);
-      setCommentValues((prevState) => ({
-        ...prevState,
-        [postId]: "",
-      }));
-    } catch (error) {
-      console.error("Error adding comment:", error);
-    }
-  };
+    return (
+        <div className='company-page-content'>
+            {/* Render the feeds dynamically */}
+            <PostJob />
+            <div className='feed-list'>
+                {feeds.map((feed, index) => (
+                    <div key={index} className='feed-item'>
+                        <div className="feed-header">
+                            <img
+                                src={feed.employer.profileImage || '/default-profile.png'}
+                                alt={feed.employer.companyName}
+                                className="feed-profile-image"
+                            />
+                            <div className="feed-details">
+                                <h4 className="feed-company-name">{feed.employer.companyName}</h4>
+                                <p className="feed-date">
+                                    {new Date(feed.postedDate).toLocaleDateString('en-US', {
+                                        year: 'numeric',
+                                        month: 'long',
+                                        day: 'numeric',
+                                    })}
+                                </p>
+                            </div>
+                        </div>
 
-  return (
-    <div className="company-page-content">
-      <PostJob />
-      <div className="feed-list">
-        {feeds.map((feed, index) => (
-          <div key={index} className="feed-item">
-            <div className="feed-header">
-              <img
-                src={feed.employer.profileImage || "/default-profile.png"}
-                alt={feed.employer.companyName}
-                className="feed-profile-image"
-              />
-              <div className="feed-details">
-                <h4 className="feed-company-name">{feed.employer.companyName}</h4>
-                <p className="feed-date">
-                  {new Date(feed.postedDate).toLocaleDateString("en-US", {
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric",
-                  })}
-                </p>
-              </div>
-            </div>
+                        {/* Caption */}
+                        <div className="feed-caption">
+                            <p>{feed.caption}</p>
+                        </div>
 
-            <div className="feed-caption">
-              <p>{feed.caption}</p>
-            </div>
+                        {/* Media */}
+                        {feed.media && feed.media.length > 0 && (
+                            <div className="feed-media">
+                                {feed.media.map((mediaUrl, i) => (
+                                    <img
+                                        key={i}
+                                        src={mediaUrl}
+                                        alt={`Media ${i + 1}`}
+                                        className="feed-media-image"
+                                    />
+                                ))}
+                            </div>
+                        )}
 
-            {feed.media && feed.media.length > 0 && (
-              <div className="feed-media">
-                {feed.media.map((mediaUrl, i) => (
-                  <img
-                    key={i}
-                    src={mediaUrl}
-                    alt={`Media ${i + 1}`}
-                    className="feed-media-image"
-                  />
+                        {/* Like & Comment Section */}
+                        <div className="feed-actions">
+                            <button onClick={() => handleLikePost(feed._id)} className="like-btn">
+                                👍 Like ({feed.likes.length})
+                            </button>
+                            <span>Comments ({feed.comments.length})</span>
+                        </div>
+
+                        {/* Comments Section */}
+                        <div className="feed-comments">
+                            {feed.comments.map((comment, i) => (
+                                <div key={i} className="feed-comment">
+                                    <p><strong>{comment.commenterName}</strong>: {comment.text}</p>
+                                </div>
+                            ))}
+
+                            {/* Add New Comment */}
+                            <div className="add-comment-section">
+                                <input
+                                    type="text"
+                                    placeholder="Add a comment..."
+                                    value={commentValues[feed._id] || ''} // Get comment value for that specific post
+                                    onChange={(e) => handleCommentChange(feed._id, e.target.value)}
+                                />
+                                <button
+                                    onClick={() => handleCommentPost(feed._id)}
+                                    disabled={!commentValues[feed._id] || !commentValues[feed._id].trim()} // Disable button if comment is empty
+                                    className={!commentValues[feed._id] || !commentValues[feed._id].trim() ? 'disabled-btn' : ''} // Add a class for disabled button styling
+                                >
+                                    Post
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 ))}
-              </div>
-            )}
-
-            <div className="feed-actions">
-              <button onClick={() => handleLikePost(feed._id)} className="like-btn">
-                👍 Like ({feed.likes.length})
-              </button>
-              <span>Comments ({feed.comments.length})</span>
             </div>
-
-            <div className="feed-comments">
-              {feed.comments.map((comment, i) => (
-                <div key={i} className="feed-comment">
-                  <img
-                    src={commentersProfileImages[comment.user]?.profileImage || "/default-profile.png"}
-                    alt={commentersProfileImages[comment.user]?.name || "Anonymous"}
-                    className="comment-profile-image"
-                  />
-                  <div className="comment-content">
-                    <p className="commenter-name">
-                      <strong>{commentersProfileImages[comment.user]?.name || "Anonymous"}</strong>
-                    </p>
-                    <p className="comment-text">{comment.text}</p>
-                  </div>
-                </div>
-              ))}
-
-              <div className="add-comment-section">
-                <input
-                  type="text"
-                  placeholder="Add a comment..."
-                  value={commentValues[feed._id] || ""}
-                  onChange={(e) => setCommentValues({ ...commentValues, [feed._id]: e.target.value })}
-                />
-                <button
-                  onClick={() => handleCommentPost(feed._id)}
-                  disabled={!commentValues[feed._id] || !commentValues[feed._id].trim()}
-                >
-                  Post
-                </button>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
+        </div>
+    );
 };
 
 export default CompanyFeeds;

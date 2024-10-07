@@ -18,7 +18,7 @@ const {
 const {
   postJob
 } = require('../controllers/jobController');
-const { postContent, likePost, commentOnPost, getPosts, getCommenterProfileImage } = require('../controllers/contentController');
+const { postContent, likePost, commentOnPost, getPosts, getCommenterProfileImage, unlikePost } = require('../controllers/contentController');
 const  {protect}  = require('../middleware/authMiddleware');
 const multer = require('multer');
 const path = require('path');
@@ -113,6 +113,7 @@ router.post('/post-contents', protect, contentUpload.array('media', 5), postCont
 
 // Like a post
 router.post('/like-post', protect, likePost);
+router.post('/unlike-post', protect, unlikePost);
 
 // Comment on a post
 router.post('/comment-post', protect, commentOnPost);

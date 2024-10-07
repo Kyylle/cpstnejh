@@ -4,7 +4,7 @@ const Employer = require("../models/employer");
 // Post a new job
 exports.postJob = async (req, res) => {
   try {
-    const employerId = req.user.id; // Assuming user is authenticated and has employer's ID in the JWT token
+    const employerId = req.user.userId; // Assuming user is authenticated and has employer's ID in the JWT token
     const { jobTitle, description, jobType, location, salaryRange, applicationDeadline, requirements, responsibilities, benefits } = req.body;
 
     // Validate required fields

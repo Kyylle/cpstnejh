@@ -24,7 +24,7 @@ export const likePost = async (postId) => {
 
 // Comment on a post
 export const commentPost = async (postId, comment) => {
-  const config = getConfig();
+  const config = getConfig(); // Ensure your config has the correct token and headers
   return axios.post('/api/auth/comment-post', { postId, comment }, config);
 };
 
@@ -32,6 +32,7 @@ export const commentPost = async (postId, comment) => {
 export const fetchCommenterProfileImage = async (userId, userType) => {
   const config = getConfig();
   const response = await axios.get(`/api/auth/commenter-profile/${userId}/${userType}`, config);
+
   return {
     profileImage: response.data.profileImage || "/default-profile.png",
     name: response.data.name || "Anonymous",

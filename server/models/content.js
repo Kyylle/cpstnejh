@@ -9,7 +9,7 @@ const contentSchema = new mongoose.Schema({
   },
   caption: {
     type: String,
-    required: true,
+    required: false,
   },
   postedDate: {
     type: Date,

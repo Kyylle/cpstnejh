@@ -10,4 +10,5 @@ const registerJobseeker = async (jobseekerData) => {
     }
 };
 
+
 export default registerJobseeker;

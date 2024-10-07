@@ -84,19 +84,16 @@ const PostJob = () => {
 
     // Handle posting content
     const handleSubmitContent = async () => {
-        if (!caption && mediaFiles.length === 0) {
-            alert("Please add a caption or media before posting.");
-            return;
-        }
-
         const formData = new FormData();
+        
+        // Caption can still be optional
         formData.append('caption', caption);
-
-        // Append all media files to the form data
+    
+        // Append all media files to the form data, but it's not required anymore
         mediaFiles.forEach((file) => {
             formData.append('media', file);
         });
-
+    
         try {
             const token = localStorage.getItem('authToken');
             const config = {
@@ -105,18 +102,19 @@ const PostJob = () => {
                     Authorization: `Bearer ${token}`
                 }
             };
-
+    
             // Send the post request to the backend
             const response = await axios.post('/api/auth/post-contents', formData, config);
-
+    
             // Handle the response from the backend
             console.log('Content posted successfully:', response.data);
             closeModal(); // Close the modal after successful post
         } catch (error) {
             console.error("Error posting content:", error);
-            alert("Failed to post content. Please try again later.");
+            alert("Caption Is required");
         }
     };
+    
 
     // Handle posting a job
     const handlePostJobClick = () => {

@@ -89,14 +89,12 @@ exports.postContent = async (req, res) => {
 // Like a post (both employers and jobseekers)
 exports.likePost = async (req, res) => {
   try {
-    const userId = req.user.id; // Extract user ID from JWT
-    // const userType = req.user.userType; // Extract userType (employer or jobseeker) from JWT
+    const userId = req.user.userId; // Extract user ID from JWT
+    const { postId } = req.body;
 
     // Debugging
     console.log("User ID:", userId);
-    // console.log("User Type:", userType);
-
-    const { postId } = req.body;
+    console.log("Post ID:", postId);
 
     // Find the content by its ID
     const content = await Content.findById(postId);
@@ -111,8 +109,8 @@ exports.likePost = async (req, res) => {
       return res.status(400).json({ message: "You have already liked this post" });
     }
 
-    // Add the like with user ID and userType
-    content.likes.push({ user: userId, userType });
+    // Add the like with user ID (omit userType if it's not needed)
+    content.likes.push({ user: userId });
     await content.save();
 
     res.status(200).json({ message: "Post liked", likes: content.likes });
@@ -121,6 +119,36 @@ exports.likePost = async (req, res) => {
     res.status(500).json({ message: "An internal server error occurred" });
   }
 };
+
+exports.unlikePost = async (req, res) => {
+  try {
+    const userId = req.user.userId; // Extract user ID from JWT
+    const { postId } = req.body;
+
+    // Find the content by its ID
+    const content = await Content.findById(postId);
+
+    if (!content) {
+      return res.status(404).json({ message: "Post not found" });
+    }
+
+    // Check if the user has already liked the post
+    const likeIndex = content.likes.findIndex(like => like.user.toString() === userId);
+    if (likeIndex === -1) {
+      return res.status(400).json({ message: "You haven't liked this post" });
+    }
+
+    // Remove the like from the likes array
+    content.likes.splice(likeIndex, 1);
+    await content.save();
+
+    res.status(200).json({ message: "Post unliked", likes: content.likes });
+  } catch (error) {
+    console.error("Error unliking post:", error);
+    res.status(500).json({ message: "An internal server error occurred" });
+  }
+};
+
 
 
 // Comment on a post (both employers and jobseekers)
@@ -141,10 +169,10 @@ exports.commentOnPost = async (req, res) => {
       return res.status(404).json({ message: "Post not found" });
     }
 
-    // Add the comment with user ID and userType
+    // Add the new comment with user ID and userType
     const newComment = {
       user: userId,
-      userType: userType, // Make sure userType is stored
+      userType: userType, // Ensure userType is stored
       text: comment,
       date: Date.now(),
     };
@@ -152,7 +180,8 @@ exports.commentOnPost = async (req, res) => {
     content.comments.push(newComment);
     await content.save();
 
-    res.status(201).json({ message: "Comment added", comments: content.comments });
+    // Return the newly added comment separately and the updated comments list
+    res.status(201).json({ message: "Comment added", comment: newComment, comments: content.comments });
   } catch (error) {
     console.error("Error commenting on post:", error);
     res.status(500).json({ message: "An internal server error occurred" });
@@ -162,16 +191,17 @@ exports.commentOnPost = async (req, res) => {
 
 
 
+
 // Get profile image of the user (employer or jobseeker) who commented
 exports.getCommenterProfileImage = async (req, res) => {
   try {
-    const { userId, userType } = req.params; // Extract user ID and type from request parameters
+    const { userId, userType } = req.params;
 
     let user;
     if (userType === 'Employer') {
-      user = await Employer.findById(userId).select('profileImage companyName'); // Fetch profileImage and companyName
+      user = await Employer.findById(userId).select('profileImage companyName');
     } else if (userType === 'Jobseeker') {
-      user = await Jobseeker.findById(userId).select('profileImage name'); // Fetch profileImage and name
+      user = await Jobseeker.findById(userId).select('profileImage name');
     }
 
     if (!user) {
@@ -180,7 +210,7 @@ exports.getCommenterProfileImage = async (req, res) => {
 
     res.status(200).json({
       profileImage: user.profileImage,
-      name: user.name || user.companyName, // Return name or companyName depending on userType
+      name: user.name || user.companyName,
     });
   } catch (error) {
     console.error("Error fetching user profile image:", error);
