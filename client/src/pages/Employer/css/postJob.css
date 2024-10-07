@@ -123,3 +123,62 @@ form input, form select {
     border-radius: 5px;
     border: 1px solid #ccc;
 }
+
+
+.post-job-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.post-job-modal {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    width: 400px;
+}
+
+.post-job-form label {
+    display: block;
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+.post-job-form input,
+.post-job-form textarea,
+.post-job-form select {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    margin-bottom: 10px;
+}
+
+.post-job-modal-actions {
+    display: flex;
+    justify-content: space-between;
+}
+
+.post-job-submit-btn {
+    background-color: #0073b1;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.post-job-close-btn {
+    background-color: #ddd;
+    color: #333;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}

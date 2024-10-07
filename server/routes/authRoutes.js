@@ -18,7 +18,7 @@ const {
 const {
   postJob
 } = require('../controllers/jobController');
-const { postContent, likePost, commentOnPost, getPosts } = require('../controllers/contentController');
+const { postContent, likePost, commentOnPost, getPosts, getCommenterProfileImage } = require('../controllers/contentController');
 const  {protect}  = require('../middleware/authMiddleware');
 const multer = require('multer');
 const path = require('path');
@@ -96,6 +96,8 @@ router.get('/getProfileImage', protect, getProfileImage);
 // Background picture routes
 router.put('/uploadBackgroundPicture', protect, upload.single('backgroundImage'), updateEmployerBackgroundPicture);
 
+
+
 // Post a job
 router.post('/post-job', protect, postJob);
 
@@ -114,7 +116,7 @@ router.post('/like-post', protect, likePost);
 
 // Comment on a post
 router.post('/comment-post', protect, commentOnPost);
-
+router.get('/commenter-profile/:userId/:userType', protect, getCommenterProfileImage);
 
 
 ///get post content

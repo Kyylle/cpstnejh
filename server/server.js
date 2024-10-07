@@ -24,7 +24,7 @@ if (!fs.existsSync(uploadsDir)) {
 app.use(express.json()); // Middleware to parse JSON bodies
 app.use(cors()); // Middleware for handling CORS (frontend-backend communication)
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
-// app.use('/contentuploads', express.static(path.join(__dirname, 'contentuploads')));
+app.use('/contentuploads', express.static(path.join(__dirname, 'contentuploads')));
 
 // Connect to MongoDB
 connectDB();

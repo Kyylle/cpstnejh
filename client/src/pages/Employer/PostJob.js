@@ -1,14 +1,54 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import './css/postJob.css'; // Add necessary styles
+import './css/postJob.css'; // Ensure the path to the CSS file is correct
 import { FiX } from 'react-icons/fi';
 
 const PostJob = () => {
     const [showJobModal, setShowJobModal] = useState(false);
     const [showMediaModal, setShowMediaModal] = useState(false);
+    const [showPostJobModal, setShowPostJobModal] = useState(false);
     const [previewImage, setPreviewImage] = useState(null);
     const [caption, setCaption] = useState(''); // Caption state
     const [mediaFiles, setMediaFiles] = useState([]); // Media files state
+    const [profileImage, setProfileImage] = useState('/path/to/default-profile.png'); // Default profile image
+
+    // Job Posting Modal States
+    const [jobTitle, setJobTitle] = useState('');
+    const [description, setDescription] = useState('');
+    const [jobType, setJobType] = useState('Full-Time');
+    const [location, setLocation] = useState('');
+    const [salaryRange, setSalaryRange] = useState('');
+    const [applicationDeadline, setApplicationDeadline] = useState('');
+    const [requirements, setRequirements] = useState('');
+    const [responsibilities, setResponsibilities] = useState('');
+    const [benefits, setBenefits] = useState('');
+
+    // Fetch employer profile for the profile image
+    useEffect(() => {
+        const fetchEmployerProfile = async () => {
+            try {
+                const token = localStorage.getItem('authToken');
+                const config = {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                };
+
+                // Fetch employer profile
+                const response = await axios.get('/api/auth/profile', config);
+                const employerData = response.data;
+
+                // Set profile image if exists
+                if (employerData.profileImage) {
+                    setProfileImage(employerData.profileImage);
+                }
+            } catch (error) {
+                console.error('Error fetching employer profile:', error);
+            }
+        };
+
+        fetchEmployerProfile();
+    }, []);
 
     const handleInputClick = () => {
         setShowJobModal(true); // Open post modal
@@ -39,8 +79,10 @@ const PostJob = () => {
     const closeModal = () => {
         setShowJobModal(false);
         setShowMediaModal(false);
+        setShowPostJobModal(false); // Close the job modal as well
     };
 
+    // Handle posting content
     const handleSubmitContent = async () => {
         if (!caption && mediaFiles.length === 0) {
             alert("Please add a caption or media before posting.");
@@ -51,7 +93,7 @@ const PostJob = () => {
         formData.append('caption', caption);
 
         // Append all media files to the form data
-        mediaFiles.forEach((file, index) => {
+        mediaFiles.forEach((file) => {
             formData.append('media', file);
         });
 
@@ -76,14 +118,58 @@ const PostJob = () => {
         }
     };
 
+    // Handle posting a job
+    const handlePostJobClick = () => {
+        setShowPostJobModal(true);
+    };
+
+    const handleSubmitJob = async () => {
+        if (!jobTitle || !description || !jobType || !location) {
+            alert("Please fill in all required fields.");
+            return;
+        }
+
+        const jobData = {
+            jobTitle,
+            description,
+            jobType,
+            location,
+            salaryRange,
+            applicationDeadline,
+            requirements: requirements.split(',').map(item => item.trim()), // Convert comma-separated input to array
+            responsibilities: responsibilities.split(',').map(item => item.trim()),
+            benefits: benefits.split(',').map(item => item.trim()),
+        };
+
+        try {
+            const token = localStorage.getItem('authToken');
+            const config = {
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`,
+                },
+            };
+
+            // Post job data to the backend
+            const response = await axios.post('/api/auth/post-job', jobData, config);
+
+            // Handle success
+            console.log('Job posted successfully:', response.data);
+            closeModal(); // Close the modal after successful post
+        } catch (error) {
+            console.error('Error posting job:', error);
+            alert('Failed to post job. Please try again later.');
+        }
+    };
+
     return (
         <div className="post-job-container">
             {/* Input Box */}
             <div className="post-job-input">
-                <img className="post-job-profile-pic" src="/path/to/default-profile.png" alt="Profile" />
+                <img className="post-job-profile-pic" src={profileImage} alt="Profile" />
                 <input type="text" placeholder="Write a post" onClick={handleInputClick} />
                 <div className="post-job-action-buttons">
-                    <button className="post-job-free-job" onClick={handleInputClick}>
+                    <button className="post-job-free-job" onClick={handlePostJobClick}>
                         <span role="img" aria-label="briefcase">💼</span> Post a free job
                     </button>
                     <button className="post-job-media" onClick={handleMediaClick}>
@@ -137,6 +223,82 @@ const PostJob = () => {
                         <button className="post-job-close-modal-btn" onClick={closeModal}>
                             <FiX size={24} />
                         </button>
+                    </div>
+                </div>
+            )}
+
+            {/* Post a Job Modal */}
+            {showPostJobModal && (
+                <div className="post-job-modal-overlay">
+                    <div className="post-job-post-modal">
+                        <div className="post-job-post-header">
+                            <h2>Post a Job for Free</h2>
+                            <button className="post-job-close-modal-btn" onClick={closeModal}>
+                                <FiX size={24} />
+                            </button>
+                        </div>
+                        <form className="post-job-form">
+                            <input
+                                type="text"
+                                placeholder="Job Title"
+                                value={jobTitle}
+                                onChange={(e) => setJobTitle(e.target.value)}
+                                required
+                            />
+                            <textarea
+                                placeholder="Job Description"
+                                value={description}
+                                onChange={(e) => setDescription(e.target.value)}
+                                required
+                            />
+                            <select
+                                value={jobType}
+                                onChange={(e) => setJobType(e.target.value)}
+                                required
+                            >
+                                <option value="Full-Time">Full-Time</option>
+                                <option value="Part-Time">Part-Time</option>
+                                <option value="Contract">Contract</option>
+                                <option value="Internship">Internship</option>
+                            </select>
+                            <input
+                                type="text"
+                                placeholder="Location"
+                                value={location}
+                                onChange={(e) => setLocation(e.target.value)}
+                                required
+                            />
+                            <input
+                                type="text"
+                                placeholder="Salary Range"
+                                value={salaryRange}
+                                onChange={(e) => setSalaryRange(e.target.value)}
+                            />
+                            <input
+                                type="date"
+                                placeholder="Application Deadline"
+                                value={applicationDeadline}
+                                onChange={(e) => setApplicationDeadline(e.target.value)}
+                            />
+                            <textarea
+                                placeholder="Requirements (comma separated)"
+                                value={requirements}
+                                onChange={(e) => setRequirements(e.target.value)}
+                            />
+                            <textarea
+                                placeholder="Responsibilities (comma separated)"
+                                value={responsibilities}
+                                onChange={(e) => setResponsibilities(e.target.value)}
+                            />
+                            <textarea
+                                placeholder="Benefits (comma separated)"
+                                value={benefits}
+                                onChange={(e) => setBenefits(e.target.value)}
+                            />
+                            <button type="button" className="post-job-post-btn" onClick={handleSubmitJob}>
+                                Post Job
+                            </button>
+                        </form>
                     </div>
                 </div>
             )}

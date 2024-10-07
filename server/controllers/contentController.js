@@ -127,6 +127,7 @@ exports.likePost = async (req, res) => {
 exports.commentOnPost = async (req, res) => {
   try {
     const userId = req.user.userId; // Extract user ID from JWT
+    const userType = req.user.userType; // Extract userType from JWT
     const { postId, comment } = req.body;
 
     if (!comment) {
@@ -140,9 +141,10 @@ exports.commentOnPost = async (req, res) => {
       return res.status(404).json({ message: "Post not found" });
     }
 
-    // Add the comment with user ID
+    // Add the comment with user ID and userType
     const newComment = {
       user: userId,
+      userType: userType, // Make sure userType is stored
       text: comment,
       date: Date.now(),
     };
@@ -158,17 +160,53 @@ exports.commentOnPost = async (req, res) => {
 };
 
 
+
+
+// Get profile image of the user (employer or jobseeker) who commented
+exports.getCommenterProfileImage = async (req, res) => {
+  try {
+    const { userId, userType } = req.params; // Extract user ID and type from request parameters
+
+    let user;
+    if (userType === 'Employer') {
+      user = await Employer.findById(userId).select('profileImage companyName'); // Fetch profileImage and companyName
+    } else if (userType === 'Jobseeker') {
+      user = await Jobseeker.findById(userId).select('profileImage name'); // Fetch profileImage and name
+    }
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    res.status(200).json({
+      profileImage: user.profileImage,
+      name: user.name || user.companyName, // Return name or companyName depending on userType
+    });
+  } catch (error) {
+    console.error("Error fetching user profile image:", error);
+    res.status(500).json({ message: "An internal server error occurred" });
+  }
+};
+
+
 //get the posts content
 exports.getPosts = async (req, res) => {
   try {
-    // Find all posts (You can add pagination, filtering, or sorting if needed)
     const posts = await Content.find()
-      .populate('employer', 'companyName profileImage') // Assuming you're fetching employer details for the post
-      .sort({ postedDate: -1 }); // Sorting by the most recent posts
+      .populate({
+        path: 'comments.user',
+        select: 'name profileImage companyName', // Select the fields to display
+      })
+      .populate({
+        path: 'employer',
+        select: 'companyName profileImage',
+      })
+      .sort({ postedDate: -1 }) // Sort by most recent posts
+      .exec();
 
-    res.status(200).json(posts); // Return the posts as JSON
-  } catch (error) {
-    console.error('Error fetching posts:', error);
-    res.status(500).json({ message: 'An error occurred while fetching posts' });
+    res.status(200).json(posts);
+  } catch (err) {
+    console.error("Error fetching posts:", err);
+    res.status(500).json({ message: "An error occurred while fetching posts" });
   }
 };
