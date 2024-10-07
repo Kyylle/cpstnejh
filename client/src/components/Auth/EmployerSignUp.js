@@ -13,7 +13,7 @@ const EmployerSignUp = ({ showModal, onClose }) => {
   });
 
   const [errors, setErrors] = useState({});
-  const [message, setMessage] = useState("");
+  const [message] = useState("");
   const [loading, setLoading] = useState(false); // Define loading state here
   const navigate = useNavigate();
 

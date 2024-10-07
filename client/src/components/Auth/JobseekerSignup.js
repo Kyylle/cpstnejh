@@ -53,7 +53,7 @@ const JobseekerSignUp = ({ showModal, onClose }) => {
     try {
       const response = await axios.post("/api/auth/jobseeker", formData);
 
-      const { token, userType } = response.data;
+      const { token} = response.data;
       localStorage.setItem("authToken", token);
       setMessage("Jobseeker registered successfully");
 
