@@ -1,23 +1,29 @@
+/* Container */
 .post-job-container {
     margin: 20px auto;
     max-width: 600px;
     border-radius: 10px;
+    background-color: #f8f9fa;
+    padding: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
+/* Input Box */
 .post-job-input {
     display: flex;
     align-items: center;
-    border: 1px solid #ccc;
-    border-radius: 20px;
-    padding: 10px;
+    border: 1px solid #dee2e6;
+    border-radius: 30px;
+    padding: 10px 20px;
     background-color: white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
 .post-job-profile-pic {
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    margin-right: 10px;
+    margin-right: 15px;
 }
 
 .post-job-input input {
@@ -25,30 +31,42 @@
     outline: none;
     flex-grow: 1;
     padding: 10px;
-    border-radius: 20px;
-    margin-right: 10px;
+    border-radius: 30px;
+    background-color: #f1f3f5;
+    font-size: 16px;
+    color: #495057;
 }
 
+/* Action Buttons */
 .post-job-action-buttons {
     display: flex;
-    gap: 10px;
+    gap: 15px;
 }
 
 .post-job-free-job, .post-job-media {
-    background: none;
+    background: #0073b1;
     border: none;
-    cursor: pointer;
+    padding: 8px 12px;
+    border-radius: 25px;
+    color: white;
+    font-weight: 500;
     display: flex;
     align-items: center;
-    color: #0073b1;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
+.post-job-free-job:hover, .post-job-media:hover {
+    background-color: #005b8f;
+}
+
+/* Modal Overlay */
 .post-job-modal-overlay {
     position: fixed;
     top: 0;
     left: 0;
-    right: 0;
-    bottom: 0;
+    width: 100vw;
+    height: 100vh;
     background-color: rgba(0, 0, 0, 0.5);
     display: flex;
     justify-content: center;
@@ -56,20 +74,37 @@
     z-index: 1000;
 }
 
-.post-job-post-modal {
+/* Modal Box */
+.post-job-post-modal, .post-job-media-modal {
     background-color: white;
-    padding: 20px;
-    width: 400px;
-    border-radius: 10px;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
     position: relative;
+    text-align: center;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-.post-job-post-header {
+.post-job-post-modal {
+    width: 700px; /* Adjust width for a two-column layout */
+}
+
+.post-job-media-modal {
+    width: 400px;
+}
+
+/* Modal Header */
+.post-job-post-header, .post-job-media-modal h4 {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-bottom: 20px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
 }
 
+/* Close Button */
 .post-job-close-modal-btn {
     background: none;
     border: none;
@@ -77,108 +112,110 @@
     position: absolute;
     top: 10px;
     right: 10px;
+    background-color: #0073b1;
+    color: white;
+    padding: 10px;
+    border-radius: 50%;
+    font-size: 20px;
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
 }
 
-.post-job-modal-actions {
+.post-job-close-modal-btn:hover {
+    background-color: #005b8f;
+}
+
+/* Form Styling */
+.post-job-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Two-column layout */
+    gap: 5px;
+}
+
+.post-job-form input, .post-job-form textarea, .post-job-form select {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
+    background-color: #f9f9f9;
+    font-size: 14px;
+    color: #333;
+    outline: none;
+    transition: border-color 0.3s ease;
+}
+
+.post-job-form input:focus, .post-job-form textarea:focus, .post-job-form select:focus {
+    border-color: #0073b1;
+    background-color: #fff;
+}
+
+.post-job-form textarea {
+    grid-column: 1 / 3; /* Textareas span both columns */
+}
+
+/* Submit Button */
+.post-job-post-btn {
+    background-color: #0073b1;
+    color: white;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    grid-column: 1 / 3; /* Button spans both columns */
+    width: 100%;
     margin-top: 20px;
-    display: flex;
-    justify-content: space-between;
 }
 
+.post-job-post-btn:hover {
+    background-color: #005b8f;
+}
+
+/* Upload Button */
 .post-job-upload-btn {
     background-color: #0073b1;
     color: white;
     padding: 10px 20px;
     border: none;
-    border-radius: 5px;
+    border-radius: 6px;
     cursor: pointer;
+    font-size: 16px;
+    margin-bottom: 15px;
 }
 
-.post-job-image-preview img {
-    max-width: 100%;
-    margin-top: 10px;
+.post-job-upload-btn:hover {
+    background-color: #005b8f;
 }
 
-.post-job-post-btn, .post-job-submit-btn {
-    background-color: #0073b1;
+/* File Input Label */
+.post-job-upload-btn label {
+    background-color: #0883dc;
     color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
+    padding: 100px 15px;
+    border-radius: 6px;
     cursor: pointer;
-    width: 100%;
-    text-align: center;
-}
-
-form label {
-    display: block;
-    margin-top: 10px;
     font-size: 14px;
+    margin: 20px;
 }
 
-form input, form select {
-    width: 100%;
-    padding: 8px;
-    margin-top: 5px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
+.post-job-upload-btn label:hover {
+    background-color: #1f3de6;
 }
 
+/* Responsive adjustments for mobile */
+@media (max-width: 768px) {
+    .post-job-form {
+        grid-template-columns: 1fr; /* Stack in one column on small screens */
+    }
 
-.post-job-modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
+    .post-job-post-modal {
+        width: 100%;
+        padding: 20px;
+    }
 }
 
-.post-job-modal {
-    background-color: white;
-    padding: 20px;
-    border-radius: 8px;
-    width: 400px;
-}
-
-.post-job-form label {
-    display: block;
-    margin-top: 10px;
-    font-weight: bold;
-}
-
-.post-job-form input,
-.post-job-form textarea,
-.post-job-form select {
-    width: 100%;
-    padding: 8px;
-    margin-top: 5px;
-    margin-bottom: 10px;
-}
-
-.post-job-modal-actions {
-    display: flex;
-    justify-content: space-between;
-}
-
-.post-job-submit-btn {
-    background-color: #0073b1;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-.post-job-close-btn {
-    background-color: #ddd;
-    color: #333;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}

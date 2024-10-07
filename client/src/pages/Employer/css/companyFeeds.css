@@ -117,4 +117,14 @@
     background-color: #ccc;
     cursor: not-allowed;
   }
+  .like-btn {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    color: #007bff;
+    margin-right: 10px;
+    display: flex;
+    align-items: center; /* Ensures icon and text are aligned */
+}
+
   
