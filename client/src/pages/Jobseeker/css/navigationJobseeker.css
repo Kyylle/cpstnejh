@@ -1,0 +1,108 @@
+.navbar-jobseeker {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: #2e4d80;
+  border-bottom: 1px solid #ddd;
+  z-index: 1000;
+  box-sizing: border-box; /* Ensure padding doesn't exceed width */
+}
+
+/* Ensure the main content starts below the navigation */
+.page-content {
+  margin-top: 60px; /* Adjust according to the height of your navbar */
+  padding: 20px;
+  background-color: #f0f0f0; /* Optional, set a background for the content area */
+}
+
+/* Adjust the rest of the elements in the layout */
+.job-feed-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.feed-posts {
+  flex: 1; /* Take up remaining space */
+  padding: 20px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.right-sidebar {
+  width: 300px;
+  background-color: #f4f4f4;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 80px; /* Keeps it visible when scrolling */
+}
+
+.navbar-left-jobseeker {
+  display: flex;
+  align-items: center;
+}
+
+.logo-jobseeker {
+  font-size: 24px;
+  font-weight: bold;
+  margin-right: 20px;
+  color: white;
+}
+
+.navbar-search-bar-jobseeker {
+  padding: 5px 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.navbar-center-jobseeker {
+  display: flex;
+  gap: 15px;
+}
+
+.navbar-button-jobseeker {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  margin-left: 15px;
+  font-size: 16px;
+}
+
+.navbar-right-jobseeker {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  position: relative;
+}
+
+.navbar-user-name-jobseeker {
+  margin-right: 10px;
+  color: white;
+}
+
+.profile-circle-jobseeker {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #666;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-size: 18px;
+}
+
+.profile-avatar-jobseeker {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}

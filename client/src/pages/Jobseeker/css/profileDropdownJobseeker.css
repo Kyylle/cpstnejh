@@ -1,0 +1,96 @@
+.jobseeker-profile-dropdown {
+    width: 250px;
+    position: absolute;
+    top: 50px;
+    right: 0;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .dropdown-header-jobseeker {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  
+  .profile-info-jobseeker {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .profile-icon-jobseeker {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-bottom: 10px;
+  }
+  
+  .view-profile-btn-jobseeker {
+    background-color: transparent;
+    border: 2px solid #3498db;
+    color: #3498db;
+    border-radius: 20px;
+    padding: 8px 15px;
+    cursor: pointer;
+    font-weight: bold;
+    margin-top: 10px;
+  }
+  
+  .view-profile-btn-jobseeker:hover {
+    background-color: #3498db;
+    color: white;
+  }
+  
+  .dropdown-section-jobseeker {
+    width: 100%;
+    text-align: left;
+    margin-bottom: 10px;
+  }
+  
+  .dropdown-section-jobseeker h4 {
+    font-size: 14px;
+    margin-bottom: 5px;
+  }
+  
+  .dropdown-section-jobseeker ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .dropdown-section-jobseeker li {
+    padding: 8px 0;
+    cursor: pointer;
+    font-size: 14px;
+  }
+  
+  .dropdown-section-jobseeker li:hover {
+    color: #3498db;
+  }
+  
+  .dropdown-footer-jobseeker {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+  
+  .sign-out-btn-jobseeker {
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .sign-out-btn-jobseeker:hover {
+    background-color: #c0392b;
+  }
+  

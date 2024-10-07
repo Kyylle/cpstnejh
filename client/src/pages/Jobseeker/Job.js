@@ -9,11 +9,11 @@ const Job = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Fetch job listings from mockAPI
+  // Fetch job listings from the backend API
   useEffect(() => {
-    axios.get('https://6635e420415f4e1a5e25977e.mockapi.io/NewData') // Use your actual endpoint
+    axios.get('/api/auth/jobs') // Updated to use the correct route
       .then((response) => {
-        setJobs(response.data);
+        setJobs(response.data.jobs); // Assuming response contains 'jobs' array
         setLoading(false);
       })
       .catch((err) => {
@@ -54,15 +54,15 @@ const Job = () => {
         {/* Main Job Listings */}
         <main className="job-listings">
           {jobs.map((job) => (
-            <div className="job-listing-item" key={job.id}>
+            <div className="job-listing-item" key={job._id}> {/* Updated key to job._id */}
               <div>
                 <button 
                   className="job-title-btn" 
                   onClick={() => handleJobSelect(job)}
                 >
-                  {job.title}
+                  {job.jobTitle} {/* Updated field name */}
                 </button>
-                <p>{job.company} • {job.location} • {job.type}</p>
+                <p>{job.company} • {job.location} • {job.jobType}</p> {/* Updated field names */}
               </div>
               <button>Apply</button>
             </div>
@@ -73,10 +73,10 @@ const Job = () => {
         <aside className="right-sidebar">
           {selectedJob ? (
             <div className="job-details">
-              <h4>{selectedJob.title}</h4>
+              <h4>{selectedJob.jobTitle}</h4> {/* Updated field name */}
               <p><strong>Company:</strong> {selectedJob.company}</p>
               <p><strong>Location:</strong> {selectedJob.location}</p>
-              <p><strong>Job Type:</strong> {selectedJob.type}</p>
+              <p><strong>Job Type:</strong> {selectedJob.jobType}</p>
               <p><strong>Description:</strong> {selectedJob.description}</p>
               <button>Apply Now</button>
             </div>

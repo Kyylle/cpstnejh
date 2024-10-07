@@ -16,7 +16,9 @@ const {
   getAllProfiles
 } = require('../controllers/authController');
 const {
-  postJob
+  postJob,
+  getAllJobs,
+  getJobsByEmployer
 } = require('../controllers/jobController');
 const { postContent, likePost, commentOnPost, getPosts, getCommenterProfileImage, unlikePost } = require('../controllers/contentController');
 const  {protect}  = require('../middleware/authMiddleware');
@@ -83,6 +85,11 @@ router.get('/jobseeker/images', protect, getJobseekerProfileAndBackgroundImages)
 
 
 
+
+
+
+
+
 // EMPLOYER ROUTES
 //get employer Profile
 router.get('/profile', protect, getUserProfile);
@@ -101,7 +108,10 @@ router.put('/uploadBackgroundPicture', protect, upload.single('backgroundImage')
 // Post a job
 router.post('/post-job', protect, postJob);
 
+///get jobs into the jobseeker
+router.get("/jobs", getAllJobs);
 
+router.get("/employer/jobs", protect, getJobsByEmployer);
 
 
 
