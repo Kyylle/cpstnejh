@@ -88,13 +88,20 @@ const EmployerSignUp = ({ showModal, onClose }) => {
   return (
     <div className="employer-modal-overlay">
       <div className="employer-signup-modal-container">
-      <button className="close-button" onClick={onClose}>
-        <FiX size={24} />
-        </button>
-        <div className="employer-form-box">
-          <h2 className="employer-title">Employer Signup</h2>
-          <form onSubmit={handleSubmit}>
-            <div className="employer-form-grid">
+        {/* Left Side with Gradient and Welcome Message */}
+        <div className="employer-left-container">
+          <h2 className="employer-welcome-text">Welcome to JobHub!</h2>
+        </div>
+
+        {/* Right Side with Form */}
+        <div className="employer-right-container">
+          <button className="close-button" onClick={onClose}>
+            <FiX size={24} />
+          </button>
+          <div className="employer-form-box">
+            <h2 className="employer-title">Employer Signup</h2>
+            <p>Create a new employer account to start posting jobs.</p>
+            <form onSubmit={handleSubmit}>
               <div className="employer-form-group">
                 <input
                   type="text"
@@ -124,9 +131,7 @@ const EmployerSignUp = ({ showModal, onClose }) => {
                   <p className="employer-error-text">{errors.email}</p>
                 )}
               </div>
-            </div>
 
-            <div className="employer-form-grid">
               <div className="employer-form-group">
                 <input
                   type="password"
@@ -156,15 +161,15 @@ const EmployerSignUp = ({ showModal, onClose }) => {
                   <p className="employer-error-text">{errors.confirmPassword}</p>
                 )}
               </div>
-            </div>
 
-            {errors.server && <p className="employer-error-text">{errors.server}</p>}
-            {message && <p className="employer-success-text">{message}</p>}
+              {errors.server && <p className="employer-error-text">{errors.server}</p>}
+              {message && <p className="employer-success-text">{message}</p>}
 
-            <button type="submit" className="employer-submit-button" disabled={loading}>
-              {loading ? 'Signing Up...' : 'Sign Up'}
-            </button>
-          </form>
+              <button type="submit" className="employer-submit-button" disabled={loading}>
+                {loading ? 'Signing Up...' : 'Sign Up'}
+              </button>
+            </form>
+          </div>
         </div>
       </div>
     </div>
@@ -172,3 +177,4 @@ const EmployerSignUp = ({ showModal, onClose }) => {
 };
 
 export default EmployerSignUp;
+

@@ -14,57 +14,59 @@
 
 /* Modal Container */
 .employer-signup-modal-container {
-  width: 500px;
+  display: flex;
+  width: 900px;
+  height: 500px;
   background-color: white;
   border-radius: 10px;
-  padding: 40px;
-  position: relative;
+  overflow: hidden;
   box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
 }
 
-/* Close Button */
-.employer-close-button {
-  position: absolute;
-  top: 15px;
-  right: 15px;
-  background: transparent;
-  border: none;
-  font-size: 1.5rem;
-  cursor: pointer;
-  color: #333;
-  transition: color 0.3s ease;
+/* Left Container (Gradient Background) */
+.employer-left-container {
+  flex: 1;
+  background: linear-gradient(135deg, #7e4cdd, #f46b45);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
 }
 
-.employer-close-button:hover {
-  color: #7e4cdd;
-}
-
-/* Form Box */
-.employer-form-box {
+.employer-welcome-text {
+  color: white;
+  font-size: 2rem;
+  font-weight: bold;
   text-align: center;
+}
+
+/* Right Container (Form Area) */
+.employer-right-container {
+  flex: 1;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
 }
 
 .employer-title {
   font-size: 1.75rem;
   font-weight: bold;
-  margin-bottom: 30px;
-}
-
-/* Form Grid */
-.employer-form-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
   margin-bottom: 20px;
+  text-align: left;
 }
 
-/* Form Group */
+.employer-form-box p {
+  margin-bottom: 20px;
+  color: #666;
+  text-align: left;
+}
+
 .employer-form-group {
-  display: flex;
-  flex-direction: column;
+  margin-bottom: 15px;
 }
 
-/* Input Field */
 .employer-input-field {
   width: 100%;
   padding: 10px;
@@ -73,13 +75,14 @@
   border-radius: 5px;
 }
 
-/* Error and Success Text */
+/* Error Text */
 .employer-error-text {
   color: red;
   font-size: 0.9rem;
   margin-top: 5px;
 }
 
+/* Success Text */
 .employer-success-text {
   color: green;
   font-size: 0.9rem;
@@ -103,7 +106,6 @@
   background-color: #6333b7;
 }
 
-
 /* Close Button */
 .close-button {
   position: absolute;
@@ -114,13 +116,11 @@
   cursor: pointer;
   font-size: 1.5rem;
   color: #333;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   padding: 8px;
   transition: color 0.3s ease;
 }
 
 .close-button:hover {
-  color: #7e4cdd; /* Matches the purple theme */
+  color: #7e4cdd;
 }
+

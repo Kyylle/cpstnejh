@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { FiX } from 'react-icons/fi';
+import { FiX } from "react-icons/fi";
 import "../css/JobseekerSignUp.css"; // Ensure unique CSS file
 
-const JobseekerSignUp = ({ showModal, onClose }) => { // Accept showModal and onClose props
+const JobseekerSignUp = ({ showModal, onClose }) => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -52,19 +52,12 @@ const JobseekerSignUp = ({ showModal, onClose }) => { // Accept showModal and on
 
     try {
       const response = await axios.post("/api/auth/jobseeker", formData);
-      
-      // Assuming the response contains an authentication token and userType
+
       const { token, userType } = response.data;
-
-      // Store token in localStorage
-      localStorage.setItem('authToken', token);
-
-      // Clear errors and set success message
+      localStorage.setItem("authToken", token);
       setMessage("Jobseeker registered successfully");
 
-      // Redirect to dashboard immediately after successful signup
       navigate("/dashboard");
-
     } catch (err) {
       setErrors({
         server: err.response ? err.response.data.error : "Server error",
@@ -72,18 +65,24 @@ const JobseekerSignUp = ({ showModal, onClose }) => { // Accept showModal and on
     }
   };
 
-  if (!showModal) return null; // Don't render if modal is not shown
+  if (!showModal) return null;
 
   return (
     <div className="jobseeker-modal-overlay">
       <div className="jobseeker-signup-modal-container">
-      <button className="close-button" onClick={onClose}>
-        <FiX size={24} />
+        <button className="close-button" onClick={onClose}>
+          <FiX size={24} />
         </button>
-        <div className="jobseeker-form-box">
-          <h2 className="jobseeker-title">Jobseeker Signup</h2>
-          <form onSubmit={handleSubmit}>
-            <div className="jobseeker-form-grid">
+
+        <div className="jobseeker-left-container">
+          <h2 className="jobseeker-welcome-text">Welcome To JobHub!</h2>
+        </div>
+
+        <div className="jobseeker-right-container">
+          <div className="jobseeker-form-box">
+            <h2 className="jobseeker-title">Sign Up</h2>
+            <p>Create a new account to start your journey.</p>
+            <form onSubmit={handleSubmit}>
               <div className="jobseeker-form-group">
                 <input
                   type="text"
@@ -94,7 +93,9 @@ const JobseekerSignUp = ({ showModal, onClose }) => { // Accept showModal and on
                   onChange={handleChange}
                   placeholder="Full Name"
                 />
-                {errors.name && <p className="jobseeker-error-text">{errors.name}</p>}
+                {errors.name && (
+                  <p className="jobseeker-error-text">{errors.name}</p>
+                )}
               </div>
 
               <div className="jobseeker-form-group">
@@ -107,7 +108,9 @@ const JobseekerSignUp = ({ showModal, onClose }) => { // Accept showModal and on
                   onChange={handleChange}
                   placeholder="Email"
                 />
-                {errors.email && <p className="jobseeker-error-text">{errors.email}</p>}
+                {errors.email && (
+                  <p className="jobseeker-error-text">{errors.email}</p>
+                )}
               </div>
 
               <div className="jobseeker-form-group">
@@ -120,7 +123,9 @@ const JobseekerSignUp = ({ showModal, onClose }) => { // Accept showModal and on
                   onChange={handleChange}
                   placeholder="Password"
                 />
-                {errors.password && <p className="jobseeker-error-text">{errors.password}</p>}
+                {errors.password && (
+                  <p className="jobseeker-error-text">{errors.password}</p>
+                )}
               </div>
 
               <div className="jobseeker-form-group">
@@ -133,17 +138,28 @@ const JobseekerSignUp = ({ showModal, onClose }) => { // Accept showModal and on
                   onChange={handleChange}
                   placeholder="Confirm Password"
                 />
-                {errors.confirmPassword && <p className="jobseeker-error-text">{errors.confirmPassword}</p>}
+                {errors.confirmPassword && (
+                  <p className="jobseeker-error-text">
+                    {errors.confirmPassword}
+                  </p>
+                )}
               </div>
-            </div>
 
-            {errors.server && <p className="jobseeker-error-text">{errors.server}</p>}
-            {message && <p className="jobseeker-success-text">{message}</p>}
+              {errors.server && (
+                <p className="jobseeker-error-text">{errors.server}</p>
+              )}
+              {message && (
+                <p className="jobseeker-success-text">{message}</p>
+              )}
 
-            <button type="submit" className="jobseeker-submit-button small-button">
-              Sign Up
-            </button>
-          </form>
+              <button
+                type="submit"
+                className="jobseeker-submit-button"
+              >
+                Sign Up
+              </button>
+            </form>
+          </div>
         </div>
       </div>
     </div>

@@ -15,7 +15,11 @@ import ProtectedRoute from './components/ProtectedRoute';
 import EmployerProfileSettings from './pages/Employer/EmployerProfileSettings';
 import EmployerNotification from './pages/Employer/notifications/EmployerNotification';
 import EmployerInquiries from './pages/Employer/Inquiries/EmployerInquiries';
+
 import EmployerMessage from './pages/Employer/Message/EmployerMessage'
+
+
+
 
 function App() {
   return (
@@ -98,7 +102,10 @@ function App() {
         </ProtectedRoute>
       }
       />
+
       {/* Employeer  Inquiries*/}
+      {/* Employeer inquiries  */}
+
       <Route
       path="/employerinquiries"
       element={
@@ -107,7 +114,12 @@ function App() {
         </ProtectedRoute>
       }
       />
+
     {/* Employer Message */}
+
+
+      {/* Employer Message route */}
+
       <Route
       path="/employermessaging"
       element={
