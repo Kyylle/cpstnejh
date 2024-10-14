@@ -1,75 +1,131 @@
 /* Modal Overlay */
 .modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  backdrop-filter: blur(4px);
+  transition: all 0.4s ease-in-out;
+}
+
+/* Modal Container */
+.modal-container {
+  background-color: #ffffff;
+  border-radius: 16px;
+  padding: 40px;
+  width: 700px;
+  max-height: 85vh;
+  overflow-y: auto;
+  box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.2);
+  position: relative;
+  animation: slideIn 0.4s ease-out;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Slide-in Animation */
+@keyframes slideIn {
+  from {
+      opacity: 0;
+      transform: translateY(-30px);
   }
-  
-  /* Modal Container */
-  .modal-container {
-    background-color: white;
-    border-radius: 8px;
-    padding: 20px;
-    width: 600px;
-    max-height: 90vh;
-    overflow-y: auto;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-    position: relative;
+  to {
+      opacity: 1;
+      transform: translateY(0);
   }
-  
-  /* Close Button */
-  .modal-close-btn {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    background-color: transparent;
-    border: none;
-    cursor: pointer;
-    font-size: 16px;
-  }
-  
-  /* Modal Header */
-  .modal-container h2 {
-    margin-top: 0;
-    font-size: 24px;
-    margin-bottom: 20px;
-  }
-  
-  /* Modal Content */
-  .modal-content label {
-    font-weight: bold;
-    margin-top: 10px;
-    display: block;
-  }
-  
-  .modal-content input,
-  .modal-content select {
-    width: 100%;
-    padding: 8px;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 16px;
-  }
-  
-  .save-btn {
-    background-color: #0073b1;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 16px;
-  }
-  
-  .save-btn:hover {
-    background-color: #005f8d;
-  }
+}
+
+/* Close Button */
+.modal-close-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 24px;
+  color: #666;
+  transition: color 0.3s;
+}
+
+.modal-close-btn:hover {
+  color: #333;
+}
+
+/* Modal Header */
+.modal-container h2 {
+  margin-top: 0;
+  margin-bottom: 24px;
+  font-size: 26px;
+  font-weight: bold;
+  text-align: center;
+  color: #222;
+  letter-spacing: 1px;
+}
+
+/* Two-Column Layout */
+.modal-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+/* Make input fields and select full width within the column */
+.modal-content input,
+.modal-content select {
+  width: 90%;
+  padding: 12px;
+  margin-bottom: 8px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  font-size: 15px;
+  transition: all 0.3s ease;
+  background-color: #fafafa;
+}
+
+/* Label styling */
+.modal-content label {
+  font-weight: 500;
+  color: #555;
+  margin-bottom: 4px;
+  display: block;
+  font-size: 15px;
+}
+
+/* Input focus */
+.modal-content input:focus,
+.modal-content select:focus {
+  border-color: #0073b1;
+  outline: none;
+  background-color: #fff;
+  box-shadow: 0 0 8px rgba(0, 115, 177, 0.4);
+}
+
+/* Full-width Save Button */
+.save-btn {
+  background-color: #0073b1;
+  color: white;
+  padding: 14px 0;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: 600;
+  grid-column: span 2; /* Make the button span both columns */
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.save-btn:hover {
+  background-color: #005f8d;
+  transform: scale(1.02);
+  box-shadow: 0px 6px 14px rgba(0, 115, 177, 0.4);
+}
+
+
   
