@@ -1,5 +1,6 @@
 import React from 'react';
 import '../css/ProfileDashboard.css';
+import NavigationJobseeker from './Navigation';
 
 function App() {
   return (
@@ -13,16 +14,7 @@ function App() {
 
 const Header = () => (
   <header className="header">
-    <div className="logo">JobHub</div>
-    <input type="text" placeholder="Search" className="search-bar" />
-    <nav className="nav">
-      <a href="#">Home</a>
-      <a href="#">Messaging</a>
-      <a href="#">Notifications</a>
-    </nav>
-    <div className="user-menu">
-      <img className="user-icon" src="path-to-user-icon" alt="user" />
-    </div>
+    <NavigationJobseeker/>
   </header>
 );
 

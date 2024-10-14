@@ -17,6 +17,7 @@ import EmployerNotification from './pages/Employer/notifications/EmployerNotific
 import EmployerInquiries from './pages/Employer/Inquiries/EmployerInquiries';
 
 import EmployerMessage from './pages/Employer/Message/EmployerMessage'
+import JobseekerProfileSettings from './pages/Jobseeker/JobseekerProfileSettings';
 
 
 
@@ -69,6 +70,17 @@ function App() {
           element={
             <ProtectedRoute>
               <Messaging />
+            </ProtectedRoute>
+          }
+        />
+
+
+
+        <Route
+          path="/jobseekerprofilesettings"
+          element={
+            <ProtectedRoute>
+              <JobseekerProfileSettings/>
             </ProtectedRoute>
           }
         />

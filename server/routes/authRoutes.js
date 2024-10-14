@@ -27,6 +27,8 @@ const path = require('path');
 const router = express.Router();
 const contentUpload = require('../middleware/contentUpload');
 const jobseekerProfileUploads = require('../middleware/jobseekerProfileUploadsMiddleware');
+const { applyToJob } = require('../controllers/applicationController');
+const { sendMessage, getMessages } = require('../controllers/messagingController');
 // Configure Multer for profile and background image uploads
 const profileStorage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -136,8 +138,21 @@ router.get('/get-posts', protect, getPosts);
 
 
 
+//apply job
 
 
+router.post('/apply-job', protect, applyToJob);
+
+
+
+
+
+
+
+//message
+
+router.post('/messages', protect, sendMessage);
+router.get('/messages', protect, getMessages);
 
 router.get('/test', (req, res) => {
   res.send('API is working!');

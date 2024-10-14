@@ -76,33 +76,29 @@
   margin-left: 15px;
   font-size: 16px;
 }
-
 .navbar-right-jobseeker {
   display: flex;
-  align-items: center;
+  flex-direction: row; /* Ensure elements are aligned in a row */
+  align-items: center; /* Vertically center the username and profile picture */
   cursor: pointer;
   position: relative;
+  gap: 10px; /* Add some space between the name and profile picture */
 }
 
 .navbar-user-name-jobseeker {
-  margin-right: 10px;
   color: white;
+  font-size: 16px;
+  white-space: nowrap; /* Ensure the name stays in a single line */
 }
 
-.profile-circle-jobseeker {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background-color: #666;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: white;
-  font-size: 18px;
-}
-
+.profile-circle-jobseeker,
 .profile-avatar-jobseeker {
   width: 40px;
   height: 40px;
   border-radius: 50%;
+  object-fit: cover; /* Ensure the profile image fits nicely inside the circle */
+}
+
+.profile-avatar-jobseeker {
+  display: block;
 }

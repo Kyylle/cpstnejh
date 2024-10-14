@@ -176,7 +176,7 @@ const ProfileSection = () => {
             <p className="ps-profile-title">{companyData.headline || ""}</p>
             <p className="ps-location">
               {companyData.location || "No location"} •{" "}
-              <a href="/" onClick={() => setIsContactModalOpen(true)}>
+              <a href="#" onClick={() => setIsContactModalOpen(true)}>
                 Contact info
               </a>
             </p>

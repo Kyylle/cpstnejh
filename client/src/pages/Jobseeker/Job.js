@@ -6,7 +6,6 @@ import './css/job.css'; // Ensure CSS is linked
 const Job = () => {
   const [jobs, setJobs] = useState([]);
   const [selectedJob, setSelectedJob] = useState(null); // State to store selected job
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   // Fetch job listings from the backend API
@@ -14,11 +13,9 @@ const Job = () => {
     axios.get('/api/auth/jobs') // Updated to use the correct route
       .then((response) => {
         setJobs(response.data.jobs); // Assuming response contains 'jobs' array
-        setLoading(false);
       })
       .catch((err) => {
         setError('Failed to fetch job listings.');
-        setLoading(false);
       });
   }, []);
 
@@ -26,9 +23,6 @@ const Job = () => {
   const handleJobSelect = (job) => {
     setSelectedJob(job);
   };
-
-  if (loading) return <p>Loading job listings...</p>;
-  if (error) return <p>{error}</p>;
 
   return (
     <div className="job-container">
@@ -54,27 +48,26 @@ const Job = () => {
         {/* Main Job Listings */}
         <main className="job-listings">
           {jobs.map((job) => (
-            <div className="job-listing-item" key={job._id}> {/* Updated key to job._id */}
+            <div className="job-listing-item" key={job._id}>
               <div>
                 <button 
                   className="job-title-btn" 
                   onClick={() => handleJobSelect(job)}
                 >
-                  {job.jobTitle} {/* Updated field name */}
+                  {job.jobTitle}
                 </button>
-                <p>{job.company} • {job.location} • {job.jobType}</p> {/* Updated field names */}
+                <p>{job.employer?.companyName} • {job.location} • {job.jobType}</p> {/* Updated to display companyName */}
               </div>
-              <button>Apply</button>
             </div>
           ))}
         </main>
 
         {/* Right Sidebar for job details */}
-        <aside className="right-sidebar">
+        <aside className="job-right-sidebar">
           {selectedJob ? (
             <div className="job-details">
-              <h4>{selectedJob.jobTitle}</h4> {/* Updated field name */}
-              <p><strong>Company:</strong> {selectedJob.company}</p>
+              <h4>{selectedJob.jobTitle}</h4>
+              <p><strong>Company:</strong> {selectedJob.employer?.companyName}</p> {/* Updated to display companyName */}
               <p><strong>Location:</strong> {selectedJob.location}</p>
               <p><strong>Job Type:</strong> {selectedJob.jobType}</p>
               <p><strong>Description:</strong> {selectedJob.description}</p>
