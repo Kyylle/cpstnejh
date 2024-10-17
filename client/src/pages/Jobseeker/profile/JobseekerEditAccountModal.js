@@ -1,8 +1,41 @@
 import React, { useState } from 'react';
-// import './JobseekerEditAccountModal.css'; // Make sure to style your modal appropriately
+import axios from 'axios';
+// import './JobseekerEditAccountModal.css'; // Ensure you have appropriate CSS for this modal
 
-const JobseekerEditAccountModal = ({ isOpen, onClose, formData, handleChange, handleSubmit }) => {
+const JobseekerEditAccountModal = ({ isOpen, onClose, formData, handleChange }) => {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
   if (!isOpen) return null;
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
+
+    try {
+      const token = localStorage.getItem("authToken");
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      const response = await axios.put("/api/auth/update/jobseeker", formData, config);
+
+      if (response.data) {
+        // Assuming the response contains the updated jobseeker profile
+        console.log("Profile updated:", response.data.updatedJobseeker);
+        onClose(); // Close modal after success
+      }
+    } catch (error) {
+      console.error("Error updating jobseeker profile:", error);
+      setError("Failed to update profile. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="modal-overlay">
@@ -10,7 +43,6 @@ const JobseekerEditAccountModal = ({ isOpen, onClose, formData, handleChange, ha
         <button className="modal-close-btn" onClick={onClose}>X</button>
         <h2>Edit Your Profile</h2>
         <form className="modal-content" onSubmit={handleSubmit}>
-          {/* Form inputs for jobseeker profile editing */}
           <label>Name*</label>
           <input
             type="text"
@@ -43,8 +75,6 @@ const JobseekerEditAccountModal = ({ isOpen, onClose, formData, handleChange, ha
             onChange={handleChange}
           />
 
-          {/* Optionally, add more fields such as skills, experience, education */}
-          {/* Example for skills (could use select/multi-select for real data) */}
           <label>Skills</label>
           <input
             type="text"
@@ -54,9 +84,11 @@ const JobseekerEditAccountModal = ({ isOpen, onClose, formData, handleChange, ha
             onChange={handleChange}
           />
 
-          <button type="submit" className="save-btn">
-            Save Changes
+          <button type="submit" className="save-btn" disabled={loading}>
+            {loading ? "Saving..." : "Save Changes"}
           </button>
+
+          {error && <p className="error-message">{error}</p>}
         </form>
       </div>
     </div>

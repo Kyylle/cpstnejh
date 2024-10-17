@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
-// import "./JobseekerProfileSection.css"; // Ensure you have appropriate CSS for this section
-// import ContactInfoModal from "./JobseekerContactInfo"; // Reuse the Contact Info Modal if applicable
+import { getJobseekerProfile, updateJobseekerProfile, uploadProfileImage } from "./jobseekerService";
 import JobseekerEditAccount from "./JobseekerEditAccountModal"; // This modal will handle profile edits
 import FileUploadModal from "./JobseekerFileUploadModal"; // Reusable file upload modal for images
 
@@ -24,43 +22,30 @@ const JobseekerProfileSection = () => {
   const [isBackgroundModalOpen, setIsBackgroundModalOpen] = useState(false);
 
   useEffect(() => {
-    const fetchJobseekerData = async () => {
+    const fetchData = async () => {
       try {
         const token = localStorage.getItem("authToken");
-        const config = {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        };
-
-        const response = await axios.get("/api/auth/getJobseekerProfile", config);
-        setJobseekerData(response.data);
+        const profileData = await getJobseekerProfile(token);
+        setJobseekerData(profileData);
       } catch (error) {
         console.error("Error fetching jobseeker profile data:", error);
       }
     };
 
-    fetchJobseekerData();
+    fetchData();
   }, []);
 
-  const updateJobseekerProfile = async (formData) => {
+  const handleProfileUpdate = async (formData) => {
     try {
       const token = localStorage.getItem("authToken");
-      const config = {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      };
-
-      const response = await axios.put("/api/auth/update/jobseeker", formData, config);
-      setJobseekerData(response.data.updatedJobseeker);
+      const updatedData = await updateJobseekerProfile(formData, token);
+      setJobseekerData(updatedData.updatedJobseeker);
     } catch (error) {
       console.error("Error updating jobseeker profile:", error);
     }
   };
 
-  const handleSaveImage = (data, field) => {
+  const handleSaveImage = async (data, field) => {
     setJobseekerData((prevData) => ({
       ...prevData,
       [field]: data.imagePath,
@@ -103,13 +88,12 @@ const JobseekerProfileSection = () => {
         onClose={() => setIsEditModalOpen(false)}
         formData={jobseekerData}
         handleChange={(e) => setJobseekerData({ ...jobseekerData, [e.target.name]: e.target.value })}
-        handleSubmit={updateJobseekerProfile}
       />
 
       <FileUploadModal
         isOpen={isProfileModalOpen}
         onClose={() => setIsProfileModalOpen(false)}
-        uploadEndpoint="/api/auth/jobseeker/upload/profile-picture"
+        uploadEndpoint="/profile-picture"
         fieldName="profileImage"
         modalTitle="Profile Picture"
         handleSave={(data) => handleSaveImage(data, 'profileImage')}
@@ -118,7 +102,7 @@ const JobseekerProfileSection = () => {
       <FileUploadModal
         isOpen={isBackgroundModalOpen}
         onClose={() => setIsBackgroundModalOpen(false)}
-        uploadEndpoint="/api/auth/jobseeker/upload/backgroundprofile"
+        uploadEndpoint="/backgroundprofile"
         fieldName="backgroundImage"
         modalTitle="Background Picture"
         handleSave={(data) => handleSaveImage(data, 'backgroundImage')}
