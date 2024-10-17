@@ -54,7 +54,7 @@ const ViewProfile = () => {
                         src={profile.profileImage || '/default-profile.png'} 
                         alt={profile.name || profile.companyName}
                     />
-                    <div className="profile-info">
+                    <div className="vp-profile-info">
                         <h2>{profile.name || profile.companyName}</h2>
                         <p className="profile-location">{profile.location}</p>
                         <p className="profile-industry">{profile.industry || profile.skills?.join(', ')}</p>

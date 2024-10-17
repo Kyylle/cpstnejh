@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import './css/profile.css'; // Ensure you have a CSS file to style the component accordingly
+import './css/profile.css'; 
 
 const Profile = () => {
-  const [profile, setProfile] = useState(null); // State to hold jobseeker profile data
-  const [loading, setLoading] = useState(true); // State to handle loading state
+  const [profile, setProfile] = useState(null); 
+  const [loading, setLoading] = useState(true); 
 
-  // Fetch jobseeker profile data when the component loads
+  
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const token = localStorage.getItem('authToken'); // Assuming the token is stored in localStorage
+        const token = localStorage.getItem('authToken'); 
 
         if (!token) {
           console.error('Token not found in localStorage');
@@ -26,25 +26,25 @@ const Profile = () => {
       } catch (error) {
         console.error('Error fetching profile data:', error.response ? error.response.data : error.message);
       } finally {
-        setLoading(false); // Set loading to false after fetch
+        setLoading(false); 
       }
     };
 
     fetchProfile();
-  }, []); // Empty dependency array means this runs once when the component mounts
+  }, []); 
 
   if (loading) {
-    return <div>Loading...</div>; // Show loading message while fetching
+    return <div>Loading...</div>; 
   }
 
   if (!profile) {
-    return <div>Profile data not available</div>; // Show message if profile data is not found
+    return <div>Profile data not available</div>; 
   }
 
   return (
     <div className="profile-container">
       <div className="profile-header">
-        {/* Background Image */}
+        
         <div className="background-image-container">
           <img
             src={profile.backgroundImage || 'https://via.placeholder.com/150'}
@@ -53,7 +53,7 @@ const Profile = () => {
           />
         </div>
 
-        {/* Profile Image */}
+        
         <div className="profile-picture-container">
           <img
             src={profile.profileImage || 'https://via.placeholder.com/100'}
@@ -62,11 +62,11 @@ const Profile = () => {
           />
         </div>
 
-        {/* Name */}
+        
         <h2>{profile.name || 'Name not available'}</h2>
       </div>
 
-      {/* Education Section */}
+      
       <div className="profile-section">
         <h4>Education</h4>
         {profile.education.length > 0 ? (
@@ -82,13 +82,13 @@ const Profile = () => {
         )}
       </div>
 
-      {/* Saved Items Section (Example of another section if needed) */}
+      
       <div className="profile-section">
         <h4>Saved Items</h4>
         <p>No saved items</p>
       </div>
 
-      {/* Example of additional sections */}
+      
       <div className="profile-section">
         <p>Groups</p>
         <p>Events</p>

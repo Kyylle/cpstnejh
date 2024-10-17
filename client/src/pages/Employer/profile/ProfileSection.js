@@ -172,7 +172,7 @@ const ProfileSection = () => {
 
           {/* Company Information */}
           <div className="ps-company-info">
-            <h1>{companyData.companyName || "Company Name"}</h1>
+            <h2>{companyData.companyName || "Company Name"}</h2>
             <p className="ps-profile-title">{companyData.headline || ""}</p>
             <p className="ps-location">
               {companyData.location || "No location"} •{" "}

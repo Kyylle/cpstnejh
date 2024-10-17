@@ -1,54 +1,91 @@
-/* src/styles/Notifications.css */
-
+/* Notifications Page Container */
 .notifications-container {
-    padding: 20px;
-    background-color: #f3f4f6; /* Light gray background */
-    font-family: 'Arial', sans-serif; /* Clean font */
-    height: 100vh; /* Full height */
-    overflow-y: auto; /* Scroll if needed */
-    padding-top: 40px;
-  }
-  
+  padding: 40px 20px;
+  background-color: #eef2f5; /* Soft blue-gray background */
+  font-family: 'Poppins', sans-serif; /* Modern font */
+  min-height: 100vh; /* Full height */
+  overflow-y: auto; /* Enable scrolling if needed */
+}
+
+/* Notifications Content Wrapper */
+.notifications-content {
+  max-width: 700px;
+  margin: 0 auto; /* Center the content */
+  background: white;
+  border-radius: 12px; /* Rounded corners */
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1); /* Soft shadow */
+  padding: 30px;
+  transition: transform 0.3s ease;
+}
+
+.notifications-content:hover {
+  transform: scale(1.02); /* Subtle scaling on hover */
+}
+
+/* Page Header */
+h1 {
+  font-size: 28px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 20px;
+  text-align: center; /* Center align the title */
+}
+
+/* Notifications List */
+.notifications-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* Individual Notification Items */
+.notification-item {
+  padding: 20px;
+  border-bottom: 1px solid #e0e0e0; /* Light divider */
+  transition: background-color 0.3s ease, box-shadow 0.2s ease;
+  border-radius: 8px;
+  margin-bottom: 10px; /* Space between items */
+}
+
+.notification-item:hover {
+  background-color: #f5f8fa; /* Light blue background on hover */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); /* Subtle shadow */
+}
+
+/* Notification Message */
+.notification-message {
+  font-size: 18px;
+  font-weight: 500;
+  color: #333;
+  margin: 0;
+}
+
+/* Notification Timestamp */
+.notification-time {
+  font-size: 14px;
+  color: #6b7280; /* Muted gray */
+  margin-top: 5px;
+  display: inline-block;
+}
+
+/* Notification Card Shadow */
+.notification-item:hover {
+  box-shadow: 0 4px 12px rgba(0, 115, 177, 0.1); /* Shadow on hover */
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
   .notifications-content {
-    max-width: 600px; /* Center content */
-    margin: auto;
-    background: white; /* White background for content */
-    border-radius: 8px; /* Rounded corners */
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
-    padding: 20px;
+      padding: 20px;
   }
-  
+
   h1 {
-    font-size: 24px;
-    color: #333; /* Dark gray for heading */
-    margin-bottom: 20px;
+      font-size: 24px;
   }
-  
-  .notifications-list {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-  }
-  
-  .notification-item {
-    padding: 15px;
-    border-bottom: 1px solid #eaeaea; /* Divider line */
-    transition: background 0.2s; /* Smooth hover effect */
-  }
-  
-  .notification-item:hover {
-    background: #f9f9f9; /* Light hover effect */
-  }
-  
+
   .notification-message {
-    font-size: 16px; /* Message font size */
-    color: #555; /* Medium gray for messages */
+      font-size: 16px;
   }
-  
-  .notification-time {
-    font-size: 12px; /* Smaller font for time */
-    color: #888; /* Light gray for time */
-    display: block; /* Ensures time is on a new line */
-    margin-top: 5px; /* Space above time */
-  }
-  
+}
+
+
