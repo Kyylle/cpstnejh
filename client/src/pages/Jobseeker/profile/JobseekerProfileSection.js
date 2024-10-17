@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { getJobseekerProfile, updateJobseekerProfile, uploadProfileImage } from "./jobseekerService";
+import { getJobseekerProfile, updateJobseekerProfile } from "./jobseekerService";
 import JobseekerEditAccount from "./JobseekerEditAccountModal"; // This modal will handle profile edits
-import FileUploadModal from "./JobseekerFileUploadModal"; // Reusable file upload modal for images
+import ChangeProfilePictureModal from "./ChangeProfilePictureModal"; // Modal for changing profile picture
+import ChangeBackgroundPictureModal from "./ChangeBackgroundPictureModal"; // Modal for changing background picture
 
 const JobseekerProfileSection = () => {
   const [jobseekerData, setJobseekerData] = useState({
@@ -35,17 +36,7 @@ const JobseekerProfileSection = () => {
     fetchData();
   }, []);
 
-  const handleProfileUpdate = async (formData) => {
-    try {
-      const token = localStorage.getItem("authToken");
-      const updatedData = await updateJobseekerProfile(formData, token);
-      setJobseekerData(updatedData.updatedJobseeker);
-    } catch (error) {
-      console.error("Error updating jobseeker profile:", error);
-    }
-  };
-
-  const handleSaveImage = async (data, field) => {
+  const handleSaveImage = (data, field) => {
     setJobseekerData((prevData) => ({
       ...prevData,
       [field]: data.imagePath,
@@ -90,22 +81,22 @@ const JobseekerProfileSection = () => {
         handleChange={(e) => setJobseekerData({ ...jobseekerData, [e.target.name]: e.target.value })}
       />
 
-      <FileUploadModal
+      <ChangeProfilePictureModal
         isOpen={isProfileModalOpen}
         onClose={() => setIsProfileModalOpen(false)}
-        uploadEndpoint="/profile-picture"
-        fieldName="profileImage"
-        modalTitle="Profile Picture"
-        handleSave={(data) => handleSaveImage(data, 'profileImage')}
+        setProfileImage={(imagePath) => setJobseekerData({
+          ...jobseekerData,
+          profileImage: imagePath
+        })}
       />
 
-      <FileUploadModal
+      <ChangeBackgroundPictureModal
         isOpen={isBackgroundModalOpen}
         onClose={() => setIsBackgroundModalOpen(false)}
-        uploadEndpoint="/backgroundprofile"
-        fieldName="backgroundImage"
-        modalTitle="Background Picture"
-        handleSave={(data) => handleSaveImage(data, 'backgroundImage')}
+        setBackgroundImage={(imagePath) => setJobseekerData({
+          ...jobseekerData,
+          backgroundImage: imagePath
+        })}
       />
     </div>
   );

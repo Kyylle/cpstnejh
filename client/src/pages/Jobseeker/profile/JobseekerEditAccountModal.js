@@ -38,7 +38,7 @@ const JobseekerEditAccountModal = ({ isOpen, onClose, formData, handleChange }) 
   };
 
   return (
-    <div className="modal-overlay">
+    <div className="modal-overlay"> 
       <div className="modal-container">
         <button className="modal-close-btn" onClick={onClose}>X</button>
         <h2>Edit Your Profile</h2>
