@@ -87,7 +87,7 @@
 /* Modal Box */
 .post-job-post-modal, .post-job-media-modal {
     background-color: white;
-    padding: 20px;
+    padding: 15px;
     border-radius: 10px;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
     font-family: 'Arial', sans-serif;
@@ -98,7 +98,7 @@
 }
 
 .post-job-media-modal {
-    width: 400px;
+    width: 350px;
     text-align: center;
     padding: 30px;
 }
@@ -247,6 +247,162 @@
     font-size: 14px;
     color: #666;
     margin-left: 10px;
+}
+/* Modal Overlay */
+.post-job-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.7); /* Darker backdrop */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    backdrop-filter: blur(5px); /* Subtle background blur */
+}
+
+/* Modal Box */
+.post-job-post-modal {
+    background-color: white;
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    font-family: 'Poppins', sans-serif;
+    width: 600px;
+    max-height: 90vh;
+    overflow-y: auto;
+    animation: slideIn 0.3s ease-out;
+}
+
+/* Animation for Modal Entry */
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Modal Header */
+.post-job-post-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.post-job-post-header h2 {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+}
+
+.post-job-close-modal-btn {
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: #666;
+    cursor: pointer;
+}
+
+.post-job-close-modal-btn:hover {
+    color: #333;
+}
+
+/* Form Styling */
+.post-job-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+/* Full Width Inputs (textarea and long fields) */
+.post-job-form textarea,
+.post-job-form input[type='date'] {
+    grid-column: span 2;
+}
+
+/* Input and Select Fields */
+.post-job-form input,
+.post-job-form select,
+.post-job-form textarea {
+    width: 90%;
+    padding: 12px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 16px;
+    background-color: #f9f9f9;
+    transition: border-color 0.3s;
+}
+
+.post-job-form input:focus,
+.post-job-form select:focus,
+.post-job-form textarea:focus {
+    border-color: #0073b1;
+    background-color: #fff;
+    box-shadow: 0 0 8px rgba(0, 115, 177, 0.2);
+    outline: none;
+}
+
+/* Placeholder Text */
+::placeholder {
+    color: #aaa;
+    font-style: italic;
+}
+
+/* Textarea Styling */
+.post-job-form textarea {
+    resize: none;
+    height: 70px;
+}
+
+/* Submit Button */
+.post-job-post-btn {
+    grid-column: span 2; /* Full-width button */
+    background-color: #0073b1;
+    color: white;
+    padding: 14px 0;
+    border: none;
+    border-radius: 8px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.post-job-post-btn:hover {
+    background-color: #005f8d;
+    transform: scale(1.02);
+}
+
+.post-job-post-btn:active {
+    transform: scale(0.98);
+}
+
+/* Salary and Location Fields in a Row */
+.post-job-form input[type='text']:nth-child(5),
+.post-job-form input[type='text']:nth-child(6) {
+    grid-column: span 1; /* Two inputs side-by-side */
+}
+
+/* Modal Scrollbar Styling */
+.post-job-post-modal::-webkit-scrollbar {
+    width: 8px;
+}
+
+.post-job-post-modal::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+}
+
+.post-job-post-modal::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(0, 0, 0, 0.3);
 }
 
 

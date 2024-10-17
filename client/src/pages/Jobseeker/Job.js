@@ -35,8 +35,10 @@ const Job = () => {
   };
 
   return (
-    <div className="job-container">
+    <div className='job-navbar'>
       <Navigation />
+    <div className="job-container">
+      
 
       <div className="job-layout">
         {/* Left Sidebar */}
@@ -94,6 +96,7 @@ const Job = () => {
           setShowModal(false);
         }} />
       )}
+    </div>
     </div>
   );
 };

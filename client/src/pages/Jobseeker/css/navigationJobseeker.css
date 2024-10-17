@@ -1,4 +1,5 @@
-.navbar-jobseeker {
+/* Updated CSS for Navigation Bar */
+.navbar {
   position: fixed;
   top: 0;
   left: 0;
@@ -10,95 +11,96 @@
   background-color: #2e4d80;
   border-bottom: 1px solid #ddd;
   z-index: 1000;
-  box-sizing: border-box; /* Ensure padding doesn't exceed width */
+  box-sizing: border-box;
 }
 
-/* Ensure the main content starts below the navigation */
-.page-content {
-  margin-top: 60px; /* Adjust according to the height of your navbar */
-  padding: 20px;
-  background-color: #f0f0f0; /* Optional, set a background for the content area */
-}
-
-/* Adjust the rest of the elements in the layout */
-.job-feed-container {
-  display: flex;
-  justify-content: space-between;
-  gap: 20px;
-}
-
-.feed-posts {
-  flex: 1; /* Take up remaining space */
-  padding: 20px;
-  background-color: white;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.right-sidebar {
-  width: 300px;
-  background-color: #f4f4f4;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  position: sticky;
-  top: 80px; /* Keeps it visible when scrolling */
-}
-
-.navbar-left-jobseeker {
+/* Navbar Left Section - Logo and Search */
+.navbar-left {
   display: flex;
   align-items: center;
 }
 
-.logo-jobseeker {
+.logo {
   font-size: 24px;
   font-weight: bold;
   margin-right: 20px;
-  color: white;
+  color: #7a3bff;
+  cursor: pointer;
 }
 
-.navbar-search-bar-jobseeker {
-  padding: 5px 10px;
+.navbar-search-bar {
+  padding: 8px 12px;
   border: 1px solid #ccc;
-  border-radius: 4px;
+  border-radius: 25px;
+  outline: none;
+  transition: border-color 0.3s ease;
 }
 
-.navbar-center-jobseeker {
+.navbar-search-bar:focus {
+  border-color: #5c9ce6;
+}
+
+/* Center Section - Navigation Buttons */
+.navbar-center {
   display: flex;
-  gap: 15px;
+  gap: 10px;
 }
 
-.navbar-button-jobseeker {
-  background: none;
-  border: none;
+.navbar-button {
+  background-color: transparent;
   color: white;
+  font-size: 14px;
+  padding: 8px 16px;
+  border-radius: 20px;
+  border: 1px solid transparent;
   cursor: pointer;
-  margin-left: 15px;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+/* Add a background to make buttons more distinct */
+.navbar-button:hover {
+  background-color: #4e7dd0;
+  color: white;
+  border-color: #4e7dd0;
+}
+
+/* Active Button State */
+.navbar-button.active {
+  background-color: #7a3bff;
+  color: white;
+  border-color: #7a3bff;
+}
+
+/* Navbar Right - Profile Section */
+.navbar-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.navbar-user-name {
+  color: white;
   font-size: 16px;
 }
-.navbar-right-jobseeker {
-  display: flex;
-  flex-direction: row; /* Ensure elements are aligned in a row */
-  align-items: center; /* Vertically center the username and profile picture */
-  cursor: pointer;
-  position: relative;
-  gap: 10px; /* Add some space between the name and profile picture */
-}
 
-.navbar-user-name-jobseeker {
-  color: white;
-  font-size: 16px;
-  white-space: nowrap; /* Ensure the name stays in a single line */
-}
-
-.profile-circle-jobseeker,
-.profile-avatar-jobseeker {
+.profile-circle {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  object-fit: cover; /* Ensure the profile image fits nicely inside the circle */
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.profile-avatar-jobseeker {
-  display: block;
+.profile-avatar {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
 }
+
+
+
+
+

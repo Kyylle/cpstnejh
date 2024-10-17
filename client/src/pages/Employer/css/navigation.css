@@ -8,7 +8,7 @@ body{
     justify-content: space-between;
     align-items: center;
     padding: 10px 20px;
-    background-color: #2e4d80;
+    background-color: white;
     border-bottom: 1px solid #ddd;
     z-index: 1000;
     width: 100%;
@@ -39,7 +39,7 @@ body{
   .navbar-button {
     background: none;
     border: none;
-    color: white;
+    color: rgb(255, 255, 255);
     cursor: pointer;
     margin-left: 15px;
     font-size: 16px;
@@ -54,7 +54,8 @@ body{
   
   .navbar-user-name {
     margin-right: 10px;
-    color: white;
+    color: black ; 
+    font-weight: bold;
   }
   
   .profile-circle {
@@ -103,3 +104,65 @@ body{
   .page-content {
     margin-top: 0px; /* Adjust according to the height of the navbar */
   }
+  .navbar-center {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .navbar-button {
+    background-color: transparent;
+    border: #7e4cdd;
+    border-radius: 20px;
+    padding: 8px 15px;
+    color: black;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 16px;
+    transition: all 0.3s ease;
+  }
+  
+  .navbar-button:hover {
+    background-color: #4a90e2; /* Lighter blue on hover */
+    color: black;
+    border-color: #4a90e2;
+  }
+  
+  .navbar-button.active {
+    background-color: #7e4cdd;
+    color:white;
+    border-color: #4a90e2;
+  }
+  
+  /* Optional for responsive behavior */
+  @media (max-width: 768px) {
+    .navbar-center {
+      flex-direction: column;
+      gap: 5px;
+    }
+  }
+  .navbar-search-bar {
+    width: 300px;
+    height: 15px;
+    padding: 10px 20px;
+    border: 1px solid #ddd;
+    border-radius: 30px;
+    font-size: 16px;
+    outline: none;
+    transition: all 0.3s ease-in-out;
+    background-color: white;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    font-style: italic;
+    color: #605e5e;
+}
+
+.navbar-search-bar::placeholder {
+    color: #aaa;
+    font-style: italic;
+}
+
+.navbar-search-bar:focus {
+    border-color: #7e4cdd;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+  
