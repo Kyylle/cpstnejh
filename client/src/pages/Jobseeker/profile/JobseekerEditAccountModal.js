@@ -38,15 +38,9 @@ const JobseekerEditAccountModal = ({ isOpen, onClose, formData, handleChange }) 
   };
 
   return (
-<<<<<<< Updated upstream
-    <div className="modal-overlay"> 
-      <div className="modal-container">
-        <button className="modal-close-btn" onClick={onClose}>X</button>
-=======
     <div className="jobseeker-modal-overlay">
       <div className="jobseeker-modal-container">
         <button className="jobseeker-modal-close-btn" onClick={onClose}>X</button>
->>>>>>> Stashed changes
         <h2>Edit Your Profile</h2>
         <form className="jobseeker-modal-content" onSubmit={handleSubmit}>
           <label>Name*</label>
