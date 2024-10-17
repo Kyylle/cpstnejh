@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-// import './JobseekerEditAccountModal.css'; // Ensure you have appropriate CSS for this modal
+import '../css/JobseekerEditAccountModal.css'; 
 
 const JobseekerEditAccountModal = ({ isOpen, onClose, formData, handleChange }) => {
   const [loading, setLoading] = useState(false);
@@ -38,11 +38,17 @@ const JobseekerEditAccountModal = ({ isOpen, onClose, formData, handleChange }) 
   };
 
   return (
+<<<<<<< Updated upstream
     <div className="modal-overlay"> 
       <div className="modal-container">
         <button className="modal-close-btn" onClick={onClose}>X</button>
+=======
+    <div className="jobseeker-modal-overlay">
+      <div className="jobseeker-modal-container">
+        <button className="jobseeker-modal-close-btn" onClick={onClose}>X</button>
+>>>>>>> Stashed changes
         <h2>Edit Your Profile</h2>
-        <form className="modal-content" onSubmit={handleSubmit}>
+        <form className="jobseeker-modal-content" onSubmit={handleSubmit}>
           <label>Name*</label>
           <input
             type="text"
@@ -84,11 +90,11 @@ const JobseekerEditAccountModal = ({ isOpen, onClose, formData, handleChange }) 
             onChange={handleChange}
           />
 
-          <button type="submit" className="save-btn" disabled={loading}>
+          <button type="submit" className="jobseeker-save-btn" disabled={loading}>
             {loading ? "Saving..." : "Save Changes"}
           </button>
 
-          {error && <p className="error-message">{error}</p>}
+          {error && <p className="jobseeker-error-message">{error}</p>}
         </form>
       </div>
     </div>
@@ -96,3 +102,4 @@ const JobseekerEditAccountModal = ({ isOpen, onClose, formData, handleChange }) 
 };
 
 export default JobseekerEditAccountModal;
+
