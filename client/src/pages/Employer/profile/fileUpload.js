@@ -1,5 +1,7 @@
 // fileUpload.js
 import axios from 'axios';
+import './FileUploadModal.css';
+
 
 // Reusable file upload function
 export const uploadFile = async (file, endpoint, fieldName) => {

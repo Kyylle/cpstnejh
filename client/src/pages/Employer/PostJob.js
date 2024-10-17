@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './css/postJob.css'; // Ensure the path to the CSS file is correct
 import { FiX } from 'react-icons/fi';
+import { FaPhotoVideo } from 'react-icons/fa'; // Import media icon from Font Awesome
 
 const PostJob = () => {
     const [showJobModal, setShowJobModal] = useState(false);
@@ -111,10 +112,9 @@ const PostJob = () => {
             closeModal(); // Close the modal after successful post
         } catch (error) {
             console.error("Error posting content:", error);
-            alert("Caption Is required");
+            alert("Caption is required");
         }
     };
-    
 
     // Handle posting a job
     const handlePostJobClick = () => {
@@ -171,7 +171,7 @@ const PostJob = () => {
                         <span role="img" aria-label="briefcase">💼</span> Post a free job
                     </button>
                     <button className="post-job-media" onClick={handleMediaClick}>
-                        <span role="img" aria-label="media">🖼️</span> Media
+                        <FaPhotoVideo className="post-job-media-icon" /> Media
                     </button>
                 </div>
             </div>
@@ -201,7 +201,7 @@ const PostJob = () => {
 
                         <div className="post-job-modal-actions">
                             <button onClick={handleMediaClick}>
-                                <img src="/path/to/media-icon.png" alt="Media" />
+                                <FaPhotoVideo className="post-job-media-icon" /> Media
                             </button>
                             <button className="post-job-post-btn" onClick={handleSubmitContent}>Post</button>
                         </div>
@@ -305,3 +305,4 @@ const PostJob = () => {
 };
 
 export default PostJob;
+
