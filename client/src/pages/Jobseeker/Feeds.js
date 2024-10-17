@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom'; // Import Link from React Router
 import axios from 'axios';
 import './css/feeds.css'; // Ensure to style it like the example image
 
@@ -7,7 +8,6 @@ const Feeds = () => {
     const [commentValues, setCommentValues] = useState({}); // State to store comments for each post
 
     useEffect(() => {
-        // Fetch feed data from backend
         const fetchFeeds = async () => {
             try {
                 const token = localStorage.getItem('authToken'); // Ensure token is available in localStorage
@@ -26,7 +26,6 @@ const Feeds = () => {
         fetchFeeds();
     }, []);
 
-    // Handle like post
     const handleLikePost = async (postId) => {
         console.log('Liking post with ID:', postId); // Debugging log
 
@@ -40,21 +39,15 @@ const Feeds = () => {
             const response = await axios.post('/api/auth/like-post', { postId }, config);
             console.log('Post liked:', response.data);
 
-            // Update the liked post in the feeds state
-            const updatedFeeds = feeds.map(feed => {
-                if (feed._id === postId) {
-                    // Update the likes count
-                    return { ...feed, likes: response.data.likes };
-                }
-                return feed;
-            });
+            const updatedFeeds = feeds.map(feed =>
+                feed._id === postId ? { ...feed, likes: response.data.likes } : feed
+            );
             setFeeds(updatedFeeds);
         } catch (error) {
             console.error('Error liking the post:', error);
         }
     };
 
-    // Handle comment input changes
     const handleCommentChange = (postId, comment) => {
         setCommentValues(prevState => ({
             ...prevState,
@@ -62,7 +55,6 @@ const Feeds = () => {
         }));
     };
 
-    // Handle comment post
     const handleCommentPost = async (postId) => {
         const comment = commentValues[postId];
         if (!comment || !comment.trim()) {
@@ -80,17 +72,13 @@ const Feeds = () => {
             const response = await axios.post('/api/auth/comment-post', { postId, comment }, config);
             console.log('Comment added:', response.data);
 
-            // Update the post with the new comment in the feeds state
-            const updatedFeeds = feeds.map(feed => {
-                if (feed._id === postId) {
-                    return { ...feed, comments: response.data.comments };
-                }
-                return feed;
-            });
+            const updatedFeeds = feeds.map(feed =>
+                feed._id === postId ? { ...feed, comments: response.data.comments } : feed
+            );
             setFeeds(updatedFeeds);
             setCommentValues(prevState => ({
                 ...prevState,
-                [postId]: '', // Clear the input field for that post after commenting
+                [postId]: '',
             }));
         } catch (error) {
             console.error('Error adding comment:', error);
@@ -99,36 +87,38 @@ const Feeds = () => {
 
     return (
         <div className='js-feeds-container'>
-            {/* Render the feeds dynamically */}
             <div className='js-feed-list'>
                 {feeds.map((feed, index) => (
                     <div key={index} className='js-feed-item'>
                         <div className="js-feed-header">
-                            <img
-                                src={feed.employer?.profileImage || feed.jobseeker?.profileImage || '/default-profile.png'}
-                                alt={feed.employer?.companyName || feed.jobseeker?.name}
-                                className="js-feed-profile-image"
-                            />
-                            <div className="js-feed-details">
-                                <h4 className="js-feed-name">
-                                    {feed.employer?.companyName || feed.jobseeker?.name}
-                                </h4>
-                                <p className="js-feed-date">
-                                    {new Date(feed.postedDate).toLocaleDateString('en-US', {
-                                        year: 'numeric',
-                                        month: 'long',
-                                        day: 'numeric',
-                                    })}
-                                </p>
-                            </div>
+                            <Link
+                                to={`/viewProfile/${feed.employer ? 'employer' : 'jobseeker'}/${feed.employer?._id || feed.jobseeker?._id}`}
+                                className="profile-link"
+                            >
+                                <img
+                                    src={feed.employer?.profileImage || feed.jobseeker?.profileImage || '/default-profile.png'}
+                                    alt={feed.employer?.companyName || feed.jobseeker?.name}
+                                    className="js-feed-profile-image"
+                                />
+                                <div className="js-feed-details">
+                                    <h4 className="js-feed-name">
+                                        {feed.employer?.companyName || feed.jobseeker?.name}
+                                    </h4>
+                                    <p className="js-feed-date">
+                                        {new Date(feed.postedDate).toLocaleDateString('en-US', {
+                                            year: 'numeric',
+                                            month: 'long',
+                                            day: 'numeric',
+                                        })}
+                                    </p>
+                                </div>
+                            </Link>
                         </div>
 
-                        {/* Caption */}
                         <div className="js-feed-caption">
                             <p>{feed.caption}</p>
                         </div>
 
-                        {/* Media */}
                         {feed.media && feed.media.length > 0 && (
                             <div className="js-feed-media">
                                 {feed.media.map((mediaUrl, i) => (
@@ -142,7 +132,6 @@ const Feeds = () => {
                             </div>
                         )}
 
-                        {/* Like & Comment Section */}
                         <div className="js-feed-actions">
                             <button onClick={() => handleLikePost(feed._id)} className="js-like-btn">
                                 👍 Like ({feed.likes.length})
@@ -150,7 +139,6 @@ const Feeds = () => {
                             <span>Comments ({feed.comments.length})</span>
                         </div>
 
-                        {/* Comments Section */}
                         <div className="js-feed-comments">
                             {feed.comments.map((comment, i) => (
                                 <div key={i} className="js-feed-comment">
@@ -158,18 +146,17 @@ const Feeds = () => {
                                 </div>
                             ))}
 
-                            {/* Add New Comment */}
                             <div className="js-add-comment-section">
                                 <input
                                     type="text"
                                     placeholder="Add a comment..."
-                                    value={commentValues[feed._id] || ''} // Get comment value for that specific post
+                                    value={commentValues[feed._id] || ''}
                                     onChange={(e) => handleCommentChange(feed._id, e.target.value)}
                                 />
                                 <button
                                     onClick={() => handleCommentPost(feed._id)}
-                                    disabled={!commentValues[feed._id] || !commentValues[feed._id].trim()} // Disable button if comment is empty
-                                    className={!commentValues[feed._id] || !commentValues[feed._id].trim() ? 'disabled-btn' : ''} // Add a class for disabled button styling
+                                    disabled={!commentValues[feed._id] || !commentValues[feed._id].trim()}
+                                    className={!commentValues[feed._id] || !commentValues[feed._id].trim() ? 'disabled-btn' : ''}
                                 >
                                     Post
                                 </button>

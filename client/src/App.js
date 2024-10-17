@@ -18,6 +18,7 @@ import EmployerInquiries from './pages/Employer/Inquiries/EmployerInquiries';
 
 import EmployerMessage from './pages/Employer/Message/EmployerMessage'
 import JobseekerProfileSettings from './pages/Jobseeker/JobseekerProfileSettings';
+import ViewProfile from './pages/Jobseeker/ViewProfile';
 
 
 
@@ -140,6 +141,9 @@ function App() {
         </ProtectedRoute>
       }
       />
+
+<Route path="/viewProfile/:type/:id" element={<ViewProfile/>} />
+
 
       </Routes>
     </Router>

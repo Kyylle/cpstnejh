@@ -1,30 +1,30 @@
 const express = require('express');
 const cors = require('cors'); // Middleware for handling CORS
-const connectDB = require('./config/db'); // DB connection
+const connectDB = require('./config/db'); // MongoDB connection
 const authRoutes = require('./routes/authRoutes'); // Auth routes
-const fs = require('fs');
 const path = require('path');
-require('dotenv').config();
-const app = express();
-const PORT = process.env.PORT || 5000;
+const fs = require('fs');
 const http = require('http');
-const socketIo = require('socket.io');
-const server = http.createServer(app);
-const io = socketIo(server);
+const { setupSocket } = require('./socket'); // Socket.IO setup
 
+require('dotenv').config(); // Load environment variables
 
-// Check if 'uploads' folder exists, if not, create it
-const uploadsDir = path.join(__dirname, 'uploads');
-
-if (!fs.existsSync(uploadsDir)) {
-  fs.mkdirSync(uploadsDir);
-}
+const app = express();
+const server = http.createServer(app); // Create HTTP server
+const PORT = process.env.PORT || 5000;
 
 // Middleware
-app.use(express.json()); // Middleware to parse JSON bodies
-app.use(cors()); // Middleware for handling CORS (frontend-backend communication)
+app.use(express.json()); // Parse JSON bodies
+app.use(cors()); // Enable CORS for frontend-backend communication
+
+// Static file handling
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use('/contentuploads', express.static(path.join(__dirname, 'contentuploads')));
+
+// Ensure 'uploads' folder exists
+if (!fs.existsSync(path.join(__dirname, 'uploads'))) {
+    fs.mkdirSync(path.join(__dirname, 'uploads'));
+}
 
 // Connect to MongoDB
 connectDB();
@@ -32,26 +32,14 @@ connectDB();
 // Routes
 app.use('/api/auth', authRoutes); // Mount auth routes at /api/auth
 
+// Setup Socket.IO
+setupSocket(server);
 
-
-// Global Error Handling Middleware (Optional)
+// Global Error Handler (optional)
 app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({ message: 'An internal server error occurred' });
-});
-
-
-io.on('connection', (socket) => {
-  console.log('New client connected');
-
-  socket.on('sendMessage', (data) => {
-    io.emit('message', data);  // This will emit the data to all clients connected
-  });
-
-  socket.on('disconnect', () => {
-    console.log('Client disconnected');
-  });
+    console.error(err.stack);
+    res.status(500).json({ message: 'Internal server error' });
 });
 
 // Start the server
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+server.listen(PORT, () => console.log(`Server running on port ${PORT}`));

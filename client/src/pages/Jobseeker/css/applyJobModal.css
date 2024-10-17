@@ -1,0 +1,41 @@
+/* Overlay styles */
+.aj-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black background */
+    z-index: 1000; /* High z-index to ensure it covers other content */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  /* Modal styles */
+  .apply-job-modal {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    z-index: 1001; /* Ensures the modal is above the overlay */
+    width: 500px; /* Adjust width as necessary */
+    max-width: 90%; /* Responsiveness */
+  }
+  
+  /* Modal form and elements styling */
+  .apply-job-modal form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .apply-job-modal textarea,
+  .apply-job-modal input[type="file"],
+  .apply-job-modal button {
+    margin-top: 10px;
+  }
+  
+  .apply-job-modal button {
+    cursor: pointer;
+  }
+  

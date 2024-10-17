@@ -11,6 +11,10 @@ const applicationSchema = new mongoose.Schema({
         ref: 'Job',
         required: true
     },
+    email: {
+        type: String,
+        required: true
+    },
     resume: { 
         type: String, // Stores the file path of the uploaded resume
         required: false

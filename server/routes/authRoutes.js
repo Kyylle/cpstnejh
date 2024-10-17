@@ -18,7 +18,9 @@ const {
 const {
   postJob,
   getAllJobs,
-  getJobsByEmployer
+  getJobsByEmployer,
+  getAppliedJobs,
+  getEmployerApplications
 } = require('../controllers/jobController');
 const { postContent, likePost, commentOnPost, getPosts, getCommenterProfileImage, unlikePost } = require('../controllers/contentController');
 const  {protect}  = require('../middleware/authMiddleware');
@@ -29,6 +31,8 @@ const contentUpload = require('../middleware/contentUpload');
 const jobseekerProfileUploads = require('../middleware/jobseekerProfileUploadsMiddleware');
 const { applyToJob } = require('../controllers/applicationController');
 const { sendMessage, getMessages } = require('../controllers/messagingController');
+const  Employer = require('../models/employer');
+const  Jobseeker = require('../models/jobseeker');
 // Configure Multer for profile and background image uploads
 const profileStorage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -75,6 +79,29 @@ router.get('/jobseeker/images', protect, getJobseekerProfileAndBackgroundImages)
 
 
 
+//view profile
+
+// In authRoutes.js
+
+router.get('/employer/:id', protect, async (req, res) => {
+  try {
+      const employer = await Employer.findById(req.params.id).select('-password');
+      if (!employer) return res.status(404).json({ message: 'Employer not found' });
+      res.json(employer);
+  } catch (error) {
+      res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+router.get('/jobseeker/:id', protect, async (req, res) => {
+  try {
+      const jobseeker = await Jobseeker.findById(req.params.id).select('-password');
+      if (!jobseeker) return res.status(404).json({ message: 'Jobseeker not found' });
+      res.json(jobseeker);
+  } catch (error) {
+      res.status(500).json({ error: 'Internal server error' });
+  }
+});
 
 
 
@@ -139,20 +166,15 @@ router.get('/get-posts', protect, getPosts);
 
 
 //apply job
-
-
 router.post('/apply-job', protect, applyToJob);
-
-
-
-
-
+router.get('/my-applied-jobs', protect, getAppliedJobs);
+router.get('/employer-applications', protect, getEmployerApplications);
 
 
 //message
 
 router.post('/messages', protect, sendMessage);
-router.get('/messages', protect, getMessages);
+router.get('/messages', protect, getMessages); 
 
 router.get('/test', (req, res) => {
   res.send('API is working!');

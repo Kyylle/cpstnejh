@@ -1,6 +1,6 @@
 const Job = require("../models/Job");
 const Employer = require("../models/employer");
-
+const Application = require("../models/application")
 // Post a new job
 exports.postJob = async (req, res) => {
   try {
@@ -82,5 +82,68 @@ exports.getJobsByEmployer = async (req, res) => {
   } catch (error) {
     console.error("Error fetching employer's jobs:", error);
     res.status(500).json({ error: "An internal server error occurred" });
+  }
+};
+
+
+//get applied jobs
+exports.getAppliedJobs = async (req, res) => {
+    try {
+        const jobseekerId = req.user._id; // Assumes user ID is stored in req.user by your auth middleware
+
+        // Fetch all applications for this jobseeker with job and employer details populated
+        const applications = await Application.find({ jobseeker: jobseekerId }).populate({
+            path: 'job',
+            populate: { path: 'employer', model: 'Employer' } // Assuming Employer model exists
+        });
+
+        // Extract jobs from the applications
+        const jobs = applications.map(application => application.job);
+
+        res.json(jobs);
+    } catch (error) {
+        console.error('Failed to fetch applied jobs:', error);
+        res.status(500).json({ message: 'Server error while fetching jobs' });
+    }
+};
+
+exports.getEmployerApplications = async (req, res) => {
+  try {
+      // Use userId provided by your authentication middleware
+      const employerId = req.user.userId;
+
+      // Fetch all jobs posted by this employer
+      const jobs = await Job.find({ employer: employerId });
+
+      // Extract job IDs to search for applications
+      const jobIds = jobs.map(job => job._id);
+
+      // Fetch all applications that have been submitted to these jobs
+      const applications = await Application.find({ job: { $in: jobIds } })
+          .populate('jobseeker', 'name email') // Populate jobseeker details you want to show
+          .populate({
+              path: 'job',
+              populate: { path: 'employer', select: 'companyName' } // Populate employer details if needed
+          });
+
+      // Map over applications to customize the response and ensure email is included
+      const formattedApplications = applications.map(app => ({
+          _id: app._id,
+          jobseekerName: app.jobseeker.name,
+          jobseekerEmail: app.jobseeker.email, // This assumes email is being populated from the jobseeker ref
+          applicationEmail: app.email, // This is the direct application email if different from jobseeker's email
+          jobTitle: app.job.title,
+          companyName: app.job.employer.companyName,
+          resume: app.resume,
+          coverLetter: app.coverLetter,
+          status: app.status,
+          appliedDate: app.appliedDate,
+          updatedDate: app.updatedDate
+      }));
+
+      res.json(formattedApplications);
+  } catch (error) {
+      console.error('Failed to fetch applications for the employer:', error);
+      res.status(500).json({ message: 'Server error while fetching applications' });
   }
 };
