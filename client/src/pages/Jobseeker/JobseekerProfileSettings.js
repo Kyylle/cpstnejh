@@ -1,5 +1,6 @@
 import React from 'react';
 import Navigation from './Navigation';
+import JobseekerProfileSection from './profile/JobseekerProfileSection';
 
 const JobseekerProfileSettings = ()=> {
     return (
@@ -8,7 +9,7 @@ const JobseekerProfileSettings = ()=> {
                 <Navigation/>
             </div>
             <div className='jps-main-content'>
-
+                <JobseekerProfileSection/>
             </div>
         </div>
     )

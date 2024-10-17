@@ -60,7 +60,7 @@ router.get('/getallprofiles', protect, getAllProfiles);
 router.get('/getJobseekerProfile', protect, getJobseekerProfile);
 
 //update jobseeker profile
-router.put('/update/jobseeker', protect, updateJobseekerProfile)
+router.put('/update/jobseeker', protect, updateJobseekerProfile);
 
 //upload jobseeker profile picture
 router.put('/jobseeker/upload/profile-picture', protect, jobseekerProfileUploads.single('profileImage'), uploadJobseekerProfilePicture);
