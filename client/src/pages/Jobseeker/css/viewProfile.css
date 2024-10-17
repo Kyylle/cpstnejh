@@ -1,21 +1,18 @@
-/* viewProfile.css */
-
-.vp-navbar {
-    margin-bottom: 20px;
-}
-
+/* General Layout */
 .profile-container {
-    max-width: 900px;
+    max-width: 1000px;
+    width: 70%;
     margin: 0 auto;
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
+    margin-top: 70px;
+    padding: 20px;
+    background-color: #f3f2ef;
 }
 
 .profile-banner {
-    height: 200px;
-    overflow: hidden;
+    position: relative;
+    height: 220px;
+    background-color: #0073b1;
+    border-radius: 10px 10px 0 0;
 }
 
 .profile-background {
@@ -24,32 +21,51 @@
     object-fit: cover;
 }
 
+/* Profile Image */
 .profile-header {
+    position: relative;
     display: flex;
     align-items: center;
-    padding: 20px;
-    border-bottom: 1px solid #eee;
+    margin-top: -70px;
+    padding-left: 20px;
 }
 
 .profile-image {
-    width: 120px;
-    height: 120px;
+    width: 90px;
+    height: 90px;
     border-radius: 50%;
-    margin-right: 20px;
+    border: 4px solid #ffffff;
     object-fit: cover;
-    border: 4px solid #fff;
+    position: absolute;
+    top: 0px;
+    left: 17px;
 }
 
-.profile-info h2 {
+/* Profile Information */
+.vp-profile-info {
+    margin-left: 90px;
+    padding: 20px;
+}
+
+.vp-profile-info h2 {
     margin: 0;
-    font-size: 24px;
+    font-size: 28px;
     font-weight: bold;
+    color: #333;
 }
 
+.vp-profile-info p {
+    margin: 5px 0;
+    color: #666;
+    font-size: 16px;
+}
+
+/* Buttons */
 .profile-buttons {
     display: flex;
-    justify-content: flex-start;
-    padding: 15px 20px;
+    gap: 10px;
+    margin-top: 10px;
+    left: 80px;
 }
 
 .profile-buttons button {
@@ -57,75 +73,140 @@
     color: #fff;
     border: none;
     border-radius: 4px;
-    padding: 10px 15px;
-    margin-right: 10px;
+    padding: 10px 20px;
+    font-size: 14px;
     cursor: pointer;
     transition: background-color 0.3s ease;
+
 }
 
 .profile-buttons button:hover {
     background-color: #004182;
 }
 
-.message-modal {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: #242526;
-    color: white;
+.btn-follow {
+    background-color: #ffffff;
+    color: #0a66c2;
+    border: 1px solid #0a66c2;
+}
+
+.btn-follow:hover {
+    background-color: #e5f1ff;
+}
+
+/* Main Section */
+.profile-main {
+    margin-top: 20px;
+    background-color: #ffffff;
     padding: 20px;
-    border-radius: 8px;
-    width: 300px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
-.modal-content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
+.section h3 {
+    font-size: 20px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 15px;
 }
 
-.modal-profile-image {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    margin-bottom: 10px;
-    object-fit: cover;
+.section p {
+    color: #666;
+    line-height: 1.6;
+    font-size: 14px;
 }
 
-.message-input {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 10px;
-    border-radius: 5px;
-    border: none;
+/* Profile Sidebar */
+.profile-sidebar {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
-.send-message-btn {
-    width: 100%;
-    background-color: #0a66c2;
-    color: white;
-    padding: 10px;
-    border-radius: 5px;
-    cursor: pointer;
+.profile-sidebar h3 {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 15px;
 }
 
-.send-message-btn:hover {
-    background-color: #004182;
+.profile-sidebar p {
+    color: #666;
+    font-size: 14px;
 }
 
-.close-modal {
+/* Edit Button (like LinkedIn pencil icon) */
+.edit-icon {
     position: absolute;
     top: 10px;
     right: 10px;
     background: none;
     border: none;
-    color: white;
-    font-size: 18px;
+    color: #0073b1;
     cursor: pointer;
+    font-size: 18px;
+}
+/* Buttons */
+.profile-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.profile-buttons button {
+    background-color: #0a66c2; /* LinkedIn Blue */
+    color: #fff;
+    border: none;
+    border-radius: 24px; /* Make the buttons more rounded */
+    padding: 12px 24px;  /* Increase padding for larger clickable area */
+    font-size: 14px;
+    font-weight: bold;  /* Make the text bold to emphasize */
+    cursor: pointer;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease; /* Smooth transitions */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);  /* Add shadow for depth */
+}
+
+.profile-buttons button:hover {
+    background-color: #004182; /* Darker blue on hover */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);  /* Larger shadow on hover for emphasis */
+}
+
+/* Follow Button */
+.btn-follow {
+    background-color: #ffffff;
+    color: #0a66c2;
+    border: 1px solid #0a66c2;
+    border-radius: 24px;
+    padding: 12px 24px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Light shadow */
+}
+
+.btn-follow:hover {
+    background-color: #e5f1ff; /* Lighter blue background on hover */
+    color: #004182;  /* Darker blue text on hover */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);  /* Larger shadow on hover */
+}
+
+/* Optional: Add a 'More' Button Style */
+.btn-more {
+    background-color: #e0e0e0;
+    color: #333;
+    border: none;
+    border-radius: 24px;
+    padding: 12px 24px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Light shadow */
+}
+
+.btn-more:hover {
+    background-color: #ccc; /* Darker grey on hover */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); /* Larger shadow on hover */
 }
