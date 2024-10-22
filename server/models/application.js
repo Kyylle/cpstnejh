@@ -11,6 +11,10 @@ const applicationSchema = new mongoose.Schema({
         ref: 'Job',
         required: true
     },
+    name: {
+        type: String,
+        required: true
+    },
     email: {
         type: String,
         required: true

@@ -61,13 +61,13 @@ const EmployerInquiries = () => {
                                 {applications.length > 0 ? (
                                     applications.map((application) => (
                                         <div key={application._id} className='application-item'>
-                                            <p><strong>Name:</strong> {application.jobseeker?.name || 'Name not available'}</p>
-                                            <p><strong>Email:</strong> {application.jobseeker?.email || 'Email not available'}</p>
+                                            <p><strong>Name:</strong> {application.name || 'Name not available'}</p>
+                                            <p><strong>Email:</strong> {application.email || 'Email not available'}</p>
                                             <p><strong>Applied Date:</strong> {application.appliedDate ? new Date(application.appliedDate).toLocaleDateString() : 'Date not available'}</p>
                                             <p><strong>Cover Letter:</strong> <br /> {application.coverLetter || 'No cover letter provided'}</p>
                                             <p><strong>Resume:</strong> 
                                                 {application.resume ? 
-                                                    <a href={`https://yourdomain.com/files/${application.resume}`} target="_blank" rel="noopener noreferrer" download>Download Resume</a> : 
+                                                    <a href={`http://localhost:5000/${application.resume}`} target="_blank" rel="noopener noreferrer" download>Download Resume</a> : 
                                                     'No resume uploaded'}
                                             </p>
                                         </div>

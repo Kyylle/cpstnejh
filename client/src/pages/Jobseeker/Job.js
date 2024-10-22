@@ -37,66 +37,103 @@ const Job = () => {
   return (
     <div className='job-navbar'>
       <Navigation />
-    <div className="job-container">
-      
+      <div className="job-container">
+        <div className="job-layout">
+          {/* Left Sidebar */}
+          <aside className="left-sidebar">
+            <div className="profile-summary">
+              <img src="path-to-profile-image" alt="profile" />
+              <h3>Your Name</h3>
+              <p>Your Title or Role</p>
+            </div>
+            <div className="filter-section">
+              <h4>Filter by</h4>
+              <p>Location</p>
+              <p>Company</p>
+              <p>Date Posted</p>
+            </div>
+          </aside>
 
-      <div className="job-layout">
-        {/* Left Sidebar */}
-        <aside className="left-sidebar">
-          <div className="profile-summary">
-            <img src="path-to-profile-image" alt="profile" />
-            <h3>Your Name</h3>
-            <p>Your Title or Role</p>
-          </div>
-          <div className="filter-section">
-            <h4>Filter by</h4>
-            <p>Location</p>
-            <p>Company</p>
-            <p>Date Posted</p>
-          </div>
-        </aside>
-
-        {/* Main Job Listings */}
-        <main className="job-listings">
-          {error && <p className="error">{error}</p>}
-          {jobs.map((job) => (
-            <div className="job-listing-item" key={job._id}>
-              <div>
-                <button 
-                  className="job-title-btn" 
-                  onClick={() => handleJobSelect(job)}
-                >
-                  {job.jobTitle}
-                </button>
-                <p>{job.employer?.companyName} • {job.location} • {job.jobType}</p>
+          {/* Main Job Listings */}
+          <main className="job-listings">
+            {error && <p className="error">{error}</p>}
+            {jobs.map((job) => (
+              <div className="job-listing-item" key={job._id}>
+                <div>
+                  <button 
+                    className="job-title-btn" 
+                    onClick={() => handleJobSelect(job)}
+                  >
+                    {job.jobTitle}
+                  </button>
+                  <p>{job.employer?.companyName} • {job.location} • {job.jobType}</p>
+                </div>
               </div>
-            </div>
-          ))}
-        </main>
+            ))}
+          </main>
 
-        {/* Right Sidebar for job details */}
-        <aside className="job-right-sidebar">
-          {selectedJob ? (
-            <div className="job-details">
-              <h4>{selectedJob.jobTitle}</h4>
-              <p><strong>Company:</strong> {selectedJob.employer?.companyName}</p>
-              <p><strong>Location:</strong> {selectedJob.location}</p>
-              <p><strong>Job Type:</strong> {selectedJob.jobType}</p>
-              <p><strong>Description:</strong> {selectedJob.description}</p>
-              <button onClick={handleApplyClick}>Apply Now</button>
-            </div>
-          ) : (
-            <p>Select a job to view details.</p>
-          )}
-        </aside>
+          {/* Right Sidebar for job details */}
+          <aside className="job-right-sidebar">
+            {selectedJob ? (
+              <div className="job-details">
+                <h4>{selectedJob.jobTitle}</h4>
+                <p><strong>Company:</strong> {selectedJob.employer?.companyName}</p>
+                <p><strong>Location:</strong> {selectedJob.location}</p>
+                <p><strong>Job Type:</strong> {selectedJob.jobType}</p>
+                <p><strong>Salary Range:</strong> {selectedJob.salaryRange || 'Not provided'}</p>
+                <p><strong>Application Deadline:</strong> {selectedJob.applicationDeadline ? new Date(selectedJob.applicationDeadline).toLocaleDateString() : 'No deadline'}</p>
+                <p><strong>Description:</strong> {selectedJob.description}</p>
+                
+                {/* Display Requirements */}
+                {selectedJob.requirements && selectedJob.requirements.length > 0 && (
+                  <>
+                    <h5>Requirements:</h5>
+                    <ul>
+                      {selectedJob.requirements.map((requirement, index) => (
+                        <li key={index}>{requirement}</li>
+                      ))}
+                    </ul>
+                  </>
+                )}
+
+                {/* Display Responsibilities */}
+                {selectedJob.responsibilities && selectedJob.responsibilities.length > 0 && (
+                  <>
+                    <h5>Responsibilities:</h5>
+                    <ul>
+                      {selectedJob.responsibilities.map((responsibility, index) => (
+                        <li key={index}>{responsibility}</li>
+                      ))}
+                    </ul>
+                  </>
+                )}
+
+                {/* Display Benefits */}
+                {selectedJob.benefits && selectedJob.benefits.length > 0 && (
+                  <>
+                    <h5>Benefits:</h5>
+                    <ul>
+                      {selectedJob.benefits.map((benefit, index) => (
+                        <li key={index}>{benefit}</li>
+                      ))}
+                    </ul>
+                  </>
+                )}
+
+                <button onClick={handleApplyClick}>Apply Now</button>
+              </div>
+            ) : (
+              <p>Select a job to view details.</p>
+            )}
+          </aside>
+        </div>
+
+        {showModal && selectedJob && (
+          <ApplyJobModal jobId={selectedJob._id} closeModal={() => {
+            setShowModal(false);
+          }} />
+        )}
       </div>
-
-      {showModal && selectedJob && (
-        <ApplyJobModal jobId={selectedJob._id} closeModal={() => {
-          setShowModal(false);
-        }} />
-      )}
-    </div>
     </div>
   );
 };

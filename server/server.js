@@ -21,7 +21,7 @@ app.use(cors()); // Enable CORS for frontend-backend communication
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use('/contentuploads', express.static(path.join(__dirname, 'contentuploads')));
 app.use('/jobseekerProfileUploads', express.static(path.join(__dirname, 'jobseekerProfileUploads')));
-
+app.use('/applications/resumes', express.static(path.join(__dirname, 'applications', 'resumes')));
 // Ensure 'uploads' folder exists
 if (!fs.existsSync(path.join(__dirname, 'uploads'))) {
     fs.mkdirSync(path.join(__dirname, 'uploads'));

@@ -120,30 +120,32 @@ exports.getEmployerApplications = async (req, res) => {
 
       // Fetch all applications that have been submitted to these jobs
       const applications = await Application.find({ job: { $in: jobIds } })
-          .populate('jobseeker', 'name email') // Populate jobseeker details you want to show
+          .populate('jobseeker', 'name email') // Populate jobseeker's name and email
           .populate({
               path: 'job',
               populate: { path: 'employer', select: 'companyName' } // Populate employer details if needed
           });
 
-      // Map over applications to customize the response and ensure email is included
+      // Map over applications to format the response and include the email
       const formattedApplications = applications.map(app => ({
           _id: app._id,
-          jobseekerName: app.jobseeker.name,
-          jobseekerEmail: app.jobseeker.email, // This assumes email is being populated from the jobseeker ref
-          applicationEmail: app.email, // This is the direct application email if different from jobseeker's email
-          jobTitle: app.job.title,
-          companyName: app.job.employer.companyName,
-          resume: app.resume,
-          coverLetter: app.coverLetter,
-          status: app.status,
-          appliedDate: app.appliedDate,
-          updatedDate: app.updatedDate
+          jobseekerName: app.jobseeker?.name || 'N/A', // Fallback if jobseeker name is unavailable
+          jobseekerEmail: app.jobseeker?.email || 'N/A', // Fallback if jobseeker email is unavailable
+          applicationEmail: app.email || 'N/A', // Email provided in the application (fallback if not provided)
+          jobTitle: app.job?.title || 'N/A', // Fallback if job title is unavailable
+          companyName: app.job?.employer?.companyName || 'N/A', // Fallback if company name is unavailable
+          resume: app.resume || 'No resume uploaded', // Provide fallback for missing resume
+          coverLetter: app.coverLetter || 'No cover letter provided', // Provide fallback for missing cover letter
+          status: app.status || 'pending', // Status of the application
+          appliedDate: app.appliedDate ? new Date(app.appliedDate).toLocaleDateString() : 'N/A', // Format the applied date
+          updatedDate: app.updatedDate ? new Date(app.updatedDate).toLocaleDateString() : 'N/A' // Format the updated date
       }));
 
+      // Send the formatted applications as a JSON response
       res.json(formattedApplications);
   } catch (error) {
       console.error('Failed to fetch applications for the employer:', error);
       res.status(500).json({ message: 'Server error while fetching applications' });
   }
 };
+

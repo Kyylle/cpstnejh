@@ -5,6 +5,7 @@ import './css/applyJobModal.css';
 const ApplyJobModal = ({ jobId, closeModal }) => {
   const [coverLetter, setCoverLetter] = useState('');
   const [resume, setResume] = useState(null);
+  const [name, setName] = useState(''); // Add state to capture name
   const [email, setEmail] = useState('');  // Add state to capture email
   const [error, setError] = useState('');
 
@@ -17,6 +18,7 @@ const ApplyJobModal = ({ jobId, closeModal }) => {
     const formData = new FormData();
     formData.append('coverLetter', coverLetter);
     formData.append('jobId', jobId);
+    formData.append('name', name);  // Append name to the form data
     formData.append('email', email);  // Append email to the form data
     if (resume) {
       formData.append('resume', resume);
@@ -50,14 +52,17 @@ const ApplyJobModal = ({ jobId, closeModal }) => {
       <div className="apply-job-modal">
         <h2>Apply for Job</h2>
         <form onSubmit={handleSubmit}>
-          <label htmlFor="coverLetter">Cover Letter:</label>
-          <textarea
-            id="coverLetter"
-            value={coverLetter}
-            onChange={(e) => setCoverLetter(e.target.value)}
+          {/* Name field */}
+          <label htmlFor="name">Name:</label>
+          <input
+            type="text"
+            id="name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
             required
-          ></textarea>
-          
+          />
+
+          {/* Email field */}
           <label htmlFor="email">Email:</label>
           <input
             type="email"
@@ -67,6 +72,16 @@ const ApplyJobModal = ({ jobId, closeModal }) => {
             required
           />
           
+          {/* Cover Letter field */}
+          <label htmlFor="coverLetter">Cover Letter:</label>
+          <textarea
+            id="coverLetter"
+            value={coverLetter}
+            onChange={(e) => setCoverLetter(e.target.value)}
+            required
+          ></textarea>
+          
+          {/* Resume file upload */}
           <label htmlFor="resume">Resume:</label>
           <input
             type="file"
@@ -77,8 +92,9 @@ const ApplyJobModal = ({ jobId, closeModal }) => {
           
           {error && <p className="error">{error}</p>}
           
+          {/* Submit and Cancel buttons */}
           <button type="submit">Submit Application</button>
-          <button onClick={closeModal}>Cancel</button>
+          <button type="button" onClick={closeModal}>Cancel</button>
         </form>
       </div>
     </div>

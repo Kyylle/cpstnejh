@@ -33,6 +33,7 @@ const { applyToJob } = require('../controllers/applicationController');
 const { sendMessage, getMessages } = require('../controllers/messagingController');
 const  Employer = require('../models/employer');
 const  Jobseeker = require('../models/jobseeker');
+const { followAccount, unfollowAccount } = require('../controllers/followController');
 // Configure Multer for profile and background image uploads
 const profileStorage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -175,6 +176,12 @@ router.get('/employer-applications', protect, getEmployerApplications);
 
 router.post('/messages', protect, sendMessage);
 router.get('/messages', protect, getMessages); 
+
+
+//follow
+
+router.post('/follow', protect, followAccount);
+router.post('/unfollow', protect, unfollowAccount);
 
 router.get('/test', (req, res) => {
   res.send('API is working!');

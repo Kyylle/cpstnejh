@@ -31,8 +31,13 @@ exports.applyToJob = async (req, res) => {
         }
 
         try {
-            const { jobId, coverLetter, email } = req.body; // Include email in the destructuring from req.body
+            const { jobId, coverLetter, email, name } = req.body; // Include name in the destructuring
             const userId = req.user.userId;
+
+            // Validate required fields (jobId, name, and email)
+            if (!name || !email) {
+                return res.status(400).json({ message: 'Name and email are required' });
+            }
 
             // Find the job by jobId
             const job = await Job.findById(jobId);
@@ -50,10 +55,11 @@ exports.applyToJob = async (req, res) => {
                 return res.status(400).json({ message: 'You have already applied for this job' });
             }
 
-            // Create a new job application with the uploaded resume file path and email
+            // Create a new job application with the uploaded resume file path, name, and email
             const newApplication = new Application({
                 jobseeker: userId,
                 job: jobId,
+                name: name, // Save the jobseeker's name
                 email: email, // Save the email provided in the application
                 resume: req.file ? req.file.path : null, // Store the file path of the uploaded resume
                 coverLetter: coverLetter || null,
@@ -67,4 +73,5 @@ exports.applyToJob = async (req, res) => {
         }
     });
 };
+
 
