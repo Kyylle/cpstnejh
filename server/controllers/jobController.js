@@ -109,43 +109,42 @@ exports.getAppliedJobs = async (req, res) => {
 
 exports.getEmployerApplications = async (req, res) => {
   try {
-      // Use userId provided by your authentication middleware
-      const employerId = req.user.userId;
+    const employerId = req.user.userId; // Get employer ID from authenticated user
 
-      // Fetch all jobs posted by this employer
-      const jobs = await Job.find({ employer: employerId });
+    // Fetch all jobs posted by this employer
+    const jobs = await Job.find({ employer: employerId });
 
-      // Extract job IDs to search for applications
-      const jobIds = jobs.map(job => job._id);
+    // Extract job IDs to search for applications
+    const jobIds = jobs.map(job => job._id);
 
-      // Fetch all applications that have been submitted to these jobs
-      const applications = await Application.find({ job: { $in: jobIds } })
-          .populate('jobseeker', 'name email') // Populate jobseeker's name and email
-          .populate({
-              path: 'job',
-              populate: { path: 'employer', select: 'companyName' } // Populate employer details if needed
-          });
+    // Fetch all applications that have been submitted to these jobs
+    const applications = await Application.find({ job: { $in: jobIds } })
+      .populate('jobseeker', 'name email') // Populate jobseeker's name and email
+      .populate({
+        path: 'job',
+        populate: { path: 'employer', select: 'companyName' } // Populate employer details if needed
+      });
 
-      // Map over applications to format the response and include the email
-      const formattedApplications = applications.map(app => ({
-          _id: app._id,
-          jobseekerName: app.jobseeker?.name || 'N/A', // Fallback if jobseeker name is unavailable
-          jobseekerEmail: app.jobseeker?.email || 'N/A', // Fallback if jobseeker email is unavailable
-          applicationEmail: app.email || 'N/A', // Email provided in the application (fallback if not provided)
-          jobTitle: app.job?.title || 'N/A', // Fallback if job title is unavailable
-          companyName: app.job?.employer?.companyName || 'N/A', // Fallback if company name is unavailable
-          resume: app.resume || 'No resume uploaded', // Provide fallback for missing resume
-          coverLetter: app.coverLetter || 'No cover letter provided', // Provide fallback for missing cover letter
-          status: app.status || 'pending', // Status of the application
-          appliedDate: app.appliedDate ? new Date(app.appliedDate).toLocaleDateString() : 'N/A', // Format the applied date
-          updatedDate: app.updatedDate ? new Date(app.updatedDate).toLocaleDateString() : 'N/A' // Format the updated date
-      }));
+    // Format the applications response
+    const formattedApplications = applications.map(app => ({
+      _id: app._id,
+      jobseekerName: app.jobseeker?.name || 'N/A', // Jobseeker name
+      jobseekerEmail: app.jobseeker?.email || 'N/A', // Jobseeker email
+      applicationEmail: app.email || 'N/A', // Application email (fallback)
+      jobTitle: app.job?.title || 'N/A', // Job title
+      companyName: app.job?.employer?.companyName || 'N/A', // Company name
+      resume: app.resume || 'No resume uploaded', // Resume (fallback)
+      coverLetter: app.coverLetter || 'No cover letter provided', // Cover letter (fallback)
+      status: app.status || 'pending', // Application status
+      appliedDate: app.appliedDate ? new Date(app.appliedDate).toLocaleDateString() : 'N/A', // Applied date
+      updatedDate: app.updatedDate ? new Date(app.updatedDate).toLocaleDateString() : 'N/A' // Updated date
+    }));
 
-      // Send the formatted applications as a JSON response
-      res.json(formattedApplications);
+    res.json(formattedApplications); // Send formatted response
   } catch (error) {
-      console.error('Failed to fetch applications for the employer:', error);
-      res.status(500).json({ message: 'Server error while fetching applications' });
+    console.error('Failed to fetch applications for the employer:', error);
+    res.status(500).json({ message: 'Server error while fetching applications' });
   }
 };
+
 

@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { getJobseekerProfile, updateJobseekerProfile } from "./jobseekerService";
-import JobseekerEditAccount from "./JobseekerEditAccountModal"; // This modal will handle profile edits
-import ChangeProfilePictureModal from "./ChangeProfilePictureModal"; // Modal for changing profile picture
-import ChangeBackgroundPictureModal from "./ChangeBackgroundPictureModal"; // Modal for changing background picture
+import JobseekerEditAccount from "./JobseekerEditAccountModal";
+import ChangeProfilePictureModal from "./ChangeProfilePictureModal";
+import ChangeBackgroundPictureModal from "./ChangeBackgroundPictureModal";
+import '../css/jobseekerProfileSection.css';
 
 const JobseekerProfileSection = () => {
   const [jobseekerData, setJobseekerData] = useState({
@@ -36,13 +37,6 @@ const JobseekerProfileSection = () => {
     fetchData();
   }, []);
 
-  const handleSaveImage = (data, field) => {
-    setJobseekerData((prevData) => ({
-      ...prevData,
-      [field]: data.imagePath,
-    }));
-  };
-
   return (
     <div className="js-profile-section-container">
       {/* Background and Profile Image Display */}
@@ -52,7 +46,9 @@ const JobseekerProfileSection = () => {
           alt="Background"
           className="js-background-photo"
         />
-        <button onClick={() => setIsBackgroundModalOpen(true)}>Change Background</button>
+        <button className="js-edit-btn" onClick={() => setIsBackgroundModalOpen(true)}>
+          Change Background
+        </button>
       </div>
 
       <div className="js-profile-picture-container">
@@ -61,16 +57,20 @@ const JobseekerProfileSection = () => {
           alt="Profile"
           className="js-profile-picture"
         />
-        <button onClick={() => setIsProfileModalOpen(true)}>Change Profile Photo</button>
+        <button className="js-edit-btn" onClick={() => setIsProfileModalOpen(true)}>
+          Change Profile Photo
+        </button>
       </div>
 
       {/* Display Jobseeker Information */}
       <div className="js-information">
-        <h2>{jobseekerData.name || "Your Name"}</h2>
-        <p>{jobseekerData.bio || "Your Bio"}</p>
-        <p>{jobseekerData.location || "Your Location"}</p>
-        <p>{jobseekerData.email || "Your Email"}</p>
-        <button onClick={() => setIsEditModalOpen(true)}>Edit Profile</button>
+        <h2 className="js-profile-name">{jobseekerData.name || "Your Name"}</h2>
+        <p className="js-profile-bio">{jobseekerData.bio || "Your Bio"}</p>
+        <p className="js-profile-location"><i className="fas fa-map-marker-alt"></i> {jobseekerData.location || "Your Location"}</p>
+        <p className="js-profile-email"><i className="fas fa-envelope"></i> {jobseekerData.email || "Your Email"}</p>
+        <button className="js-edit-btn" onClick={() => setIsEditModalOpen(true)}>
+          Edit Profile
+        </button>
       </div>
 
       {/* Modals for Editing and Uploading */}
