@@ -61,10 +61,14 @@ const EmployerInquiries = () => {
                                 {applications.length > 0 ? (
                                     applications.map((application) => (
                                         <div key={application._id} className='application-item'>
-                                            <p><strong>Name:</strong> {application.name || 'Name not available'}</p>
-                                            <p><strong>Email:</strong> {application.email || 'Email not available'}</p>
-                                            <p><strong>Applied Date:</strong> {application.appliedDate ? new Date(application.appliedDate).toLocaleDateString() : 'Date not available'}</p>
-                                            <p><strong>Cover Letter:</strong> <br /> {application.coverLetter || 'No cover letter provided'}</p>
+                                            <h3>Job Title: <span>{application.jobTitle || 'Name not available'}</span></h3>
+                                            <p><strong>Name:</strong> <span>{application.jobseekerName || 'Name not available'}</span></p>
+                                            <p><strong>Email:</strong> <span>{application.jobseekerEmail || 'Email not available'}</span></p>
+                                            <p><strong>Applied Date:</strong> <span>{application.appliedDate ? new Date(application.appliedDate).toLocaleDateString() : 'Date not available'}</span></p>
+                                            <div className='cover-letter'>
+                                                <h4>Cover Letter:</h4>
+                                                <p>{application.coverLetter || 'No cover letter provided'}</p>
+                                            </div>
                                             <p><strong>Resume:</strong> 
                                                 {application.resume ? 
                                                     <a href={`http://localhost:5000/${application.resume}`} target="_blank" rel="noopener noreferrer" download>Download Resume</a> : 

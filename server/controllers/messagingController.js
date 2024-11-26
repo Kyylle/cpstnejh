@@ -69,3 +69,34 @@ exports.getMessages = asyncHandler(async (req, res) => {
         res.status(500).json({ error: 'Internal server error', details: error.toString() });
     }
 });
+
+exports.receiveMessage = asyncHandler(async (socket) => {
+    socket.on('sendMessage', async ({ content, toId }) => {
+        const fromId = socket.userId; // Assuming you store the userId in the socket session
+
+        // Validate input
+        if (!content || !fromId || !toId) {
+            return socket.emit('error', { message: 'All fields are required: content, fromId, and toId.' });
+        }
+
+        try {
+            // Create and save the message
+            const message = new Message({
+                content,
+                from: { id: fromId, type: 'Employer' }, // Adjust user type accordingly
+                to: { id: toId, type: 'Jobseeker' } // Adjust user type accordingly
+            });
+            await message.save();
+
+            // Emit the message to the recipient
+            const io = getIo();
+            io.to(toId).emit('receiveMessage', message);
+
+            // Optionally, acknowledge the message sent
+            socket.emit('messageSent', { message });
+        } catch (error) {
+            console.error('Error receiving message:', error);
+            socket.emit('error', { message: 'Internal server error', details: error.toString() });
+        }
+    });
+});

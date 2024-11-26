@@ -79,15 +79,13 @@
 
 /* Error Text */
 .jobseeker-error-text {
-  color: red;
-  font-size: 0.9rem;
+  color: red !important;
+  font-size: 14px;
   margin-top: 5px;
 }
-
-/* Success Text */
 .jobseeker-success-text {
   color: green;
-  font-size: 0.9rem;
+  font-size: 14px;
   margin-top: 5px;
 }
 

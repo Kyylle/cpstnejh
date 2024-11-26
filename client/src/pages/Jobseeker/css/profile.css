@@ -1,100 +1,110 @@
 /* Container for the entire profile card */
-.profile-container {
-  width: 260px;
-  border: 1px solid #ddd;
+.left-column-profile-container {
+  width: 280px; /* Slightly wider for better layout */
+  border: 1px solid #e0e0e0; /* Softer border color */
   border-radius: 10px;
   background-color: white;
-  padding: 15px;
+  padding: 20px; /* Increased padding for better spacing */
   text-align: center;
   font-family: Arial, sans-serif;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
+  transition: transform 0.2s; /* Smooth transition for hover effect */
+}
+
+.left-column-profile-container:hover {
+  transform: translateY(-2px); /* Lift effect on hover */
 }
 
 /* Profile header container for picture and name */
-.profile-header {
+.left-column-profile-header {
   margin-bottom: 20px;
 }
 
 /* Profile picture container */
-.profile-picture-container {
+.left-column-profile-picture-container {
   width: 100%;
   height: 80px;
-  background-color: #f0f0f0;
-  border-top-left-radius: 8px;
-  border-top-right-radius: 8px;
+  background-color: #f9f9f9; /* Lighter background color */
+  border-top-left-radius: 10px; /* Match the card border radius */
+  border-top-right-radius: 10px;
   margin-bottom: 10px;
   position: relative;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1); /* Soft inner shadow */
 }
 
 /* Profile picture styles */
-.profile-picture {
+.left-column-profile-picture {
   width: 70px;
   height: 70px;
   border-radius: 50%;
-  border: 2px solid white;
+  border: 3px solid white; /* Thicker border for better visibility */
   position: absolute;
-  top: -35px;
+  top: -35px; /* Center the image */
   left: 50%;
   transform: translateX(-50%);
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2); /* Shadow for the profile picture */
 }
 
 /* Username styles */
-.profile-header h2 {
-  font-size: 16px;
-  font-weight: 600;
-  margin: 35px 0 5px 0;
+.left-column-profile-header h2 {
+  font-size: 18px; /* Larger font size */
+  font-weight: bold; /* Bold for emphasis */
+  margin: 40px 0 5px 0; /* Adjusted margin for spacing */
 }
 
 /* User's title (job or student info) */
-.profile-header p {
+.left-column-profile-header p {
   font-size: 14px;
   color: #666;
 }
 
 /* Profile section styles for connections, premium, etc. */
-.profile-section {
+.left-column-profile-section {
   text-align: left;
-  padding: 8px 0;
+  padding: 10px 0; /* Increased padding */
   border-bottom: 1px solid #eee;
-  font-size: 14px;
+  font-size: 15px; /* Slightly larger font size */
   color: #333;
 }
 
 /* Premium button styles */
-.premium-button {
+.left-column-premium-button {
   display: inline-block;
   width: 100%;
   background-color: #f9c846;
   color: white;
   border: none;
   border-radius: 20px;
-  padding: 8px;
-  margin: 10px 0;
+  padding: 10px; /* Increased padding for a better touch target */
+  margin: 12px 0; /* Slightly increased margin */
   cursor: pointer;
-  font-size: 14px;
+  font-size: 15px; /* Slightly larger font size */
   font-weight: bold;
+  transition: background-color 0.3s, transform 0.2s; /* Smooth transitions */
 }
 
-.premium-button:hover {
-  background-color: #f3a233;
+.left-column-premium-button:hover {
+  background-color: #f3a233; /* Slightly darker on hover */
+  transform: translateY(-1px); /* Lift effect on hover */
 }
 
 /* Saved items styling */
-.saved-items {
+.left-column-saved-items {
   display: flex;
   align-items: center;
   font-size: 14px;
   color: #666;
-  padding: 10px 0;
+  padding: 12px 0; /* Added padding for spacing */
 }
 
 /* Icon for saved items */
-.icon-saved {
+.left-column-icon-saved {
   margin-right: 8px;
-  font-size: 18px;
+  font-size: 20px; /* Slightly larger icon */
   color: #666;
 }
 
 /* Remove the border on the last profile section */
-.profile-section:last-child {
+.left-column-profile-section:last-child {
   border-bottom: none;
 }

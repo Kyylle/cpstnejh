@@ -18,9 +18,22 @@ const storage = multer.diskStorage({
     }
 });
 
+const fileFilter = (req, file, cb) => {
+    const allowedTypes = /pdf|doc|docx/;
+    const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
+    const mimetype = allowedTypes.test(file.mimetype);
+
+    if (extname && mimetype) {
+        cb(null, true);
+    } else {
+        cb(new Error('Only PDF and DOC files are allowed'));
+    }
+};
+
 const upload = multer({
     storage: storage,
     limits: { fileSize: 10 * 1024 * 1024 },
+    fileFilter: fileFilter
 }).single('resume'); // Expect a single resume file
 
 // Controller for applying to a job

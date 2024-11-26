@@ -23,10 +23,14 @@ const JobseekerSignUp = ({ showModal, onClose }) => {
   const validateForm = () => {
     const errors = {};
 
+    if (!formData.name) {
+      errors.name = "Full Name is required";
+    }
+
     if (!formData.email) {
       errors.email = "Email is required";
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      errors.email = "Email address is invalid";
+      errors.email = "Please enter a valid email address";
     }
 
     if (!formData.password) {
@@ -53,14 +57,14 @@ const JobseekerSignUp = ({ showModal, onClose }) => {
     try {
       const response = await axios.post("/api/auth/jobseeker", formData);
 
-      const { token} = response.data;
+      const { token } = response.data;
       localStorage.setItem("authToken", token);
       setMessage("Jobseeker registered successfully");
 
       navigate("/dashboard");
     } catch (err) {
       setErrors({
-        server: err.response ? err.response.data.error : "Server error",
+        server: err.response ? err.response.data.error : "An unexpected server error occurred",
       });
     }
   };

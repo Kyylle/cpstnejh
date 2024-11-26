@@ -1,14 +1,28 @@
-
+.followed-accounts-container {
+  background-color: #f5f8fa; /* Light background color */
+  border: 1px solid #e1e9ee; /* Subtle border */
+  border-radius: 8px; /* Rounded corners */
+  padding: 20px; /* Padding for spacing */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+}
 
 .followed-accounts-container h3 {
   font-size: 16px;
   margin-bottom: 16px;
+  color: #333; /* Darker color for better contrast */
 }
 
 .account {
   display: flex;
   align-items: center;
   margin-bottom: 16px;
+  padding: 10px; /* Padding for account items */
+  border-radius: 6px; /* Rounded corners for each account */
+  transition: background-color 0.3s; /* Smooth transition for hover effect */
+}
+
+.account:hover {
+  background-color: #e6f7ff; /* Light blue background on hover */
 }
 
 .account-logo {
@@ -16,6 +30,7 @@
   height: 50px;
   border-radius: 50%;
   margin-right: 12px;
+  border: 2px solid #0a66c2; /* Border around the profile picture */
 }
 
 .account-info {
@@ -25,6 +40,7 @@
 .account-info h4 {
   font-size: 14px;
   margin: 0;
+  color: #0a66c2; /* Brand color for account names */
 }
 
 .account-info p {
@@ -33,17 +49,18 @@
 }
 
 .follow-button {
-  background-color: #0a66c2;
+  background-color: #0a66c2; /* Primary button color */
   color: white;
   border: none;
   border-radius: 20px;
   padding: 8px 12px;
   cursor: pointer;
   font-size: 12px;
+  transition: background-color 0.3s; /* Smooth transition for hover effect */
 }
 
 .follow-button:hover {
-  background-color: #004182;
+  background-color: #004182; /* Darker shade on hover */
 }
 
 .view-more {
@@ -53,9 +70,51 @@
 .view-more a {
   text-decoration: none;
   font-size: 12px;
-  color: #0073b1;
+  color: #0073b1; /* Brand color for links */
 }
 
 .view-more a:hover {
   text-decoration: underline;
+}
+
+
+.follow-button-container {
+  display: flex;
+  align-items: center;
+}
+
+.follow-button {
+  background-color: #0a66c2; /* Primary button color */
+  color: white;
+  border: none;
+  border-radius: 20px;
+  padding: 10px 16px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s, transform 0.2s; /* Smooth transition for color and scale */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+}
+
+.follow-button:hover {
+  background-color: #004182; /* Darker shade on hover */
+  transform: translateY(-2px); /* Slight lift effect on hover */
+}
+
+.follow-button.following {
+  background-color: #ff4d4d; /* Color for 'Unfollow' */
+}
+
+.follow-button.not-following {
+  background-color: #0a66c2; /* Color for 'Follow' */
+}
+
+.follow-button.loading {
+  background-color: #cccccc; /* Grey color for loading state */
+  cursor: not-allowed; /* Change cursor to indicate loading */
+}
+
+.error-message {
+  color: red; /* Error message color */
+  font-size: 12px;
+  margin-top: 8px; /* Space between button and error message */
 }

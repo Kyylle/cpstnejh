@@ -18,10 +18,13 @@ const followSchema = new mongoose.Schema({
   }, // Person/entity being followed
   followingModel: { 
     type: String, 
-    enum: ['Jobseeker', 'Employer'],
+    enum: ['Jobseeker', 'Employer'], // Include both versions
     required: true 
   },
-  createdAt: { type: Date, default: Date.now }
+  createdAt: { 
+    type: Date, 
+    default: Date.now 
+  }
 });
 
 module.exports = mongoose.model('Follow', followSchema);

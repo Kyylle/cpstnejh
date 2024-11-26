@@ -41,11 +41,6 @@ const Job = () => {
         <div className="job-layout">
           {/* Left Sidebar */}
           <aside className="left-sidebar">
-            <div className="profile-summary">
-              <img src="path-to-profile-image" alt="profile" />
-              <h3>Your Name</h3>
-              <p>Your Title or Role</p>
-            </div>
             <div className="filter-section">
               <h4>Filter by</h4>
               <p>Location</p>

@@ -128,10 +128,10 @@ exports.getEmployerApplications = async (req, res) => {
     // Format the applications response
     const formattedApplications = applications.map(app => ({
       _id: app._id,
-      jobseekerName: app.jobseeker?.name || 'N/A', // Jobseeker name
-      jobseekerEmail: app.jobseeker?.email || 'N/A', // Jobseeker email
+      jobseekerName: app.name || 'N/A', // Jobseeker name
+      jobseekerEmail: app.email || 'N/A', // Jobseeker email
       applicationEmail: app.email || 'N/A', // Application email (fallback)
-      jobTitle: app.job?.title || 'N/A', // Job title
+      jobTitle: app.job?.jobTitle || 'N/A', // Job title
       companyName: app.job?.employer?.companyName || 'N/A', // Company name
       resume: app.resume || 'No resume uploaded', // Resume (fallback)
       coverLetter: app.coverLetter || 'No cover letter provided', // Cover letter (fallback)

@@ -23,19 +23,24 @@ const FollowButton = ({ followId, followModel }) => {
         : await axios.post('/api/auth/follow', { followId, followModel }, config);
 
       setIsFollowing(!isFollowing);
-      setLoading(false);
     } catch (error) {
+      console.error('Error updating follow status:', error);
       setError('Failed to update follow status.');
+    } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div>
-      <button onClick={handleFollow} disabled={loading}>
-        {isFollowing ? 'Unfollow' : 'Follow'}
+    <div className="follow-button-container">
+      <button
+        onClick={handleFollow}
+        disabled={loading}
+        className={`follow-button ${isFollowing ? 'following' : 'not-following'} ${loading ? 'loading' : ''}`}
+      >
+        {loading ? 'Loading...' : isFollowing ? 'Unfollow' : 'Follow'}
       </button>
-      {error && <p>{error}</p>}
+      {error && <p className="error-message">{error}</p>}
     </div>
   );
 };

@@ -1,4 +1,5 @@
 const socketIo = require('socket.io');
+const Message = require('./models/message'); // Import your message model
 let io;  // Store the Socket.IO instance
 
 // Setup function to initialize Socket.IO
@@ -25,6 +26,11 @@ function setupSocket(server) {
         socket.on('sendMessage', async (data) => {
             const { content, fromId, fromType, toId, toType } = data;
 
+            // Basic validation
+            if (!content || !fromId || !toId) {
+                return socket.emit('error', { message: 'Content, fromId, and toId are required.' });
+            }
+
             try {
                 // Save message to MongoDB
                 const message = new Message({
@@ -36,6 +42,7 @@ function setupSocket(server) {
 
                 // Emit message to the recipient's room
                 io.to(toId).emit('receiveMessage', message);
+                socket.emit('messageSent', { message }); // Acknowledge message sent
             } catch (error) {
                 console.error('Error sending message:', error);
                 socket.emit('error', { error: 'Internal server error' });

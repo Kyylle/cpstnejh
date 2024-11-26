@@ -113,7 +113,7 @@ exports.loginWithEmail = async (req, res) => {
     }
 
     if (!user) {
-      return res.status(401).json({ message: "User not found" });
+      return res.status(401).json({ message: "Invalid email or password" });
     }
 
       // Check if the password matches

@@ -6,7 +6,6 @@ const Profile = () => {
   const [profile, setProfile] = useState(null); 
   const [loading, setLoading] = useState(true); 
 
-  
   useEffect(() => {
     const fetchProfile = async () => {
       try {
@@ -42,32 +41,32 @@ const Profile = () => {
   }
 
   return (
-    <div className="profile-container">
-      <div className="profile-header">
+    <div className="left-column-profile-container">
+      <div className="left-column-profile-header">
         
-        <div className="background-image-container">
+        <div className="left-column-background-image-container">
           <img
             src={profile.backgroundImage || 'https://via.placeholder.com/150'}
             alt="Background"
-            className="background-image"
+            className="left-column-background-image"
           />
         </div>
 
         
-        <div className="profile-picture-container">
+        <div className="left-column-profile-picture-container">
           <img
             src={profile.profileImage || 'https://via.placeholder.com/100'}
             alt="Profile"
-            className="profile-picture"
+            className="left-column-profile-picture"
           />
         </div>
 
         
-        <h2>{profile.name || 'Name not available'}</h2>
+        <h2 className="left-column-profile-name">{profile.name || 'Name not available'}</h2>
       </div>
 
       
-      <div className="profile-section">
+      <div className="left-column-profile-section">
         <h4>Education</h4>
         {profile.education.length > 0 ? (
           <ul>
@@ -83,13 +82,13 @@ const Profile = () => {
       </div>
 
       
-      <div className="profile-section">
+      <div className="left-column-profile-section">
         <h4>Saved Items</h4>
         <p>No saved items</p>
       </div>
 
       
-      <div className="profile-section">
+      <div className="left-column-profile-section">
         <p>Groups</p>
         <p>Events</p>
         <p>Followed Hashtags</p>

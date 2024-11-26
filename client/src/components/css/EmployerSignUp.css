@@ -77,7 +77,7 @@
 
 /* Error Text */
 .employer-error-text {
-  color: red;
+  color: red !important;
   font-size: 0.9rem;
   margin-top: 5px;
 }

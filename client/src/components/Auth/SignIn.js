@@ -110,7 +110,7 @@ const SignIn = ({ showModal, onClose, openSignupModal }) => {
                 <label>
                   <input type="checkbox" /> Remember Me
                 </label>
-                <a href="/forgot-password" className="styled-forgot-password-link">Forgot Password?</a>
+                {/* <a href="/forgot-password" className="styled-forgot-password-link">Forgot Password?</a> */}
               </div>
 
               <button type="submit" className="styled-submit-button" disabled={loading}>
