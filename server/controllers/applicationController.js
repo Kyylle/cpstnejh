@@ -3,7 +3,7 @@ const path = require('path');
 const fs = require('fs');
 const Application = require('../models/application');
 const Job = require('../models/Job');
-
+const Notification = require('../models/notification');
 // Multer setup in the controller
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -44,7 +44,7 @@ exports.applyToJob = async (req, res) => {
         }
 
         try {
-            const { jobId, coverLetter, email, name } = req.body; // Include name in the destructuring
+            const { jobId, email, name } = req.body; // Removed coverLetter from destructuring
             const userId = req.user.userId;
 
             // Validate required fields (jobId, name, and email)
@@ -75,7 +75,6 @@ exports.applyToJob = async (req, res) => {
                 name: name, // Save the jobseeker's name
                 email: email, // Save the email provided in the application
                 resume: req.file ? req.file.path : null, // Store the file path of the uploaded resume
-                coverLetter: coverLetter || null,
             });
 
             await newApplication.save();
@@ -87,4 +86,51 @@ exports.applyToJob = async (req, res) => {
     });
 };
 
-
+exports.updateApplicationStatus = async (req, res) => {
+    const { applicationId } = req.params;
+    const { status } = req.body;
+  
+    // Validate new status
+    const validStatuses = ['pending', 'reviewed', 'accepted', 'rejected'];
+    if (!validStatuses.includes(status)) {
+      return res.status(400).json({ message: 'Invalid status value.' });
+    }
+  
+    try {
+      // Find and update the application
+      const application = await Application.findByIdAndUpdate(
+        applicationId,
+        { status, updatedDate: Date.now() }, // Update status and timestamp
+        { new: true, runValidators: true }
+      ).populate('job');
+  
+      if (!application) {
+        return res.status(404).json({ message: 'Application not found.' });
+      }
+  
+      // Construct the notification message
+      const notificationMessage = `Your application for the job "${application.job.jobTitle}" has been updated to "${status}".`;
+  
+      // Ensure jobseeker exists in the application
+      if (!application.jobseeker) {
+        return res.status(400).json({ message: 'Jobseeker ID is missing in the application.' });
+      }
+  
+      // Create a notification for the jobseeker
+      await Notification.create({
+        userId: application.jobseeker, // This should reference the jobseeker field
+        userType: 'jobseeker',          // Set the userType as 'jobseeker'
+        message: notificationMessage,
+      });
+  
+      res.status(200).json({
+        message: 'Status updated successfully and notification sent.',
+        application,
+      });
+    } catch (error) {
+      console.error('Error updating application status:', error);
+      res.status(500).json({ message: 'Internal server error.' });
+    }
+  };
+  
+  

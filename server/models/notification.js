@@ -1,28 +1,10 @@
 const mongoose = require('mongoose');
 
 const notificationSchema = new mongoose.Schema({
-    userId: { 
-        type: mongoose.Schema.Types.ObjectId, 
-        required: true, 
-        refPath: 'userType' // Dynamically references either Jobseeker or Employer
-    },
-    userType: {
-        type: String,
-        required: true,
-        enum: ['Jobseeker', 'Employer']
-    },
-    message: { 
-        type: String, 
-        required: true 
-    },
-    isRead: { 
-        type: Boolean, 
-        default: false 
-    },
-    createdAt: { 
-        type: Date, 
-        default: Date.now 
-    }
-});
-
+    message: { type: String, required: true },
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    userType: { type: String, enum: ['jobseeker', 'employer'], required: true }, // Ensure enum has correct values
+    createdAt: { type: Date, default: Date.now },
+  });
+  
 module.exports = mongoose.model('Notification', notificationSchema);

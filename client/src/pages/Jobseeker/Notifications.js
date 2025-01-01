@@ -1,46 +1,65 @@
 // src/components/Notifications.js
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import Navigation from './Navigation';
-import './css/Notifications.css'
-
-const notificationsData = [
-  {
-    id: 1,
-    message: 'You have a new job recommendation: Software Engineer at ABC Corp.',
-    time: '2m ago',
-  },
-  {
-    id: 2,
-    message: 'Your application for the Marketing Manager position has been viewed.',
-    time: '10m ago',
-  },
-  {
-    id: 3,
-    message: 'Congratulations! You have been invited for an interview for the Graphic Designer role.',
-    time: '1h ago',
-  },
-  {
-    id: 4,
-    message: 'New updates are available for your resume. Please review them.',
-    time: '3h ago',
-  },
-];
+import './css/Notifications.css';
 
 const Notifications = () => {
+  const [notifications, setNotifications] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    fetchNotifications();
+  }, []);
+
+  const fetchNotifications = async () => {
+    setIsLoading(true);
+    setError('');
+    try {
+      // Send a GET request to fetch notifications from the backend
+      const response = await axios.get('/api/auth/notifications', {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('authToken')}`, // Use the JWT stored in localStorage
+        },
+      });
+
+      // Sort the notifications by createdAt (recent first)
+      const sortedNotifications = response.data.notifications.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+      setNotifications(sortedNotifications); // Update state with the sorted notifications
+    } catch (error) {
+      console.error('Failed to fetch notifications:', error);
+      setError('Failed to load notifications.');
+    }
+    setIsLoading(false);
+  };
+
   return (
-    <div><Navigation />
-    <div className='notifications-container'>
-      
-      <h1>Notifications</h1>
-      <ul className='notifications-list'>
-        {notificationsData.map((notification) => (
-          <li key={notification.id} className='notification-item'>
-            <p>{notification.message}</p>
-            <span className='notification-time'>{notification.time}</span>
-          </li>
-        ))}
-      </ul>
-    </div>
+    <div>
+      <Navigation />
+      <div className="notifications-container">
+        <h1>Notifications</h1>
+
+        {isLoading ? (
+          <p className="loading">Loading...</p>
+        ) : error ? (
+          <p className="error">{error}</p>
+        ) : notifications.length > 0 ? (
+          <ul className="notifications-list">
+            {notifications.map((notification) => (
+              <li key={notification._id} className="notification-item">
+                <p>{notification.message}</p>
+                <span className="notification-time">
+                  {new Date(notification.createdAt).toLocaleString()}
+                </span>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className="no-notifications">No notifications available.</p>
+        )}
+      </div>
     </div>
   );
 };

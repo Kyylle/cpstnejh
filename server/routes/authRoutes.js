@@ -1,4 +1,6 @@
 const express = require('express');
+const Job = require('../models/Job');
+const Content = require('../models/content');
 const {
   registerEmployer,
   registerJobseeker,
@@ -29,11 +31,13 @@ const path = require('path');
 const router = express.Router();
 const contentUpload = require('../middleware/contentUpload');
 const jobseekerProfileUploads = require('../middleware/jobseekerProfileUploadsMiddleware');
-const { applyToJob } = require('../controllers/applicationController');
-const { sendMessage, getMessages } = require('../controllers/messagingController');
+const { applyToJob, updateApplicationStatus } = require('../controllers/applicationController');
+const { sendMessage, getMessages, getConversations } = require('../controllers/messagingController');
 const  Employer = require('../models/employer');
 const  Jobseeker = require('../models/jobseeker');
-const { followAccount, unfollowAccount, checkFollowingStatus } = require('../controllers/followController');
+const { followAccount, unfollowAccount, checkFollowingStatus, getFollowedAccounts } = require('../controllers/followController');
+const { search, searchUser } = require('../controllers/searchController');
+const Notification = require('../models/notification');
 // Configure Multer for profile and background image uploads
 const profileStorage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -86,13 +90,32 @@ router.get('/jobseeker/images', protect, getJobseekerProfileAndBackgroundImages)
 
 router.get('/employer/:id', protect, async (req, res) => {
   try {
-      const employer = await Employer.findById(req.params.id).select('-password');
-      if (!employer) return res.status(404).json({ message: 'Employer not found' });
-      res.json(employer);
+    // Find the employer by ID
+    const employer = await Employer.findById(req.params.id).select('-password'); // Exclude password
+    if (!employer) return res.status(404).json({ message: 'Employer not found' });
+
+    // Fetch jobs posted by the employer
+    const jobs = await Job.find({ employer: employer._id });
+
+    // Fetch posts created by the employer
+    const posts = await Content.find({ employer: employer._id })
+      .populate({
+        path: 'comments.user',
+        select: 'name profileImage companyName', // Only fetch required fields
+      });
+
+    // Return employer data along with jobs and posts
+    res.json({
+      employer,
+      jobs,
+      posts,
+    });
   } catch (error) {
-      res.status(500).json({ error: 'Internal server error' });
+    console.error('Error fetching employer details:', error);
+    res.status(500).json({ error: 'Internal server error' });
   }
 });
+
 
 router.get('/jobseeker/:id', protect, async (req, res) => {
   try {
@@ -157,7 +180,7 @@ router.post('/unlike-post', protect, unlikePost);
 
 // Comment on a post
 router.post('/comment-post', protect, commentOnPost);
-router.get('/commenter-profile/:userId/:userType', protect, getCommenterProfileImage);
+router.get('/commenter-profile/:userId/:userType',protect, getCommenterProfileImage);
 
 
 ///get post content
@@ -174,15 +197,43 @@ router.get('/employer-applications', protect, getEmployerApplications);
 
 //message
 
-router.post('/messages', protect, sendMessage);
-router.get('/messages', protect, getMessages); 
-
+router.post('/send-messages', protect, sendMessage);
+router.get('/get-messages', protect, getMessages); 
+router.get('/fetch-conversations', protect, getConversations);
 
 //follow
 
 router.post('/follow', protect, followAccount);
 router.post('/unfollow', protect, unfollowAccount);
 router.get('/following-status', protect, checkFollowingStatus);
+router.get('/followed-accounts', protect, getFollowedAccounts);
+
+
+
+//search
+router.get('/search', search);
+router.get ('/search-user', searchUser); 
+//status application
+router.put('/applications/:applicationId/status', protect, updateApplicationStatus);
+
+//notifications
+router.get('/notifications', protect, async (req, res) => {
+  // Retrieve the authenticated user's ID (assumes `req.user.id` is set by your authentication middleware)
+  const userId = req.user.userId; // Assuming you're storing the authenticated user's ID in `req.user.id`
+
+  try {
+    // Query notifications for the logged-in user only
+    const notifications = await Notification.find({ userId })
+      .sort({ createdAt: -1 }) // Sort notifications by `createdAt` in descending order (most recent first)
+      .lean();
+
+    return res.status(200).json({ notifications });
+  } catch (error) {
+    console.error('Error fetching notifications:', error);
+    return res.status(500).json({ error: 'Internal server error.' });
+  }
+});
+
 
 //test
 router.get('/test', (req, res) => {
@@ -191,6 +242,8 @@ router.get('/test', (req, res) => {
 router.get('/test-auth', protect, (req, res) => {
   res.json({ message: "Authentication successful", user: req.user });
 });
+
+
 
 
 module.exports = router;

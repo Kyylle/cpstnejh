@@ -5,85 +5,91 @@ import './css/followedAccounts.css';
 const FollowedAccounts = () => {
   const [profiles, setProfiles] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [followStatus, setFollowStatus] = useState({}); // Track follow status for each profile
+  const [followStatus, setFollowStatus] = useState({});
 
-  useEffect(() => {
-    // Fetch profiles and follow statuses from the backend
-    const fetchProfiles = async () => {
-      try {
-        const profilesResponse = await axios.get('/api/auth/getallprofiles', {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('authToken')}`
-          }
-        });
-
-        setProfiles(profilesResponse.data);
-
-        // Fetch the follow status for all profiles
-        const followStatusResponse = await axios.get('/api/auth/getfollowstatuses', {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('authToken')}`
-          }
-        });
-
-        // Populate followStatus object
-        const statusMap = {};
-        followStatusResponse.data.forEach(({ followingId }) => {
-          statusMap[followingId] = true; // Mark as followed
-        });
-
-        setFollowStatus(statusMap);
-        setLoading(false);
-      } catch (error) {
-        console.error('Error fetching profiles or follow statuses:', error);
-        setLoading(false);
-      }
-    };
-
-    fetchProfiles();
-  }, []);
-
-  const handleFollow = async (profileId, profileModel) => {
+  // Fetch all profiles and followed statuses
+  const fetchProfilesAndStatus = async () => {
     try {
-      const response = await axios.post(
-        '/api/auth/follow',
-        { followId: profileId, followModel: profileModel },
-        { headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` } }
+      const token = localStorage.getItem('authToken');
+      const config = {
+        headers: { Authorization: `Bearer ${token}` },
+      };
+  
+      // Fetch profiles
+      const profilesResponse = await axios.get('/api/auth/getallprofiles', config);
+      console.log('Profiles Response:', profilesResponse.data);
+      setProfiles(profilesResponse.data);
+  
+      // Fetch follow statuses concurrently
+      const followStatusResponses = await Promise.all(
+        profilesResponse.data.map((profile) => {
+          const followModel = profile.type === 'employer' ? 'Employer' : 'Jobseeker';
+          const targetId = profile._id;
+  
+          if (!targetId) {
+            console.error('Missing targetId for profile:', profile);
+            return null;
+          }
+  
+          return axios
+            .get(`/api/auth/following-status?followModel=${followModel}&targetId=${targetId}`, config)
+            .then((response) => ({ id: targetId, isFollowing: response.data.isFollowing }))
+            .catch((error) => {
+              console.error('Error fetching follow status for profile:', profile, error);
+              return null;
+            });
+        })
       );
-
-      if (response.status === 200) {
-        // Update follow status
-        setFollowStatus((prevState) => ({
-          ...prevState,
-          [profileId]: true
-        }));
-      }
+  
+      // Update followStatus state
+      const statusMap = {};
+      followStatusResponses.forEach((result) => {
+        if (result) {
+          statusMap[result.id] = result.isFollowing;
+        }
+      });
+  
+      setFollowStatus(statusMap);
+      setLoading(false);
     } catch (error) {
-      console.error('Error following account:', error.response ? error.response.data : error);
+      console.error('Error fetching profiles or follow statuses:', error);
+      setLoading(false);
     }
   };
+  
+  
 
-  const handleUnfollow = async (profileId, profileModel) => {
+  // Handle follow/unfollow actions
+  const handleFollowUnfollow = async (profileId, profileModel, isFollowing) => {
+    const endpoint = isFollowing ? '/api/auth/unfollow' : '/api/auth/follow';
     try {
+      const token = localStorage.getItem('authToken');
+      const config = {
+        headers: { Authorization: `Bearer ${token}` },
+      };
+
       const response = await axios.post(
-        '/api/auth/unfollow',
-        { followId: profileId, followModel: profileModel },
-        { headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` } }
+        endpoint,
+        { followModel: profileModel, followingId: profileId },
+        config
       );
 
       if (response.status === 200) {
-        // Update follow status
         setFollowStatus((prevState) => ({
           ...prevState,
-          [profileId]: false
+          [profileId]: !isFollowing, // Toggle follow status
         }));
       }
     } catch (error) {
-      console.error('Error unfollowing account:', error.response ? error.response.data : error);
+      console.error(`Error ${isFollowing ? 'unfollowing' : 'following'} account:`, error);
     }
   };
 
   const checkFollowStatus = (profileId) => followStatus[profileId] || false;
+
+  useEffect(() => {
+    fetchProfilesAndStatus();
+  }, []);
 
   if (loading) {
     return <div>Loading...</div>;
@@ -117,9 +123,7 @@ const FollowedAccounts = () => {
               <button
                 className="follow-button"
                 onClick={() =>
-                  isFollowing
-                    ? handleUnfollow(profile._id, profileModel)
-                    : handleFollow(profile._id, profileModel)
+                  handleFollowUnfollow(profile._id, profileModel, isFollowing)
                 }
               >
                 {isFollowing ? 'Unfollow' : '+ Follow'}

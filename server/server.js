@@ -1,46 +1,60 @@
 const express = require('express');
-const cors = require('cors'); // Middleware for handling CORS
-const connectDB = require('./config/db'); // MongoDB connection
-const authRoutes = require('./routes/authRoutes'); // Auth routes
+const cors = require('cors');
+const connectDB = require('./config/db');
+const authRoutes = require('./routes/authRoutes');
 const path = require('path');
 const fs = require('fs');
 const http = require('http');
-const { setupSocket } = require('./socket'); // Socket.IO setup
+const { setupSocket } = require('./socket'); // Import your Socket.IO setup
 
 require('dotenv').config(); // Load environment variables
 
 const app = express();
-const server = http.createServer(app); // Create HTTP server
+const server = http.createServer(app);
 const PORT = process.env.PORT || 5000;
 
 // Middleware
-app.use(express.json()); // Parse JSON bodies
+app.use(express.json()); // For parsing application/json
 app.use(cors()); // Enable CORS for frontend-backend communication
 
-// Static file handling
+// Static Files Setup
+const directories = [
+    'uploads',
+    'contentuploads',
+    'jobseekerProfileUploads',
+    path.join('applications', 'resumes'),
+];
+
+// Ensure all directories exist
+directories.forEach((dir) => {
+    const fullPath = path.join(__dirname, dir);
+    if (!fs.existsSync(fullPath)) {
+        fs.mkdirSync(fullPath, { recursive: true });
+    }
+});
+
+// Serve Static Files
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use('/contentuploads', express.static(path.join(__dirname, 'contentuploads')));
 app.use('/jobseekerProfileUploads', express.static(path.join(__dirname, 'jobseekerProfileUploads')));
 app.use('/applications/resumes', express.static(path.join(__dirname, 'applications', 'resumes')));
-// Ensure 'uploads' folder exists
-if (!fs.existsSync(path.join(__dirname, 'uploads'))) {
-    fs.mkdirSync(path.join(__dirname, 'uploads'));
-}
 
-// Connect to MongoDB
+// MongoDB Connection
 connectDB();
 
 // Routes
-app.use('/api/auth', authRoutes); // Mount auth routes at /api/auth
+app.use('/api/auth', authRoutes); // Auth routes
 
 // Setup Socket.IO
-setupSocket(server);
+setupSocket(server); // Assuming this sets up and exports Socket.IO instance
 
-// Global Error Handler (optional)
+// Global Error Handler
 app.use((err, req, res, next) => {
     console.error(err.stack);
-    res.status(500).json({ message: 'Internal server error' });
+    res.status(err.statusCode || 500).json({ 
+        message: err.message || 'Internal server error' 
+    });
 });
 
-// Start the server
-server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+// Start Server
+server.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));

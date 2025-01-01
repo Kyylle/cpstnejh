@@ -1,94 +1,151 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import "./css/companyAnalytics.css";
+import './css/companyAnalytics.css'; // Import the new CSS file
 
 const CompanyAnalytics = () => {
   const [profiles, setProfiles] = useState([]);
+  const [followStatus, setFollowStatus] = useState({});
+  const [loading, setLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
 
-  useEffect(() => {
-    const fetchProfiles = async () => {
-      try {
-        const token = localStorage.getItem("authToken");
-        const config = {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        };
+  // Fetch profiles and follow status
+  const fetchProfilesAndStatus = async () => {
+    try {
+      const token = localStorage.getItem("authToken");
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
 
-        // Fetch all profiles (both employers and jobseekers)
-        const response = await axios.get("/api/auth/getallprofiles", config); // Adjust the endpoint to match your backend
-        const profilesData = response.data;
+      // Fetch all profiles (both employers and jobseekers)
+      const response = await axios.get("/api/auth/getallprofiles", config);
+      const profilesData = response.data;
 
-        if (profilesData.length === 0) {
-          setErrorMessage("No profiles available at this time.");
-        } else {
-          setProfiles(profilesData);
-        }
-      } catch (error) {
-        console.error("Error fetching profiles:", error);
-        setErrorMessage("Failed to load profiles. Please try again later.");
+      if (profilesData.length === 0) {
+        setErrorMessage("No profiles available at this time.");
+      } else {
+        setProfiles(profilesData);
       }
-    };
 
-    fetchProfiles();
+      // Fetch follow statuses
+      const followStatusResponses = await Promise.all(
+        profilesData.map((profile) => {
+          const followModel = profile.type === "employer" ? "Employer" : "Jobseeker";
+          const targetId = profile._id;
+
+          return axios
+            .get(`/api/auth/following-status?followModel=${followModel}&targetId=${targetId}`, config)
+            .then((response) => ({
+              id: targetId,
+              isFollowing: response.data.isFollowing,
+            }))
+            .catch((error) => {
+              console.error("Error fetching follow status for profile:", profile, error);
+              return null;
+            });
+        })
+      );
+
+      const statusMap = {};
+      followStatusResponses.forEach((result) => {
+        if (result) {
+          statusMap[result.id] = result.isFollowing;
+        }
+      });
+
+      setFollowStatus(statusMap);
+    } catch (error) {
+      console.error("Error fetching profiles or follow statuses:", error);
+      setErrorMessage("Failed to load profiles. Please try again later.");
+    }
+    setLoading(false);
+  };
+
+  // Handle follow/unfollow actions
+  const handleFollowUnfollow = async (profileId, profileModel, isFollowing) => {
+    const endpoint = isFollowing ? "/api/auth/unfollow" : "/api/auth/follow";
+    try {
+      const token = localStorage.getItem("authToken");
+      const config = {
+        headers: { Authorization: `Bearer ${token}` },
+      };
+
+      const response = await axios.post(
+        endpoint,
+        { followModel: profileModel, followingId: profileId },
+        config
+      );
+
+      if (response.status === 200) {
+        setFollowStatus((prevState) => ({
+          ...prevState,
+          [profileId]: !isFollowing, // Toggle follow status
+        }));
+      }
+    } catch (error) {
+      console.error(`Error ${isFollowing ? "unfollowing" : "following"} account:`, error);
+    }
+  };
+
+  const checkFollowStatus = (profileId) => followStatus[profileId] || false;
+
+  useEffect(() => {
+    fetchProfilesAndStatus();
   }, []);
 
   return (
-    <div className="company-analytics-container">
-      <div className="company-analytics-header">
-        <h4>Add to your feed</h4>
-        <i className="info-icon">i</i>
-      </div>
-      {errorMessage && <p className="error-message">{errorMessage}</p>}
+    <div className="custom-followed-accounts-container">
+      <h3 className="custom-h3">Add to your feed</h3>
+
+      {loading && <div>Loading...</div>}
+
+      {errorMessage && (
+        <p className="custom-error-message">{errorMessage}</p>
+      )}
+
       {!errorMessage && profiles.length > 0 && (
-        <div className="company-analytics-recommendations-list">
-          {profiles.map((profile, index) => (
-            <div key={index} className="company-analytics-recommendation-item">
-              <img
-                src={
-                  profile.type === "employer"
-                    ? profile.profileImage
-                    : profile.jobseekerProfileImage || "/default-profile.png"
-                }
-                alt={`${
-                  profile.type === "employer"
-                    ? profile.companyName
-                    : profile.name
-                }'s profile`}
-                className="company-analytics-profile-image"
-              />
-              <div className="company-analytics-profile-details">
-                {profile.type === "employer" ? (
-                  <>
-                    <p className="company-analytics-profile-name">
-                      {profile.companyName}
-                    </p>
-                    <p className="company-analytics-profile-description">
-                      {profile.location} &bull; {profile.industry}
-                    </p>
-                  </>
-                ) : (
-                  <>
-                    <p className="company-analytics-profile-name">
-                      {profile.name}
-                    </p>
-                    <p className="company-analytics-profile-description">
-                      {profile.experience}
-                      &bull;
-                      {profile.skills.length > 0
-                        ? profile.skills.join(", ")
-                        : "No skills"}
-                    </p>
-                  </>
-                )}
+        <div className="custom-profiles-container">
+          {profiles.map((profile, index) => {
+            const isFollowing = checkFollowStatus(profile._id);
+            const profileModel = profile.type === "employer" ? "Employer" : "Jobseeker";
+
+            return (
+              <div key={index} className="custom-account">
+                <img
+                  src={
+                    profile.type === "employer" || "jobseeker"
+                      ? profile.profileImage
+                      : profile.jobseekerProfileImage || "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y"
+                  }
+                  alt={`${profile.type === "employer" ? profile.companyName : profile.name}'s profile`}
+                  className="custom-account-logo"
+                />
+                <div className="custom-account-info">
+                  <h4 className="custom-account-name">
+                    {profile.type === "employer" ? profile.companyName : profile.name}
+                  </h4>
+                  <p className="custom-account-description">
+                    {profile.type === "employer"
+                      ? `${profile.location} | ${profile.industry}`
+                      : `${profile.experience} | ${profile.skills.length > 0 ? profile.skills.join(", ") : "No skills"}`}
+                  </p>
+                  <div className="custom-follow-button-container">
+                    <button
+                      className={`custom-follow-button ${isFollowing ? "following" : "not-following"}`}
+                      onClick={() => handleFollowUnfollow(profile._id, profileModel, isFollowing)}
+                    >
+                      {isFollowing ? "Unfollow" : "+ Follow"}
+                    </button>
+                  </div>
+                </div>
               </div>
-              <button className="company-analytics-follow-btn">+ Follow</button>
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
-      <div className="company-analytics-view-more">
+
+      <div className="custom-view-more">
         <a href="#">View all recommendations →</a>
       </div>
     </div>

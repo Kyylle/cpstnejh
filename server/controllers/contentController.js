@@ -1,5 +1,6 @@
 const Content = require('../models/content');
 const Employer = require('../models/employer'); // Include the Employer model
+const Jobseeker = require('../models/jobseeker');
 
 // Post content (picture, video, caption) by Employer only
 // exports.postContent = async (req, res) => {
@@ -225,13 +226,14 @@ exports.getPosts = async (req, res) => {
     const posts = await Content.find()
       .populate({
         path: 'comments.user',
-        select: 'name profileImage companyName', // Select the fields to display
+        populate: { path: 'userType', select: 'name profileImage' }, // Ensure it references the correct schema
+        select: 'name profileImage', // Select name and profileImage for each commenter
       })
       .populate({
         path: 'employer',
-        select: 'companyName profileImage',
+        select: 'companyName profileImage', // Select companyName and profileImage for the employer
       })
-      .sort({ postedDate: -1 }) // Sort by most recent posts
+      .sort({ postedDate: -1 }) // Sort posts by most recent first
       .exec();
 
     res.status(200).json(posts);
@@ -240,3 +242,4 @@ exports.getPosts = async (req, res) => {
     res.status(500).json({ message: "An error occurred while fetching posts" });
   }
 };
+

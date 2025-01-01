@@ -23,10 +23,6 @@ const applicationSchema = new mongoose.Schema({
         type: String, // Stores the file path of the uploaded resume
         required: false
     },
-    coverLetter: { 
-        type: String, 
-        required: false
-    },
     status: {
         type: String,
         enum: ['pending', 'reviewed', 'accepted', 'rejected'],

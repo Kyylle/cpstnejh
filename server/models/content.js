@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 
-
 const contentSchema = new mongoose.Schema({
   employer: {
     type: mongoose.Schema.Types.ObjectId,
@@ -23,7 +22,7 @@ const contentSchema = new mongoose.Schema({
     {
       user: {
         type: mongoose.Schema.Types.ObjectId,
-        refPath: 'userType', // Reference to either Employer or Jobseeker
+        refPath: 'likes.userType', // Reference to either Employer or Jobseeker
       },
       userType: {
         type: String,
@@ -35,7 +34,7 @@ const contentSchema = new mongoose.Schema({
     {
       user: {
         type: mongoose.Schema.Types.ObjectId,
-        refPath: 'userType', // Reference to either Employer or Jobseeker
+        refPath: 'comments.userType', // Reference to either Employer or Jobseeker
       },
       userType: {
         type: String,
@@ -52,5 +51,14 @@ const contentSchema = new mongoose.Schema({
     },
   ],
 });
+
+
+// Set up a method to populate commenter details
+contentSchema.methods.populateComments = async function () {
+  await this.populate({
+    path: 'comments.user',
+    select: 'name profileImage', // Select only name and profileImage
+  }).execPopulate();
+};
 
 module.exports = mongoose.model('Content', contentSchema);

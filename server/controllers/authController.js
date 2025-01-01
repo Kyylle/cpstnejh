@@ -523,15 +523,16 @@ exports.getAllProfiles = async (req, res) => {
 
     // Fetch all employer profiles except the logged-in user
     const employers = await Employer.find({ _id: { $ne: loggedInUserId } })
-      .select('companyName location industry profileImage');
+      .select('_id companyName location industry profileImage'); // Include _id
 
     // Fetch all jobseeker profiles except the logged-in user
     const jobseekers = await Jobseeker.find({ _id: { $ne: loggedInUserId } })
-      .select('name skills experience profileImage');
+      .select('_id name skills experience profileImage'); // Include _id
 
     // Construct a combined response for both employers and jobseekers
     const profiles = [
       ...employers.map(employer => ({
+        _id: employer._id, // Include the _id field
         type: 'employer', // Add a type field to distinguish
         companyName: employer.companyName,
         location: employer.location,
@@ -539,11 +540,12 @@ exports.getAllProfiles = async (req, res) => {
         profileImage: employer.profileImage,
       })),
       ...jobseekers.map(jobseeker => ({
+        _id: jobseeker._id, // Include the _id field
         type: 'jobseeker', // Add a type field to distinguish
         name: jobseeker.name,
         skills: jobseeker.skills,
         experience: jobseeker.experience.map(exp => `${exp.title} at ${exp.company}`).join(', ') || 'No experience',
-        jobseekerProfileImage: jobseeker.profileImage,
+        profileImage: jobseeker.profileImage, // Ensure consistent key name
       })),
     ];
 
@@ -558,6 +560,7 @@ exports.getAllProfiles = async (req, res) => {
     return res.status(500).json({ message: 'An internal server error occurred' });
   }
 };
+
 
 //Post a job
 // Post a new job

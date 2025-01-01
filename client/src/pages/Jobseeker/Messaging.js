@@ -1,153 +1,206 @@
-import React, { useState, useEffect } from 'react';
-import io from 'socket.io-client';
-import axios from 'axios';
-import Navigation from './Navigation'; // Import the Navigation component
-import './css/messaging.css';
+import React, { useRef, useState, useEffect } from "react";
+import axios from "axios";
+import Navigation from "./Navigation";
 
 const Messaging = () => {
-    const [conversations, setConversations] = useState([]);
-    const [activeChat, setActiveChat] = useState(null);
-    const [messages, setMessages] = useState([]);
-    const [content, setContent] = useState('');
-    const userId = localStorage.getItem('userId'); // Logged-in user's ID
-    const socket = io(process.env.REACT_APP_BACKEND_URL, {
-        query: { userId },
-    });
+  const [followedAccounts, setFollowedAccounts] = useState([]);
+  const [selectedAccount, setSelectedAccount] = useState(null);
+  const [messageContent, setMessageContent] = useState("");
+  const [messages, setMessages] = useState([]);
+  const [isMessageSent, setIsMessageSent] = useState(false);
 
-    useEffect(() => {
-        // Connect to Socket.IO
-        socket.on('connect', () => {
-            console.log('Connected to Socket.IO server');
-        });
+  // Fetch followed accounts
+  const fetchFollowedAccounts = async () => {
+    try {
+      const token = localStorage.getItem("authToken");
+      const config = {
+        headers: { Authorization: `Bearer ${token}` },
+      };
 
-        // Listen for incoming messages
-        socket.on('receiveMessage', (message) => {
-            setMessages((prevMessages) => {
-                if (message.from.id === activeChat || message.to.id === activeChat) {
-                    return [...prevMessages, message];
-                }
-                return prevMessages;
-            });
-        });
+      const response = await axios.get("/api/auth/followed-accounts", config);
+      setFollowedAccounts(response.data.followedAccounts);
+    } catch (error) {
+      console.error("Error fetching followed accounts:", error);
+    }
+  };
 
-        // Cleanup on component unmount
-        return () => {
-            socket.disconnect();
-        };
-    }, [socket, activeChat]);
+  // Fetch messages when an account is selected
+  const fetchMessages = async () => {
+    if (!selectedAccount) return;
 
-    useEffect(() => {
-        // Fetch conversations
-        const fetchConversations = async () => {
-            try {
-                const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/conversations`, {
-                    params: { userId },
-                });
-                setConversations(response.data.conversations);
-            } catch (error) {
-                console.error('Error fetching conversations:', error);
-            }
-        };
+    try {
+      const token = localStorage.getItem("authToken");
+      const config = {
+        headers: { Authorization: `Bearer ${token}` },
+      };
 
-        fetchConversations();
-    }, [userId]);
+      const response = await axios.get(
+        `/api/auth/fetch-conversations?userId=${selectedAccount.id}`,
+        config
+      );
 
-    useEffect(() => {
-        // Fetch messages for the active chat
-        if (activeChat) {
-            const fetchMessages = async () => {
-                try {
-                    const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/messages`, {
-                        params: { userId: activeChat },
-                    });
-                    setMessages(response.data.messages);
-                } catch (error) {
-                    console.error('Error fetching messages:', error);
-                }
-            };
-            fetchMessages();
-        }
-    }, [activeChat]);
+      const conversation = response.data.conversations?.[0] || {};
+      setMessages(conversation.messages || []);
+    } catch (error) {
+      console.error("Error fetching messages:", error);
+    }
+  };
 
-    const sendMessage = async () => {
-        if (!content || !activeChat) {
-            alert('Please provide message content');
-            return;
-        }
+  useEffect(() => {
+    fetchFollowedAccounts();
+  }, []);
 
-        try {
-            socket.emit('sendMessage', { content, toId: activeChat });
-            setMessages((prevMessages) => [
-                ...prevMessages,
-                { content, from: { id: userId }, to: { id: activeChat } },
-            ]);
-            setContent('');
-        } catch (error) {
-            console.error('Error sending message:', error);
-        }
-    };
+  useEffect(() => {
+    fetchMessages();
+  }, [selectedAccount]);
 
-    return (
-        <div className="messaging-page">
-            {/* Add the Navigation bar */}
-            <Navigation />
+  // Send message to selected account
+  const sendMessage = async () => {
+    if (!messageContent || !selectedAccount) {
+      return alert("Please select a user and enter a message.");
+    }
 
-            <div className="messaging-container">
-                <div className="sidebar">
-                    <h2>Chats</h2>
-                    {conversations.map((conversation) => (
-                        <div
-                            key={conversation.id}
-                            className={`conversation ${conversation.id === activeChat ? 'active' : ''}`}
-                            onClick={() => setActiveChat(conversation.id)}
-                        >
-                            <img
-                                src={conversation.avatar || '/default-avatar.png'}
-                                alt="User Avatar"
-                                className="avatar"
-                            />
-                            <div className="conversation-info">
-                                <h3>{conversation.name}</h3>
-                                <p>{conversation.lastMessage}</p>
-                            </div>
-                        </div>
-                    ))}
-                </div>
+    try {
+      const token = localStorage.getItem("authToken");
+      const config = {
+        headers: { Authorization: `Bearer ${token}` },
+      };
 
-                <div className="chat-window">
-                    {activeChat ? (
-                        <>
-                            <div className="chat-header">
-                                <h3>{conversations.find((c) => c.id === activeChat)?.name}</h3>
-                            </div>
-                            <div className="chat-body">
-                                {messages.map((message, index) => (
-                                    <div
-                                        key={index}
-                                        className={`message ${message.from.id === userId ? 'sent' : 'received'}`}
-                                    >
-                                        {message.content}
-                                    </div>
-                                ))}
-                            </div>
-                            <div className="chat-input">
-                                <textarea
-                                    placeholder="Type your message..."
-                                    value={content}
-                                    onChange={(e) => setContent(e.target.value)}
-                                />
-                                <button onClick={sendMessage}>Send</button>
-                            </div>
-                        </>
-                    ) : (
-                        <div className="no-chat-selected">
-                            <p>Select a conversation to start messaging</p>
-                        </div>
-                    )}
-                </div>
+      await axios.post(
+        "/api/auth/send-messages",
+        { content: messageContent, toId: selectedAccount.id },
+        config
+      );
+
+      setMessageContent("");
+      setIsMessageSent(true);
+
+      // Fetch messages to reflect the latest conversation
+      fetchMessages();
+    } catch (error) {
+      console.error("Error sending message:", error);
+      alert("Failed to send message");
+    }
+  };
+
+  // Handle keydown for Enter key in the textarea
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage();
+    }
+  };
+
+  const messagesEndRef = useRef(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
+  return (
+    <div className="messaging-page bg-gray-100 min-h-screen flex flex-col md:flex-row">
+      <Navigation />
+      <div className="users-sidebar w-full md:w-1/4 bg-white border-b md:border-r p-4 mt-20 md:mt-15">
+        <h3 className="text-xl font-semibold text-gray-700 mb-4">Chats</h3>
+        {followedAccounts.length > 0 ? (
+          <div className="space-y-4">
+            {followedAccounts.map((account) => (
+              <div
+                key={account.id}
+                className="account-item flex items-center cursor-pointer hover:bg-gray-100 p-2 rounded-lg"
+                onClick={() => setSelectedAccount(account)}
+              >
+                <img
+                  src={account.avatar || "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y"}
+                  alt={account.name}
+                  className="w-12 h-12 rounded-full object-cover mr-3"
+                />
+                <span className="text-lg font-medium text-gray-800">
+                  {account.name}
+                </span>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p className="text-gray-500">No followed accounts found.</p>
+        )}
+      </div>
+
+      <div className="chat-section flex-1 bg-gray-50 p-6 flex flex-col mt-20 md:mt-16">
+        {selectedAccount && (
+          <>
+            <div className="chat-header flex items-center justify-between mb-4">
+              <div className="flex items-center">
+                <img
+                  src={selectedAccount.avatar || "/default-avatar.png"}
+                  alt={selectedAccount.name}
+                  className="w-10 h-10 rounded-full object-cover mr-3"
+                />
+                <span className="text-xl font-semibold text-gray-800">
+                  {selectedAccount.name}
+                </span>
+              </div>
             </div>
-        </div>
-    );
+
+            <div
+              className="messages-container flex-1 bg-white p-4 rounded-lg shadow-md overflow-y-auto"
+              style={{ maxHeight: "calc(100vh - 320px)" }}
+            >
+              {messages && messages.length > 0 ? (
+                <div className="space-y-4">
+                  {messages.map((message, index) => (
+                    <div
+                      key={index}
+                      className={`message-item ${
+                        message.from?.id === selectedAccount?.id
+                          ? "text-left"
+                          : "text-right"
+                      }`}
+                    >
+                      <div
+                        className={`message-bubble ${
+                          message.from?.id === selectedAccount?.id
+                            ? "bg-gray-200"
+                            : "bg-blue-500 text-white"
+                        } px-4 py-2 rounded-lg max-w-[80%] inline-block`}
+                      >
+                        {message.content}
+                      </div>
+                    </div>
+                  ))}
+                  {/* Target element to scroll to */}
+                  <div ref={messagesEndRef}></div>
+                </div>
+              ) : (
+                <p className="text-gray-500">No messages yet.</p>
+              )}
+            </div>
+
+            <div className="message-form flex items-center space-x-4 mt-4">
+              <textarea
+                value={messageContent}
+                onChange={(e) => setMessageContent(e.target.value)}
+                onKeyDown={handleKeyDown}
+                placeholder="Type your message here..."
+                rows="3"
+                className="w-full p-4 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300 ease-in-out"
+              />
+              <button
+                onClick={sendMessage}
+                className="px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300 ease-in-out"
+              >
+                Send
+              </button>
+            </div>
+          </>
+        )}
+      </div>
+    </div>
+  );
 };
 
 export default Messaging;

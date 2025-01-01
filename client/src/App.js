@@ -19,7 +19,7 @@ import EmployerInquiries from './pages/Employer/Inquiries/EmployerInquiries';
 import EmployerMessage from './pages/Employer/Message/EmployerMessage'
 import JobseekerProfileSettings from './pages/Jobseeker/JobseekerProfileSettings';
 import ViewProfile from './pages/Jobseeker/ViewProfile';
-
+import { SkeletonTheme } from 'react-loading-skeleton';
 
 
 
@@ -118,7 +118,7 @@ function App() {
 
       {/* Employeer  Inquiries*/}
       {/* Employeer inquiries  */}
-
+      
       <Route
       path="/employerinquiries"
       element={

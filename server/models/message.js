@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 
 const messageSchema = new mongoose.Schema({
     content: { type: String, required: true },
+    read: { type: Boolean, default: false },
     from: {
         id: { type: mongoose.Schema.Types.ObjectId, required: true, refPath: 'from.type' },
         type: { type: String, required: true, enum: ['Jobseeker', 'Employer'] } // Differentiate user types
